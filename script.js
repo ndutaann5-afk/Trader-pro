@@ -1,23 +1,102 @@
 let derivSocket;
 
 const SYMBOL = "1HZ100V";
-
 const MAX_TICKS = 1000;
 
-let lastDigits = [];
-let predictions = [];
+let ticks = [];
+let currentSignal = null;
+let scanTimer = null;
+let countdownTimer = null;
+let waiting = false;
 
-let engineReady = false;
+const MAX_VALIDITY = 40;
+const MIN_VALIDITY = 12;
+const WAIT_TIME = 20;
 
 
 /* =========================
-   CONNECTION
+   STATUS
 ========================= */
 
 function setStatus(text) {
-  document.getElementById("connection").textContent = text;
+  const el = document.getElementById("connection");
+  if (el) el.textContent = text;
 }
 
+
+/* =========================
+   DIGIT EXTRACTION
+========================= */
+
+function getLastDigit(quote, pipSize = null) {
+
+  if (quote === null || quote === undefined) {
+    return null;
+  }
+
+  const number = Number(quote);
+
+  if (!Number.isFinite(number)) {
+    return null;
+  }
+
+  /*
+    Prefer Deriv's pip_size when available.
+    This avoids relying on JavaScript's raw
+    number representation.
+  */
+
+  if (
+    Number.isInteger(pipSize) &&
+    pipSize >= 0 &&
+    pipSize <= 10
+  ) {
+
+    const factor = Math.pow(10, pipSize);
+
+    const fixed = Math.round(
+      number * factor
+    );
+
+    return Math.abs(fixed) % 10;
+  }
+
+  /*
+    Fallback:
+    determine the visible decimal precision.
+  */
+
+  let text = String(number);
+
+  if (text.includes("e")) {
+    text = number.toFixed(10);
+  }
+
+  const decimalIndex = text.indexOf(".");
+
+  if (decimalIndex >= 0) {
+
+    const decimals =
+      text.substring(decimalIndex + 1);
+
+    if (decimals.length > 0) {
+      return Number(
+        decimals.charAt(
+          decimals.length - 1
+        )
+      );
+    }
+  }
+
+  return Number(
+    text.slice(-1)
+  );
+}
+
+
+/* =========================
+   CONNECT
+========================= */
 
 function connectDeriv() {
 
@@ -33,52 +112,65 @@ function connectDeriv() {
     setStatus("● LIVE");
 
     /*
-      First load historical ticks.
-      This gives the engine data immediately
-      instead of waiting for hundreds of new ticks.
+      Historical data first.
     */
 
-    derivSocket.send(JSON.stringify({
-      ticks_history: SYMBOL,
-      count: 1000,
-      end: "latest",
-      style: "ticks",
-      subscribe: 0,
-      req_id: 100
-    }));
+    derivSocket.send(
+      JSON.stringify({
+        ticks_history: SYMBOL,
+        count: 1000,
+        end: "latest",
+        style: "ticks",
+        subscribe: 0,
+        req_id: 1
+      })
+    );
 
 
     /*
-      Then start the live stream.
+      Live stream.
     */
 
-    derivSocket.send(JSON.stringify({
-      ticks: SYMBOL,
-      subscribe: 1,
-      req_id: 101
-    }));
+    derivSocket.send(
+      JSON.stringify({
+        ticks: SYMBOL,
+        subscribe: 1,
+        req_id: 2
+      })
+    );
 
   };
 
 
-  derivSocket.onmessage = function (event) {
+  derivSocket.onmessage = function(event) {
 
-    const data = JSON.parse(event.data);
+    let data;
+
+    try {
+      data = JSON.parse(event.data);
+    } catch (error) {
+      return;
+    }
 
 
     if (data.error) {
 
-      console.error(data.error);
+      console.error(
+        "Deriv error:",
+        data.error
+      );
 
-      setStatus("Deriv error");
+      setStatus(
+        "Deriv error — reconnecting..."
+      );
 
       return;
     }
 
 
-    /* =========================
-       HISTORICAL DATA
-    ========================= */
+    /* =====================
+       HISTORY
+    ===================== */
 
     if (
       data.msg_type === "history" &&
@@ -86,51 +178,100 @@ function connectDeriv() {
       Array.isArray(data.history.prices)
     ) {
 
-      lastDigits = data.history.prices
-        .map(getLastDigit)
-        .filter(digit => digit !== null)
-        .slice(-MAX_TICKS);
+      ticks = [];
+
+      const prices =
+        data.history.prices;
+
+      prices.forEach(function(price) {
+
+        const digit =
+          getLastDigit(
+            price,
+            data.pip_size
+          );
+
+        if (digit !== null) {
+          ticks.push({
+            digit: digit,
+            price: price
+          });
+        }
+
+      });
 
 
-      engineReady = true;
+      if (ticks.length > MAX_TICKS) {
+        ticks =
+          ticks.slice(-MAX_TICKS);
+      }
 
-      updateEngine();
+
+      updateDisplay();
+
+      startFreshScan();
 
       return;
     }
 
 
-    /* =========================
+    /* =====================
        LIVE TICK
-    ========================= */
+    ===================== */
 
     if (
       data.msg_type === "tick" &&
       data.tick
     ) {
 
-      const price = data.tick.quote;
+      const quote =
+        data.tick.quote;
 
-      document.getElementById("market").textContent =
-        SYMBOL + ": " + price;
-
-
-      const digit = getLastDigit(price);
-
-
-      if (digit !== null) {
-
-        lastDigits.push(digit);
+      const digit =
+        getLastDigit(
+          quote,
+          data.tick.pip_size
+        );
 
 
-        if (lastDigits.length > MAX_TICKS) {
-          lastDigits.shift();
-        }
+      if (digit === null) {
+        return;
+      }
 
 
-        engineReady = true;
+      ticks.push({
+        digit: digit,
+        price: quote,
+        epoch: data.tick.epoch
+      });
 
-        updateEngine();
+
+      if (ticks.length > MAX_TICKS) {
+        ticks.shift();
+      }
+
+
+      document.getElementById(
+        "market"
+      ).textContent =
+        SYMBOL + ": " + quote;
+
+
+      updateDisplay();
+
+
+      /*
+        Only scan continuously when
+        we are not inside a valid signal.
+      */
+
+      if (
+        !currentSignal &&
+        !waiting &&
+        ticks.length >= 100
+      ) {
+
+        startFreshScan();
 
       }
 
@@ -139,18 +280,26 @@ function connectDeriv() {
   };
 
 
-  derivSocket.onerror = function () {
+  derivSocket.onerror = function(error) {
+
+    console.error(error);
 
     setStatus("Connection error");
 
   };
 
 
-  derivSocket.onclose = function () {
+  derivSocket.onclose = function() {
 
-    setStatus("Disconnected — reconnecting...");
+    setStatus(
+      "Disconnected — reconnecting..."
+    );
 
-    setTimeout(connectDeriv, 3000);
+
+    setTimeout(
+      connectDeriv,
+      3000
+    );
 
   };
 
@@ -158,111 +307,30 @@ function connectDeriv() {
 
 
 /* =========================
-   DIGIT EXTRACTION
+   WINDOWS
 ========================= */
 
-function getLastDigit(price) {
+function getDigits(size) {
 
-  if (price === null || price === undefined) {
-    return null;
-  }
-
-
-  /*
-    Convert the quote into normal decimal text.
-
-    This avoids problems caused by scientific notation.
-  */
-
-  const number = Number(price);
-
-
-  if (!Number.isFinite(number)) {
-    return null;
-  }
-
-
-  let text = String(number);
-
-
-  /*
-    Handle scientific notation.
-  */
-
-  if (text.includes("e")) {
-
-    text = number.toFixed(10);
-
-  }
-
-
-  const digitsOnly =
-    text.replace(/\D/g, "");
-
-
-  if (!digitsOnly.length) {
-    return null;
-  }
-
-
-  return Number(
-    digitsOnly.slice(-1)
-  );
-
-}
-
-
-/* =========================
-   COUNTS
-========================= */
-
-function getCounts(data) {
-
-  const counts =
-    Array(10).fill(0);
-
-
-  data.forEach(function (digit) {
-
-    if (
-      Number.isInteger(digit) &&
-      digit >= 0 &&
-      digit <= 9
-    ) {
-
-      counts[digit]++;
-
-    }
-
-  });
-
-
-  return counts;
-
-}
-
-
-/* =========================
-   WINDOW
-========================= */
-
-function getWindow(size) {
-
-  return lastDigits.slice(
-    Math.max(
-      0,
-      lastDigits.length - size
+  return ticks
+    .slice(
+      Math.max(
+        0,
+        ticks.length - size
+      )
     )
-  );
+    .map(
+      item => item.digit
+    );
 
 }
 
 
 /* =========================
-   DIGIT FREQUENCY
+   FREQUENCY
 ========================= */
 
-function getFrequency(data, digit) {
+function frequency(data, digit) {
 
   if (!data.length) {
     return 0;
@@ -272,7 +340,7 @@ function getFrequency(data, digit) {
   let count = 0;
 
 
-  data.forEach(function (value) {
+  data.forEach(function(value) {
 
     if (value === digit) {
       count++;
@@ -289,223 +357,85 @@ function getFrequency(data, digit) {
 
 
 /* =========================
-   STREAK
+   CONSISTENCY
 ========================= */
 
-function getStreak(data) {
+function consistency(digit) {
 
-  if (!data.length) {
-
-    return {
-      digit: null,
-      count: 0
-    };
-
-  }
-
-
-  const latest =
-    data[data.length - 1];
+  const windows = [
+    25,
+    50,
+    100,
+    250,
+    500
+  ];
 
 
-  let count = 1;
+  const values = [];
 
 
-  for (
-    let i = data.length - 2;
-    i >= 0;
-    i--
-  ) {
+  windows.forEach(function(size) {
 
-    if (data[i] === latest) {
+    if (ticks.length >= size) {
 
-      count++;
-
-    } else {
-
-      break;
+      values.push(
+        frequency(
+          getDigits(size),
+          digit
+        )
+      );
 
     }
 
+  });
+
+
+  if (values.length < 3) {
+    return 0;
   }
 
 
-  return {
-    digit: latest,
-    count: count
-  };
+  /*
+    How close are the windows
+    to each other?
+  */
+
+  const average =
+    values.reduce(
+      (a, b) => a + b,
+      0
+    ) / values.length;
+
+
+  const variance =
+    values.reduce(
+      (sum, value) =>
+        sum +
+        Math.pow(
+          value - average,
+          2
+        ),
+      0
+    ) / values.length;
+
+
+  const deviation =
+    Math.sqrt(variance);
+
+
+  return Math.max(
+    0,
+    100 - deviation * 8
+  );
 
 }
 
 
 /* =========================
-   TRANSITIONS
+   SCORE ALL DIGITS
 ========================= */
 
-function getTransitionScore(
-  data,
-  target
-) {
-
-  if (data.length < 2) {
-    return 50;
-  }
-
-
-  let afterOther = 0;
-  let targetAfterOther = 0;
-
-
-  for (
-    let i = 1;
-    i < data.length;
-    i++
-  ) {
-
-    if (data[i - 1] !== target) {
-
-      afterOther++;
-
-      if (data[i] === target) {
-        targetAfterOther++;
-      }
-
-    }
-
-  }
-
-
-  if (!afterOther) {
-    return 50;
-  }
-
-
-  const rate =
-    (targetAfterOther / afterOther) * 100;
-
-
-  /*
-    Convert the rate into a relative score.
-
-    10% = neutral baseline.
-  */
-
-  return rate;
-
-}
-
-
-/* =========================
-   DIGIT SCORING
-========================= */
-
-function scoreDigit(digit) {
-
-  const w25 = getWindow(25);
-  const w50 = getWindow(50);
-  const w100 = getWindow(100);
-  const w500 = getWindow(500);
-
-
-  const f25 =
-    getFrequency(w25, digit);
-
-
-  const f50 =
-    getFrequency(w50, digit);
-
-
-  const f100 =
-    getFrequency(w100, digit);
-
-
-  const f500 =
-    getFrequency(w500, digit);
-
-
-  /*
-    Baseline for a random digit = 10%.
-  */
-
-  const edge25 =
-    f25 - 10;
-
-
-  const edge50 =
-    f50 - 10;
-
-
-  const edge100 =
-    f100 - 10;
-
-
-  const edge500 =
-    f500 - 10;
-
-
-  /*
-    Weight recent data more heavily,
-    while still requiring longer-window
-    agreement.
-  */
-
-  const frequencyScore =
-    (
-      edge25 * 0.35 +
-      edge50 * 0.30 +
-      edge100 * 0.20 +
-      edge500 * 0.15
-    );
-
-
-  const transition =
-    getTransitionScore(
-      w500,
-      digit
-    );
-
-
-  const transitionEdge =
-    transition - 10;
-
-
-  /*
-    Final statistical score.
-
-    Positive = digit is appearing
-    more frequently than baseline.
-
-    Negative = digit is below baseline.
-  */
-
-  const score =
-    frequencyScore +
-    transitionEdge * 0.20;
-
-
-  return {
-
-    digit,
-
-    f25,
-    f50,
-    f100,
-    f500,
-
-    transition,
-
-    score
-
-  };
-
-}
-
-
-/* =========================
-   RANK DIGITS
-========================= */
-
-function rankDigits() {
+function analyzeDigits() {
 
   const results = [];
 
@@ -516,17 +446,84 @@ function rankDigits() {
     digit++
   ) {
 
-    results.push(
-      scoreDigit(digit)
-    );
+    const f25 =
+      frequency(
+        getDigits(25),
+        digit
+      );
+
+
+    const f50 =
+      frequency(
+        getDigits(50),
+        digit
+      );
+
+
+    const f100 =
+      frequency(
+        getDigits(100),
+        digit
+      );
+
+
+    const f500 =
+      frequency(
+        getDigits(500),
+        digit
+      );
+
+
+    /*
+      10% is the neutral
+      random-digit baseline.
+    */
+
+    const edge25 =
+      f25 - 10;
+
+    const edge50 =
+      f50 - 10;
+
+    const edge100 =
+      f100 - 10;
+
+    const edge500 =
+      f500 - 10;
+
+
+    const score =
+      edge25 * 0.30 +
+      edge50 * 0.25 +
+      edge100 * 0.25 +
+      edge500 * 0.20;
+
+
+    const stable =
+      consistency(digit);
+
+
+    results.push({
+
+      digit,
+
+      f25,
+      f50,
+      f100,
+      f500,
+
+      score,
+
+      stable
+
+    });
 
   }
 
 
   results.sort(
-    function (a, b) {
-      return b.score - a.score;
-    }
+    (a, b) =>
+      b.score - a.score
   );
 
 
@@ -536,17 +533,21 @@ function rankDigits() {
 
 
 /* =========================
-   TARGET SELECTION
+   CREATE SIGNAL
 ========================= */
 
-function selectTarget(ranked) {
+function findSignal() {
 
-  if (!ranked.length) {
+  if (ticks.length < 100) {
     return null;
   }
 
 
-  const top =
+  const ranked =
+    analyzeDigits();
+
+
+  const best =
     ranked[0];
 
 
@@ -554,155 +555,39 @@ function selectTarget(ranked) {
     ranked[1];
 
 
-  /*
-    Require the top digit to have
-    meaningful separation.
-
-    Otherwise there is no clear target.
-  */
-
   const separation =
-    top.score - second.score;
-
-
-  if (separation < 0.75) {
-
-    return {
-      target: top,
-      strong: false,
-      separation
-    };
-
-  }
-
-
-  return {
-    target: top,
-    strong: true,
-    separation
-  };
-
-}
-
-
-/* =========================
-   SIGNAL ENGINE
-========================= */
-
-function generateSignal(selection) {
-
-  if (!selection) {
-
-    return {
-      signal: "WAIT",
-      confidence: 0,
-      reason: "Insufficient data."
-    };
-
-  }
-
-
-  const target =
-    selection.target;
+    best.score -
+    second.score;
 
 
   /*
-    Minimum data requirement.
-  */
-
-  if (lastDigits.length < 100) {
-
-    return {
-
-      signal: "WAIT",
-
-      confidence: 0,
-
-      reason:
-        "Collecting at least 100 ticks."
-
-    };
-
-  }
-
-
-  /*
-    Calculate how strongly the target
-    differs from the 10% baseline.
-  */
-
-  const edge =
-    target.f100 - 10;
-
-
-  const longEdge =
-    target.f500 - 10;
-
-
-  const transitionEdge =
-    target.transition - 10;
-
-
-  /*
-    Agreement score.
-
-    We don't want one short burst
-    to produce a signal.
-  */
-
-  let agreement = 0;
-
-
-  if (edge > 1) {
-    agreement++;
-  }
-
-
-  if (longEdge > 0) {
-    agreement++;
-  }
-
-
-  if (transitionEdge > 0) {
-    agreement++;
-  }
-
-
-  if (selection.strong) {
-    agreement++;
-  }
-
-
-  /*
-    MATCHES requires positive evidence.
-
-    Otherwise DIFFERS is the statistical
-    baseline, but we still require enough
-    evidence before displaying it as a signal.
+    Strong MATCH candidate.
   */
 
   if (
-    target.f100 >= 13 &&
-    target.f500 >= 11 &&
-    agreement >= 3
+    best.f100 >= 13 &&
+    best.f500 >= 11 &&
+    best.stable >= 70 &&
+    separation >= 0.75
   ) {
-
-    const confidence =
-      calculateConfidence(
-        target,
-        "MATCHES",
-        agreement
-      );
-
 
     return {
 
-      signal: "MATCHES",
+      type: "MATCHES",
 
-      confidence,
+      digit: best.digit,
 
-      reason:
-        "Target digit is consistently above the 10% baseline."
+      confidence:
+        calculateConfidence(
+          best,
+          separation
+        ),
+
+      validity:
+        calculateValidity(
+          best,
+          separation
+        )
 
     };
 
@@ -710,53 +595,51 @@ function generateSignal(selection) {
 
 
   /*
-    Strong below-baseline target:
-    this supports DIFFERS for that target.
+    Strong DIFFER candidate.
+
+    Here the target digit is
+    consistently below baseline.
   */
 
+  const cold =
+    ranked
+      .slice()
+      .sort(
+        (a, b) =>
+          a.f100 - b.f100
+      )[0];
+
+
   if (
-    target.f100 <= 8.5 &&
-    target.f500 <= 9.5 &&
-    agreement >= 2
+    cold.f100 <= 8.5 &&
+    cold.f500 <= 9.5 &&
+    cold.stable >= 70
   ) {
-
-    const confidence =
-      calculateConfidence(
-        target,
-        "DIFFERS",
-        agreement
-      );
-
 
     return {
 
-      signal: "DIFFERS",
+      type: "DIFFERS",
 
-      confidence,
+      digit: cold.digit,
 
-      reason:
-        "Target digit is consistently below the 10% baseline."
+      confidence:
+        calculateConfidence(
+          cold,
+          separation
+        ),
+
+      validity:
+        calculateValidity(
+          cold,
+          separation
+        )
 
     };
 
   }
 
 
-  return {
-
-    signal: "WAIT",
-
-    confidence:
-      calculateConfidence(
-        target,
-        "WAIT",
-        agreement
-      ),
-
-    reason:
-      "Evidence is not strong or consistent enough."
-
-  };
+  return null;
 
 }
 
@@ -766,59 +649,381 @@ function generateSignal(selection) {
 ========================= */
 
 function calculateConfidence(
-  target,
-  signal,
-  agreement
+  result,
+  separation
 ) {
 
-  if (signal === "WAIT") {
-
-    return Math.min(
-      64,
-      45 + agreement * 4
-    );
-
-  }
+  let value = 50;
 
 
-  let confidence = 50;
-
-
-  const edge100 =
+  value +=
     Math.abs(
-      target.f100 - 10
-    );
+      result.f100 - 10
+    ) * 3;
 
 
-  const edge500 =
+  value +=
     Math.abs(
-      target.f500 - 10
-    );
+      result.f500 - 10
+    ) * 2;
 
 
-  confidence +=
-    edge100 * 3;
+  value +=
+    result.stable * 0.10;
 
 
-  confidence +=
-    edge500 * 2;
+  value +=
+    separation * 2;
 
-
-  confidence +=
-    agreement * 3;
-
-
-  /*
-    Never present the number as
-    mathematical certainty.
-  */
 
   return Math.min(
     89,
     Math.max(
       50,
-      confidence
+      value
     )
+  );
+
+}
+
+
+/* =========================
+   VALIDITY
+========================= */
+
+function calculateValidity(
+  result,
+  separation
+) {
+
+  let seconds =
+    MIN_VALIDITY;
+
+
+  /*
+    Stronger statistical edge
+    gets more time.
+
+    Maximum = 40 seconds.
+  */
+
+  const edge =
+    Math.abs(
+      result.f100 - 10
+    );
+
+
+  seconds +=
+    edge * 3;
+
+
+  seconds +=
+    result.stable * 0.10;
+
+
+  seconds +=
+    separation * 2;
+
+
+  seconds =
+    Math.round(seconds);
+
+
+  return Math.min(
+    MAX_VALIDITY,
+    Math.max(
+      MIN_VALIDITY,
+      seconds
+    )
+  );
+
+}
+
+
+/* =========================
+   START SCAN
+========================= */
+
+function startFreshScan() {
+
+  if (
+    currentSignal ||
+    waiting ||
+    ticks.length < 100
+  ) {
+    return;
+  }
+
+
+  const signal =
+    findSignal();
+
+
+  if (!signal) {
+
+    showWaiting(
+      "SCANNING — NO VALID SETUP"
+    );
+
+
+    /*
+      Re-check after a short period.
+    */
+
+    setTimeout(
+      startFreshScan,
+      3000
+    );
+
+    return;
+  }
+
+
+  activateSignal(signal);
+
+}
+
+
+/* =========================
+   ACTIVATE SIGNAL
+========================= */
+
+function activateSignal(signal) {
+
+  currentSignal =
+    signal;
+
+
+  let remaining =
+    signal.validity;
+
+
+  document.getElementById(
+    "targetDigit"
+  ).textContent =
+    signal.digit;
+
+
+  document.getElementById(
+    "signal"
+  ).textContent =
+    signal.type;
+
+
+  document.getElementById(
+    "confidence"
+  ).textContent =
+    signal.confidence.toFixed(1) +
+    "%";
+
+
+  document.getElementById(
+    "message"
+  ).textContent =
+    "VALID SIGNAL — monitor until expiry";
+
+
+  clearInterval(
+    countdownTimer
+  );
+
+
+  countdownTimer =
+    setInterval(
+      function() {
+
+        remaining--;
+
+
+        document.getElementById(
+          "message"
+        ).textContent =
+          "VALID FOR " +
+          remaining +
+          "s";
+
+
+        if (remaining <= 0) {
+
+          clearInterval(
+            countdownTimer
+          );
+
+
+          expireSignal();
+
+        }
+
+      },
+      1000
+    );
+
+}
+
+
+/* =========================
+   EXPIRE
+========================= */
+
+function expireSignal() {
+
+  currentSignal =
+    null;
+
+
+  document.getElementById(
+    "signal"
+  ).textContent =
+    "EXPIRED";
+
+
+  document.getElementById(
+    "message"
+  ).textContent =
+    "Waiting " +
+    WAIT_TIME +
+    "s before next scan";
+
+
+  waiting = true;
+
+
+  clearTimeout(
+    scanTimer
+  );
+
+
+  scanTimer =
+    setTimeout(
+      function() {
+
+        waiting = false;
+
+        showWaiting(
+          "SCANNING FOR NEW SETUP..."
+        );
+
+
+        startFreshScan();
+
+      },
+      WAIT_TIME * 1000
+    );
+
+}
+
+
+/* =========================
+   WAIT DISPLAY
+========================= */
+
+function showWaiting(text) {
+
+  document.getElementById(
+    "signal"
+  ).textContent =
+    "WAIT";
+
+
+  document.getElementById(
+    "message"
+  ).textContent =
+    text;
+
+}
+
+
+/* =========================
+   DISPLAY
+========================= */
+
+function updateDisplay() {
+
+  if (!ticks.length) {
+    return;
+  }
+
+
+  const digits =
+    ticks.map(
+      item => item.digit
+    );
+
+
+  const counts =
+    Array(10).fill(0);
+
+
+  digits.forEach(function(digit) {
+
+    counts[digit]++;
+
+  });
+
+
+  const total =
+    digits.length;
+
+
+  document.getElementById(
+    "sampleSize"
+  ).textContent =
+    total;
+
+
+  let hot = 0;
+  let cold = 0;
+
+
+  for (
+    let i = 1;
+    i <= 9;
+    i++
+  ) {
+
+    if (
+      counts[i] >
+      counts[hot]
+    ) {
+      hot = i;
+    }
+
+
+    if (
+      counts[i] <
+      counts[cold]
+    ) {
+      cold = i;
+    }
+
+  }
+
+
+  document.getElementById(
+    "hotDigit"
+  ).textContent =
+    hot;
+
+
+  document.getElementById(
+    "coldDigit"
+  ).textContent =
+    cold;
+
+
+  const recent =
+    digits.slice(-40);
+
+
+  document.getElementById(
+    "digitHistory"
+  ).textContent =
+    recent.join(" ");
+
+
+  renderDistribution(
+    counts,
+    total
   );
 
 }
@@ -850,7 +1055,10 @@ function renderDistribution(
 
     const percentage =
       total
-        ? (counts[digit] / total) * 100
+        ? (
+            counts[digit] /
+            total
+          ) * 100
         : 0;
 
 
@@ -874,7 +1082,9 @@ function renderDistribution(
       "%</strong>";
 
 
-    container.appendChild(box);
+    container.appendChild(
+      box
+    );
 
   }
 
@@ -882,280 +1092,19 @@ function renderDistribution(
 
 
 /* =========================
-   MAIN ENGINE
-========================= */
-
-function updateEngine() {
-
-  if (!engineReady) {
-    return;
-  }
-
-
-  if (!lastDigits.length) {
-    return;
-  }
-
-
-  const counts =
-    getCounts(lastDigits);
-
-
-  const total =
-    lastDigits.length;
-
-
-  const ranked =
-    rankDigits();
-
-
-  const selection =
-    selectTarget(ranked);
-
-
-  const result =
-    generateSignal(selection);
-
-
-  const target =
-    selection
-      ? selection.target
-      : null;
-
-
-  /*
-    Distribution
-  */
-
-  renderDistribution(
-    counts,
-    total
-  );
-
-
-  /*
-    Basic statistics
-  */
-
-  document.getElementById(
-    "sampleSize"
-  ).textContent = total;
-
-
-  /*
-    Hot / cold digit
-  */
-
-  let hotDigit = 0;
-  let coldDigit = 0;
-
-
-  for (
-    let i = 1;
-    i <= 9;
-    i++
-  ) {
-
-    if (
-      counts[i] >
-      counts[hotDigit]
-    ) {
-
-      hotDigit = i;
-
-    }
-
-
-    if (
-      counts[i] <
-      counts[coldDigit]
-    ) {
-
-      coldDigit = i;
-
-    }
-
-  }
-
-
-  document.getElementById(
-    "hotDigit"
-  ).textContent = hotDigit;
-
-
-  document.getElementById(
-    "coldDigit"
-  ).textContent = coldDigit;
-
-
-  /*
-    Streak
-  */
-
-  const streak =
-    getStreak(lastDigits);
-
-
-  document.getElementById(
-    "streak"
-  ).textContent =
-    streak.digit === null
-      ? "—"
-      : streak.digit +
-        " × " +
-        streak.count;
-
-
-  /*
-    Recent digits
-  */
-
-  document.getElementById(
-    "digitHistory"
-  ).textContent =
-    lastDigits
-      .slice(-40)
-      .join(" ");
-
-
-  /*
-    Target
-  */
-
-  if (target) {
-
-    document.getElementById(
-      "targetDigit"
-    ).textContent =
-      target.digit;
-
-
-    /*
-      Display MATCH probability
-      based on observed frequency.
-    */
-
-    document.getElementById(
-      "matchesChance"
-    ).textContent =
-      target.f100.toFixed(1) +
-      "%";
-
-
-    /*
-      DIFFERS probability is
-      the complement for that target.
-    */
-
-    document.getElementById(
-      "differsChance"
-    ).textContent =
-      (
-        100 -
-        target.f100
-      ).toFixed(1) +
-      "%";
-
-
-  } else {
-
-    document.getElementById(
-      "targetDigit"
-    ).textContent = "—";
-
-
-    document.getElementById(
-      "matchesChance"
-    ).textContent = "—";
-
-
-    document.getElementById(
-      "differsChance"
-    ).textContent = "—";
-
-  }
-
-
-  /*
-    Signal
-  */
-
-  document.getElementById(
-    "signal"
-  ).textContent =
-    result.signal;
-
-
-  /*
-    Confidence
-  */
-
-  document.getElementById(
-    "confidence"
-  ).textContent =
-    result.confidence.toFixed(1) +
-    "%";
-
-
-  /*
-    Explanation
-  */
-
-  document.getElementById(
-    "message"
-  ).textContent =
-    result.reason;
-
-
-  /*
-    Store current analysis
-    for future backtesting.
-  */
-
-  predictions.push({
-
-    target:
-      target
-        ? target.digit
-        : null,
-
-    signal:
-      result.signal,
-
-    confidence:
-      result.confidence,
-
-    tickCount:
-      lastDigits.length,
-
-    timestamp:
-      Date.now()
-
-  });
-
-
-  /*
-    Keep memory controlled.
-  */
-
-  if (
-    predictions.length > 500
-  ) {
-
-    predictions.shift();
-
-  }
-
-}
-
-
-/* =========================
-   MANUAL ANALYZE BUTTON
+   BUTTON
 ========================= */
 
 function analyzeTrade() {
 
-  updateEngine();
+  if (
+    !currentSignal &&
+    !waiting
+  ) {
+
+    startFreshScan();
+
+  }
 
 }
 
