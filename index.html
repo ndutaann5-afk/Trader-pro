@@ -4,61 +4,95 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trader Pro</title>
-
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <header>
-      <h1>TRADER PRO</h1>
-      <p>Professional Trading Analysis</p>
-    </header>
+  <header>
+    <h1>TRADER PRO</h1>
+    <p>Live Trading Analysis</p>
+    <div id="connection" class="status">Connecting...</div>
+  </header>
 
-    <section class="panel">
-      <h2>Market</h2>
-      <p id="market">Waiting for market data</p>
-    </section>
+  <section class="panel">
+    <h2>Market</h2>
+    <div id="market" class="value">Connecting to Deriv...</div>
+  </section>
 
-    <section class="panel">
-      <h2>Market Bias</h2>
-      <div id="bias" class="value">WAIT</div>
-    </section>
+  <section class="panel">
+    <h2>Market Bias</h2>
+    <div id="bias" class="value">WAIT</div>
+  </section>
 
-    <section class="panel">
-      <h2>Confidence</h2>
-      <div id="confidence" class="value">—</div>
-    </section>
+  <section class="panel">
+    <h2>Confidence</h2>
+    <div id="confidence" class="value">—</div>
+  </section>
 
-    <section class="panel">
-      <h2>Order Block</h2>
-      <div id="orderblock" class="value">Score: — / 5</div>
-    </section>
+  <section class="panel">
+    <h2>Order Block</h2>
+    <div id="orderblock" class="value">Score: — / 5</div>
+  </section>
 
-    <section class="panel">
-      <h2>FVG</h2>
-      <div id="fvg" class="value">Not detected</div>
-    </section>
+  <section class="panel">
+    <h2>FVG</h2>
+    <div id="fvg" class="value">Not detected</div>
+  </section>
 
-    <section class="panel">
-      <h2>Liquidity</h2>
-      <div id="liquidity" class="value">—</div>
-    </section>
+  <section class="panel">
+    <h2>Liquidity</h2>
+    <div id="liquidity" class="value">Waiting for data</div>
+  </section>
 
-    <section class="signal-panel">
-      <h2>Signal</h2>
-      <div id="signal" class="signal">WAIT</div>
-    </section>
+  <section class="digit-panel">
+    <h2>Matches & Differs</h2>
 
-    <button id="analyzeButton" onclick="analyzeTrade()">
-      ANALYZE MARKET
-    </button>
+    <div class="digit-main">
+      <span>Target Digit</span>
+      <strong id="targetDigit">—</strong>
+    </div>
 
-  </div>
+    <div class="stats">
+      <div>
+        <span>Matches</span>
+        <strong id="matchesChance">—</strong>
+      </div>
 
-  <script src="script.js"></script>
+      <div>
+        <span>Differs</span>
+        <strong id="differsChance">—</strong>
+      </div>
+    </div>
+
+    <div class="sample">
+      Sample: <strong id="sampleSize">0</strong> ticks
+    </div>
+
+    <div id="digitMessage" class="message">
+      Collecting live tick data...
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Last Digits</h2>
+    <div id="digitHistory" class="history">—</div>
+  </section>
+
+  <section class="signal-panel">
+    <h2>Signal</h2>
+    <div id="signal" class="signal">WAIT</div>
+  </section>
+
+  <button id="analyzeButton" onclick="analyzeTrade()">
+    ANALYZE MARKET
+  </button>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
-      </html>
+</html>
