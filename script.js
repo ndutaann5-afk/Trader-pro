@@ -1,28 +1,39 @@
 let derivSocket;
-
 let lastDigits = [];
 
 const MAX_TICKS = 100;
+const SYMBOL = "1HZ100V";
 
+function setStatus(message) {
+  document.getElementById("connection").textContent = message;
+}
 
 function connectDeriv() {
 
-  derivSocket = new WebSocket(
-    "wss://ws.binaryws.com/websockets/v3"
-  );
+  setStatus("Connecting...");
+
+  try {
+
+    derivSocket = new WebSocket(
+      "wss://ws.binaryws.com/websockets/v3"
+    );
+
+  } catch (error) {
+
+    setStatus("Connection failed");
+    return;
+
+  }
 
 
-  derivSocket.onopen = function () {
+  derivSocket.onopen = function() {
 
-    document.getElementById("connection").textContent =
-      "● LIVE";
+    setStatus("● LIVE");
 
     derivSocket.send(JSON.stringify({
-
-      ticks: "1HZ100V",
-
-      subscribe: 1
-
+      ticks: SYMBOL,
+      subscribe: 1,
+      req_id: 1
     }));
 
   };
@@ -33,20 +44,36 @@ function connectDeriv() {
     const data = JSON.parse(event.data);
 
 
+    if (data.error) {
+
+      console.error("Deriv error:", data.error);
+
+      setStatus(
+        "Deriv error: " + data.error.message
+      );
+
+      return;
+    }
+
+
     if (data.msg_type === "tick" && data.tick) {
 
       const price = data.tick.quote;
 
-
       document.getElementById("market").textContent =
-        price;
+        SYMBOL + ": " + price;
 
+
+      /*
+        Use Deriv's quote as a string so
+        we preserve the final displayed digit.
+      */
 
       const priceText = String(price);
 
-
-      const digit =
-        Number(priceText.slice(-1));
+      const digit = Number(
+        priceText.slice(-1)
+      );
 
 
       if (!Number.isNaN(digit)) {
@@ -55,9 +82,7 @@ function connectDeriv() {
 
 
         if (lastDigits.length > MAX_TICKS) {
-
           lastDigits.shift();
-
         }
 
 
@@ -72,19 +97,22 @@ function connectDeriv() {
 
   derivSocket.onerror = function() {
 
-    document.getElementById("connection").textContent =
-      "Connection error";
+    console.error("WebSocket error");
+
+    setStatus("Connection error");
 
   };
 
 
   derivSocket.onclose = function() {
 
-    document.getElementById("connection").textContent =
-      "Disconnected";
+    setStatus("Disconnected — reconnecting...");
 
+    setTimeout(function() {
 
-    setTimeout(connectDeriv, 3000);
+      connectDeriv();
+
+    }, 3000);
 
   };
 
@@ -98,8 +126,7 @@ function updateAnalysis() {
   }
 
 
-  const counts =
-    Array(10).fill(0);
+  const counts = Array(10).fill(0);
 
 
   lastDigits.forEach(function(digit) {
@@ -108,10 +135,6 @@ function updateAnalysis() {
 
   });
 
-
-  /*
-    Find the most frequent digit.
-  */
 
   let targetDigit = 0;
 
@@ -156,20 +179,15 @@ function updateAnalysis() {
     lastDigits.slice(-30).join(" ");
 
 
-  /*
-    Display a conservative statistical confidence.
-  */
-
   let confidence = 0;
 
 
   if (lastDigits.length >= 20) {
 
-    confidence =
-      Math.min(
-        95,
-        50 + Math.abs(matches - 10) * 2
-      );
+    confidence = Math.min(
+      95,
+      50 + Math.abs(matches - 10) * 2
+    );
 
   }
 
@@ -189,7 +207,7 @@ function updateAnalysis() {
   } else {
 
     document.getElementById("message").textContent =
-      "Statistical analysis — not a guaranteed prediction.";
+      "Statistical analysis only.";
 
   }
 
@@ -208,17 +226,15 @@ function analyzeTrade() {
   }
 
 
-  const matches =
-    Number(
-      document
-        .getElementById("matchesChance")
-        .textContent
-        .replace("%", "")
-    );
+  const matches = Number(
+    document
+      .getElementById("matchesChance")
+      .textContent
+      .replace("%", "")
+  );
 
 
-  const differs =
-    100 - matches;
+  const differs = 100 - matches;
 
 
   if (differs > matches) {
