@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -15,12 +16,14 @@
     rel="stylesheet"
     href="style.css"
   >
+
 </head>
 
 
 <body>
 
   <main class="app">
+
 
     <!-- HEADER -->
 
@@ -36,12 +39,14 @@
 
       <button
         class="menu-button"
+        type="button"
         aria-label="Menu"
       >
         ☰
       </button>
 
     </header>
+
 
 
     <!-- LIVE DASHBOARD -->
@@ -53,57 +58,62 @@
         <h2>Live Dashboard</h2>
 
         <p>
-          Pick a market and strategy,
+          Choose a market and contract type,
           then start analysis.
         </p>
 
       </div>
 
 
-      <!-- CONTRACT -->
+
+      <!-- CONTRACT TYPE -->
 
       <div class="field">
 
-        <label>
+        <label for="contractSelect">
           CONTRACT TYPE
         </label>
 
-        <div class="select-box">
+        <select
+          id="contractSelect"
+          class="market-select"
+        >
 
-          <span>
+          <option value="MATCHES">
             Matches
-          </span>
+          </option>
 
-          <span>
-            ▼
-          </span>
+          <option value="DIFFERS">
+            Differs
+          </option>
 
-        </div>
+        </select>
 
       </div>
+
 
 
       <!-- MARKET -->
 
       <div class="field">
 
-        <label>
+        <label for="marketSelect">
           MARKET
         </label>
 
-        <div class="select-box">
+        <select
+          id="marketSelect"
+          class="market-select"
+        >
 
-          <span>
-            Volatility 100 (1s) Index
-          </span>
+          <option value="">
+            Loading markets...
+          </option>
 
-          <span>
-            ▼
-          </span>
-
-        </div>
+        </select>
 
       </div>
+
 
 
       <!-- LIVE PRICE -->
@@ -127,11 +137,13 @@
       </div>
 
 
+
       <!-- ANALYSIS BUTTON -->
 
       <button
         id="analysisButton"
         class="analysis-button"
+        type="button"
         onclick="toggleAnalysis()"
       >
         START ANALYSIS
@@ -140,9 +152,11 @@
     </section>
 
 
+
     <!-- ANALYZER -->
 
     <section class="analyzer">
+
 
       <div class="section-heading">
 
@@ -165,6 +179,7 @@
       </div>
 
 
+
       <!-- TREND -->
 
       <div class="analysis-row">
@@ -173,13 +188,12 @@
           Current Trend
         </span>
 
-        <strong
-          id="trend"
-        >
+        <strong id="trend">
           Waiting
         </strong>
 
       </div>
+
 
 
       <!-- STRENGTH -->
@@ -190,13 +204,12 @@
           Signal Strength
         </span>
 
-        <strong
-          id="signalStrength"
-        >
+        <strong id="signalStrength">
           Waiting
         </strong>
 
       </div>
+
 
 
       <!-- PATTERN -->
@@ -213,6 +226,7 @@
         </p>
 
       </div>
+
 
 
       <!-- TARGET -->
@@ -233,6 +247,7 @@
       </div>
 
 
+
       <!-- MATCH / DIFFER -->
 
       <div class="contract-buttons">
@@ -246,13 +261,12 @@
             MATCHES
           </span>
 
-          <strong
-            id="matchesChance"
-          >
+          <strong id="matchesChance">
             —
           </strong>
 
         </div>
+
 
 
         <div
@@ -264,15 +278,14 @@
             DIFFERS
           </span>
 
-          <strong
-            id="differsChance"
-          >
+          <strong id="differsChance">
             —
           </strong>
 
         </div>
 
       </div>
+
 
 
       <!-- CONFIDENCE -->
@@ -283,13 +296,12 @@
           CONFIDENCE
         </span>
 
-        <strong
-          id="confidence"
-        >
+        <strong id="confidence">
           —
         </strong>
 
       </div>
+
 
 
       <!-- VALIDITY -->
@@ -300,16 +312,15 @@
           SIGNAL VALID FOR
         </span>
 
-        <strong
-          id="validity"
-        >
+        <strong id="validity">
           —
         </strong>
 
       </div>
 
 
-      <!-- STATUS -->
+
+      <!-- SIGNAL -->
 
       <div
         id="signal"
@@ -317,6 +328,7 @@
       >
         WAIT
       </div>
+
 
 
       <div
@@ -330,16 +342,23 @@
     </section>
 
 
+
     <!-- MARKET DATA -->
 
     <section class="data-section">
 
       <div class="data-heading">
-        <h2>Market Data</h2>
+
+        <h2>
+          Market Data
+        </h2>
+
       </div>
 
 
+
       <div class="stat-grid">
+
 
         <div class="stat-card">
 
@@ -347,13 +366,12 @@
             SAMPLE SIZE
           </span>
 
-          <strong
-            id="sampleSize"
-          >
+          <strong id="sampleSize">
             0
           </strong>
 
         </div>
+
 
 
         <div class="stat-card">
@@ -362,13 +380,12 @@
             HOT DIGIT
           </span>
 
-          <strong
-            id="hotDigit"
-          >
+          <strong id="hotDigit">
             —
           </strong>
 
         </div>
+
 
 
         <div class="stat-card">
@@ -377,13 +394,12 @@
             COLD DIGIT
           </span>
 
-          <strong
-            id="coldDigit"
-          >
+          <strong id="coldDigit">
             —
           </strong>
 
         </div>
+
 
 
         <div class="stat-card">
@@ -392,24 +408,26 @@
             CURRENT STREAK
           </span>
 
-          <strong
-            id="streak"
-          >
+          <strong id="streak">
             —
           </strong>
 
         </div>
+
 
       </div>
 
     </section>
 
 
+
     <!-- DIGIT DISTRIBUTION -->
 
     <section class="data-section">
 
-      <h2>Digit Distribution</h2>
+      <h2>
+        Digit Distribution
+      </h2>
 
       <div
         id="digitDistribution"
@@ -421,11 +439,14 @@
     </section>
 
 
+
     <!-- RECENT DIGITS -->
 
     <section class="data-section">
 
-      <h2>Recent Digits</h2>
+      <h2>
+        Recent Digits
+      </h2>
 
       <div
         id="digitHistory"
