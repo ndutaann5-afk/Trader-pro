@@ -23,14 +23,25 @@ header {
 header h1 {
   font-size: 32px;
   margin: 10px 0 5px;
+  letter-spacing: 2px;
 }
 
 header p {
   color: #8b95a5;
-  margin: 0;
+  margin: 0 0 10px;
 }
 
-.panel {
+.status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: #111722;
+  color: #8b95a5;
+  font-size: 12px;
+}
+
+.panel,
+.digit-panel {
   background: #111722;
   border: 1px solid #202938;
   border-radius: 14px;
@@ -39,6 +50,7 @@ header p {
 }
 
 .panel h2,
+.digit-panel h2,
 .signal-panel h2 {
   margin: 0 0 10px;
   font-size: 15px;
@@ -47,8 +59,69 @@ header p {
 }
 
 .value {
-  font-size: 22px;
+  font-size: 21px;
   font-weight: bold;
+}
+
+.digit-main {
+  text-align: center;
+  padding: 10px 0 20px;
+}
+
+.digit-main span {
+  display: block;
+  color: #8b95a5;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.digit-main strong {
+  font-size: 48px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stats div {
+  background: #080b10;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+}
+
+.stats span {
+  display: block;
+  color: #8b95a5;
+  font-size: 12px;
+  margin-bottom: 7px;
+}
+
+.stats strong {
+  font-size: 24px;
+}
+
+.sample {
+  text-align: center;
+  margin-top: 15px;
+  color: #8b95a5;
+  font-size: 13px;
+}
+
+.message {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #8b95a5;
+}
+
+.history {
+  word-break: break-all;
+  line-height: 1.8;
+  font-size: 17px;
+  letter-spacing: 3px;
 }
 
 .signal-panel {
@@ -74,4 +147,8 @@ button {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.98);
 }
