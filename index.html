@@ -4,10 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trader Pro</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>Trader Pro</h1>
-  <p>Trading analysis platform</p>
+
+  <div class="app">
+
+    <header>
+      <h1>TRADER PRO</h1>
+      <p>Professional Trading Analysis</p>
+    </header>
+
+    <section class="panel">
+      <h2>Market</h2>
+      <p id="market">Waiting for market data</p>
+    </section>
+
+    <section class="panel">
+      <h2>Market Bias</h2>
+      <div id="bias" class="value">WAIT</div>
+    </section>
+
+    <section class="panel">
+      <h2>Confidence</h2>
+      <div id="confidence" class="value">—</div>
+    </section>
+
+    <section class="panel">
+      <h2>Order Block</h2>
+      <div id="orderblock" class="value">Score: — / 5</div>
+    </section>
+
+    <section class="panel">
+      <h2>FVG</h2>
+      <div id="fvg" class="value">Not detected</div>
+    </section>
+
+    <section class="panel">
+      <h2>Liquidity</h2>
+      <div id="liquidity" class="value">—</div>
+    </section>
+
+    <section class="signal-panel">
+      <h2>Signal</h2>
+      <div id="signal" class="signal">WAIT</div>
+    </section>
+
+    <button id="analyzeButton" onclick="analyzeTrade()">
+      ANALYZE MARKET
+    </button>
+
+  </div>
+
+  <script src="script.js"></script>
+
 </body>
-</html>
+      </html>
