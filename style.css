@@ -5,7 +5,7 @@
 body {
   margin: 0;
   background: #080b10;
-  color: #ffffff;
+  color: white;
   font-family: Arial, sans-serif;
 }
 
@@ -21,19 +21,19 @@ header {
 }
 
 header h1 {
-  font-size: 32px;
   margin: 10px 0 5px;
+  font-size: 30px;
   letter-spacing: 2px;
 }
 
 header p {
-  color: #8b95a5;
   margin: 0 0 10px;
+  color: #8b95a5;
 }
 
 .status {
   display: inline-block;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 20px;
   background: #111722;
   color: #8b95a5;
@@ -46,49 +46,50 @@ header p {
   border: 1px solid #202938;
   border-radius: 14px;
   padding: 18px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .panel h2,
 .digit-panel h2,
 .signal-panel h2 {
-  margin: 0 0 10px;
-  font-size: 15px;
+  margin: 0 0 15px;
+  font-size: 14px;
   color: #8b95a5;
   text-transform: uppercase;
 }
 
 .value {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: bold;
 }
 
-.digit-main {
+.target {
   text-align: center;
-  padding: 10px 0 20px;
+  padding: 10px 0 25px;
 }
 
-.digit-main span {
+.target span {
   display: block;
   color: #8b95a5;
   font-size: 13px;
-  margin-bottom: 5px;
 }
 
-.digit-main strong {
-  font-size: 48px;
+.target strong {
+  display: block;
+  font-size: 55px;
+  margin-top: 5px;
 }
 
 .stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
 .stats div {
   background: #080b10;
-  border-radius: 10px;
-  padding: 15px;
+  border-radius: 12px;
+  padding: 18px;
   text-align: center;
 }
 
@@ -96,44 +97,49 @@ header p {
   display: block;
   color: #8b95a5;
   font-size: 12px;
-  margin-bottom: 7px;
+  margin-bottom: 8px;
 }
 
 .stats strong {
-  font-size: 24px;
+  font-size: 25px;
 }
 
 .sample {
   text-align: center;
-  margin-top: 15px;
   color: #8b95a5;
-  font-size: 13px;
+  margin-top: 18px;
+}
+
+.confidence {
+  text-align: center;
+  font-size: 38px;
+  font-weight: bold;
 }
 
 .message {
   text-align: center;
-  margin-top: 15px;
-  font-size: 13px;
   color: #8b95a5;
+  font-size: 12px;
+  margin-top: 10px;
 }
 
 .history {
+  line-height: 2;
   word-break: break-all;
-  line-height: 1.8;
+  letter-spacing: 4px;
   font-size: 17px;
-  letter-spacing: 3px;
 }
 
 .signal-panel {
   background: #151c27;
   border-radius: 14px;
-  padding: 22px;
+  padding: 25px;
   margin: 18px 0;
   text-align: center;
 }
 
 .signal {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: bold;
 }
 
@@ -142,13 +148,8 @@ button {
   padding: 17px;
   border: none;
   border-radius: 12px;
-  background: #ffffff;
+  background: white;
   color: #080b10;
   font-size: 16px;
   font-weight: bold;
-  cursor: pointer;
-}
-
-button:active {
-  transform: scale(0.98);
 }
