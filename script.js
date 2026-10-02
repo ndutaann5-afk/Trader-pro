@@ -1,7 +1,43 @@
-function analyzeTrade() {
-  document.getElementById("market").textContent =
-    "Analysis ready";
+let derivSocket;
 
+function connectDeriv() {
+  derivSocket = new WebSocket(
+    "wss://ws.binaryws.com/websockets/v3"
+  );
+
+  derivSocket.onopen = function () {
+    document.getElementById("market").textContent =
+      "Connected to Deriv";
+
+    derivSocket.send(JSON.stringify({
+      ticks: "1HZ100V",
+      subscribe: 1
+    }));
+  };
+
+  derivSocket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+
+    if (data.msg_type === "tick" && data.tick) {
+      const price = data.tick.quote;
+
+      document.getElementById("market").textContent =
+        "Deriv 1HZ100V: " + price;
+    }
+  };
+
+  derivSocket.onerror = function () {
+    document.getElementById("market").textContent =
+      "Deriv connection error";
+  };
+
+  derivSocket.onclose = function () {
+    document.getElementById("market").textContent =
+      "Deriv disconnected";
+  };
+}
+
+function analyzeTrade() {
   document.getElementById("bias").textContent =
     "WAIT";
 
@@ -15,8 +51,10 @@ function analyzeTrade() {
     "Not detected";
 
   document.getElementById("liquidity").textContent =
-    "Waiting for data";
+    "Waiting for analysis";
 
   document.getElementById("signal").textContent =
     "WAIT";
 }
+
+connectDeriv();
