@@ -1,114 +1,447 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deriv Matches & Differs Analyzer</title>
-  <link rel="stylesheet" href="style.css">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Trader Pro</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 </head>
+
 
 <body>
 
-<div class="app">
+  <main class="app">
 
-  <header>
-    <h1>DERIV ANALYZER</h1>
-    <p>Matches & Differs</p>
-    <div id="connection" class="status">Connecting...</div>
-  </header>
+    <!-- HEADER -->
 
-  <section class="panel">
-    <h2>Live Market</h2>
-    <div id="market" class="value">Connecting...</div>
-  </section>
-
-  <section class="panel target-panel">
-    <h2>Current Analysis</h2>
-
-    <div class="target">
-      <span>Target Digit</span>
-      <strong id="targetDigit">—</strong>
-    </div>
-
-    <div class="stats">
+    <header class="header">
 
       <div>
-        <span>MATCHES</span>
-        <strong id="matchesChance">—</strong>
+
+        <h1>Trader Pro</h1>
+
+        <p>Expert Market Analysis</p>
+
       </div>
 
-      <div>
-        <span>DIFFERS</span>
-        <strong id="differsChance">—</strong>
+      <button
+        class="menu-button"
+        aria-label="Menu"
+      >
+        ☰
+      </button>
+
+    </header>
+
+
+    <!-- LIVE DASHBOARD -->
+
+    <section class="dashboard">
+
+      <div class="dashboard-title">
+
+        <h2>Live Dashboard</h2>
+
+        <p>
+          Pick a market and strategy,
+          then start analysis.
+        </p>
+
       </div>
 
-    </div>
 
-  </section>
+      <!-- CONTRACT -->
 
-  <section class="panel">
-    <h2>Confidence</h2>
+      <div class="field">
 
-    <div id="confidence" class="confidence">
-      —
-    </div>
+        <label>
+          CONTRACT TYPE
+        </label>
 
-    <div id="signal" class="signal">
-      WAIT
-    </div>
+        <div class="select-box">
 
-    <div id="message" class="message">
-      Collecting data...
-    </div>
-  </section>
+          <span>
+            Matches
+          </span>
 
-  <section class="panel">
-    <h2>Digit Distribution</h2>
+          <span>
+            ▼
+          </span>
 
-    <div id="digitDistribution" class="distribution">
-      Loading...
-    </div>
-  </section>
+        </div>
 
-  <section class="panel">
-    <h2>Statistics</h2>
+      </div>
 
-    <div class="stat-row">
-      <span>Sample Size</span>
-      <strong id="sampleSize">0</strong>
-    </div>
 
-    <div class="stat-row">
-      <span>Hot Digit</span>
-      <strong id="hotDigit">—</strong>
-    </div>
+      <!-- MARKET -->
 
-    <div class="stat-row">
-      <span>Cold Digit</span>
-      <strong id="coldDigit">—</strong>
-    </div>
+      <div class="field">
 
-    <div class="stat-row">
-      <span>Current Streak</span>
-      <strong id="streak">—</strong>
-    </div>
-  </section>
+        <label>
+          MARKET
+        </label>
 
-  <section class="panel">
-    <h2>Recent Digits</h2>
+        <div class="select-box">
 
-    <div id="digitHistory" class="history">
-      —
-    </div>
-  </section>
+          <span>
+            Volatility 100 (1s) Index
+          </span>
 
-  <button onclick="analyzeTrade()">
-    ANALYZE
-  </button>
+          <span>
+            ▼
+          </span>
 
-</div>
+        </div>
 
-<script src="script.js"></script>
+      </div>
+
+
+      <!-- LIVE PRICE -->
+
+      <div class="live-price">
+
+        <div
+          id="market"
+          class="price"
+        >
+          Connecting...
+        </div>
+
+        <div
+          id="connection"
+          class="connection"
+        >
+          Connecting to live data...
+        </div>
+
+      </div>
+
+
+      <!-- ANALYSIS BUTTON -->
+
+      <button
+        id="analysisButton"
+        class="analysis-button"
+        onclick="toggleAnalysis()"
+      >
+        START ANALYSIS
+      </button>
+
+    </section>
+
+
+    <!-- ANALYZER -->
+
+    <section class="analyzer">
+
+      <div class="section-heading">
+
+        <span class="ai-icon">
+          ✦
+        </span>
+
+        <div>
+
+          <h2>
+            AI Market Analyzer
+          </h2>
+
+          <p>
+            Live statistical analysis
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- TREND -->
+
+      <div class="analysis-row">
+
+        <span>
+          Current Trend
+        </span>
+
+        <strong
+          id="trend"
+        >
+          Waiting
+        </strong>
+
+      </div>
+
+
+      <!-- STRENGTH -->
+
+      <div class="analysis-row">
+
+        <span>
+          Signal Strength
+        </span>
+
+        <strong
+          id="signalStrength"
+        >
+          Waiting
+        </strong>
+
+      </div>
+
+
+      <!-- PATTERN -->
+
+      <div class="pattern">
+
+        <span>
+          Pattern Detected
+        </span>
+
+        <p id="pattern">
+          Waiting for sufficient
+          live market data.
+        </p>
+
+      </div>
+
+
+      <!-- TARGET -->
+
+      <div class="target-section">
+
+        <span class="target-label">
+          TARGET DIGIT
+        </span>
+
+        <div
+          id="targetDigit"
+          class="target-digit"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <!-- MATCH / DIFFER -->
+
+      <div class="contract-buttons">
+
+        <div
+          id="matchesBox"
+          class="contract-box"
+        >
+
+          <span>
+            MATCHES
+          </span>
+
+          <strong
+            id="matchesChance"
+          >
+            —
+          </strong>
+
+        </div>
+
+
+        <div
+          id="differsBox"
+          class="contract-box"
+        >
+
+          <span>
+            DIFFERS
+          </span>
+
+          <strong
+            id="differsChance"
+          >
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONFIDENCE -->
+
+      <div class="confidence-section">
+
+        <span>
+          CONFIDENCE
+        </span>
+
+        <strong
+          id="confidence"
+        >
+          —
+        </strong>
+
+      </div>
+
+
+      <!-- VALIDITY -->
+
+      <div class="validity">
+
+        <span>
+          SIGNAL VALID FOR
+        </span>
+
+        <strong
+          id="validity"
+        >
+          —
+        </strong>
+
+      </div>
+
+
+      <!-- STATUS -->
+
+      <div
+        id="signal"
+        class="signal-status"
+      >
+        WAIT
+      </div>
+
+
+      <div
+        id="message"
+        class="message"
+      >
+        Connect to live data
+        to begin analysis.
+      </div>
+
+    </section>
+
+
+    <!-- MARKET DATA -->
+
+    <section class="data-section">
+
+      <div class="data-heading">
+        <h2>Market Data</h2>
+      </div>
+
+
+      <div class="stat-grid">
+
+        <div class="stat-card">
+
+          <span>
+            SAMPLE SIZE
+          </span>
+
+          <strong
+            id="sampleSize"
+          >
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>
+            HOT DIGIT
+          </span>
+
+          <strong
+            id="hotDigit"
+          >
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>
+            COLD DIGIT
+          </span>
+
+          <strong
+            id="coldDigit"
+          >
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <span>
+            CURRENT STREAK
+          </span>
+
+          <strong
+            id="streak"
+          >
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- DIGIT DISTRIBUTION -->
+
+    <section class="data-section">
+
+      <h2>Digit Distribution</h2>
+
+      <div
+        id="digitDistribution"
+        class="distribution"
+      >
+        Waiting for data...
+      </div>
+
+    </section>
+
+
+    <!-- RECENT DIGITS -->
+
+    <section class="data-section">
+
+      <h2>Recent Digits</h2>
+
+      <div
+        id="digitHistory"
+        class="digit-history"
+      >
+        —
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <script src="script.js"></script>
 
 </body>
+
 </html>
