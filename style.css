@@ -5,7 +5,7 @@
 body {
   margin: 0;
   background: #080b10;
-  color: white;
+  color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
@@ -40,8 +40,7 @@ header p {
   font-size: 12px;
 }
 
-.panel,
-.digit-panel {
+.panel {
   background: #111722;
   border: 1px solid #202938;
   border-radius: 14px;
@@ -49,9 +48,7 @@ header p {
   margin-bottom: 14px;
 }
 
-.panel h2,
-.digit-panel h2,
-.signal-panel h2 {
+.panel h2 {
   margin: 0 0 15px;
   font-size: 14px;
   color: #8b95a5;
@@ -59,13 +56,13 @@ header p {
 }
 
 .value {
-  font-size: 22px;
+  font-size: 21px;
   font-weight: bold;
 }
 
 .target {
   text-align: center;
-  padding: 10px 0 25px;
+  padding: 5px 0 20px;
 }
 
 .target span {
@@ -104,15 +101,16 @@ header p {
   font-size: 25px;
 }
 
-.sample {
-  text-align: center;
-  color: #8b95a5;
-  margin-top: 18px;
-}
-
 .confidence {
   text-align: center;
   font-size: 38px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.signal {
+  text-align: center;
+  font-size: 28px;
   font-weight: bold;
 }
 
@@ -123,6 +121,46 @@ header p {
   margin-top: 10px;
 }
 
+.distribution {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.digit-box {
+  background: #080b10;
+  border-radius: 9px;
+  padding: 10px 5px;
+  text-align: center;
+}
+
+.digit-box span {
+  display: block;
+  color: #8b95a5;
+  font-size: 12px;
+}
+
+.digit-box strong {
+  display: block;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #202938;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-row span {
+  color: #8b95a5;
+}
+
 .history {
   line-height: 2;
   word-break: break-all;
@@ -130,26 +168,14 @@ header p {
   font-size: 17px;
 }
 
-.signal-panel {
-  background: #151c27;
-  border-radius: 14px;
-  padding: 25px;
-  margin: 18px 0;
-  text-align: center;
-}
-
-.signal {
-  font-size: 32px;
-  font-weight: bold;
-}
-
 button {
   width: 100%;
   padding: 17px;
   border: none;
   border-radius: 12px;
-  background: white;
+  background: #ffffff;
   color: #080b10;
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 20px;
 }
