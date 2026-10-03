@@ -1,730 +1,502 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Trader Pro — Matches Edge</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trader Pro</title>
 
-<style>
-*{box-sizing:border-box}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body{
-  margin:0;
-  background:#06090d;
-  color:#f5f7fa;
-  font-family:Arial,sans-serif
-}
+    body {
+      margin: 0;
+      background: #080b10;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
 
-.app{
-  max-width:760px;
-  margin:auto;
-  padding:16px 12px 40px
-}
+    .app {
+      max-width: 700px;
+      margin: auto;
+      padding: 18px;
+    }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px
-}
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
 
-.logo{
-  font-size:24px;
-  font-weight:900
-}
+    .subtitle {
+      color: #8d98a8;
+      margin-top: 5px;
+      margin-bottom: 20px;
+    }
 
-.logo span{color:#19d681}
+    .card {
+      background: #11161e;
+      border: 1px solid #252c36;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
 
-.status{
-  font-size:11px;
-  padding:7px 10px;
-  border-radius:20px;
-  background:#141a22;
-  color:#9da9b7
-}
+    label {
+      display: block;
+      color: #9ca8b8;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
 
-.card{
-  background:#10151c;
-  border:1px solid #252e39;
-  border-radius:15px;
-  padding:15px;
-  margin-bottom:12px
-}
+    select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 9px;
+      border: 1px solid #303846;
+      background: #080b10;
+      color: white;
+      font-size: 15px;
+    }
 
-.label{
-  color:#8793a2;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  margin-bottom:8px
-}
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #7ee787;
+      font-size: 14px;
+    }
 
-select{
-  width:100%;
-  padding:14px;
-  border-radius:10px;
-  border:1px solid #303a46;
-  background:#080c11;
-  color:#fff;
-  font-size:15px
-}
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #7ee787;
+    }
 
-.price{
-  font-size:25px;
-  font-weight:900;
-  margin-top:5px;
-  word-break:break-all
-}
+    .main-result {
+      text-align: center;
+      padding: 25px 10px;
+    }
 
-.center{text-align:center}
+    .small-title {
+      color: #8995a5;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
 
-.timer{
-  font-size:42px;
-  font-weight:900;
-  margin:5px 0
-}
+    .digit {
+      font-size: 76px;
+      font-weight: bold;
+      margin: 8px 0;
+    }
 
-.timer.live{color:#19d681}
+    .edge {
+      font-size: 17px;
+      font-weight: bold;
+    }
 
-.timer.done{color:#fff}
+    .confidence {
+      margin-top: 7px;
+      color: #b8c2cf;
+    }
 
-.big-digit{
-  font-size:82px;
-  font-weight:900;
-  margin:0
-}
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
 
-.result-label{
-  color:#19d681;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:1px
-}
+    .stat {
+      background: #0b0f15;
+      border-radius: 10px;
+      padding: 13px;
+    }
 
-.confidence{
-  font-size:35px;
-  font-weight:900;
-  margin:5px 0 12px
-}
+    .stat-name {
+      color: #8995a5;
+      font-size: 12px;
+    }
 
-.edge{
-  font-size:20px;
-  font-weight:900;
-  margin-bottom:10px
-}
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
 
-.insight{
-  color:#c1cad5;
-  line-height:1.6;
-  font-size:14px
-}
+    .timer {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin: 8px 0 15px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px
-}
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
 
-.stat{
-  background:#080c11;
-  border-radius:10px;
-  padding:12px
-}
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #ffffff;
+      color: #000000;
+    }
 
-.stat-title{
-  color:#7e8998;
-  font-size:10px;
-  text-transform:uppercase
-}
+    button:active {
+      transform: scale(0.98);
+    }
 
-.stat-value{
-  font-size:20px;
-  font-weight:900;
-  margin-top:5px
-}
+    button.secondary {
+      background: #252c36;
+      color: white;
+    }
 
-.digits{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:7px
-}
+    button:disabled {
+      opacity: 0.45;
+    }
 
-.digit{
-  background:#080c11;
-  border:1px solid #27313c;
-  border-radius:9px;
-  padding:10px 3px;
-  text-align:center
-}
+    .feed {
+      max-height: 180px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 13px;
+      color: #aeb8c6;
+    }
 
-.digit strong{
-  display:block;
-  font-size:18px
-}
+    .feed div {
+      padding: 5px 0;
+      border-bottom: 1px solid #1c222b;
+    }
 
-.digit small{
-  color:#7f8a99;
-  font-size:10px
-}
+    .digits {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
+      margin-top: 10px;
+    }
 
-.digit.selected{
-  border-color:#19d681
-}
+    .digit-box {
+      background: #0b0f15;
+      border-radius: 6px;
+      text-align: center;
+      padding: 8px 2px;
+      font-size: 12px;
+    }
 
-.tickfeed{
-  max-height:200px;
-  overflow:auto;
-  font-family:monospace;
-  color:#9ca8b5;
-  font-size:12px;
-  line-height:1.7
-}
+    .digit-box strong {
+      display: block;
+      font-size: 14px;
+      margin-top: 3px;
+    }
 
-.error{
-  display:none;
-  background:#291116;
-  border:1px solid #74303d;
-  color:#ff9ba7;
-  padding:11px;
-  border-radius:9px;
-  margin-top:10px;
-  font-size:12px;
-  line-height:1.5;
-  word-break:break-word
-}
+    .insight {
+      color: #b9c3d0;
+      line-height: 1.5;
+      font-size: 14px;
+    }
 
-.buttons{
-  display:flex;
-  gap:8px
-}
-
-button{
-  flex:1;
-  border:0;
-  border-radius:10px;
-  padding:15px 6px;
-  font-weight:900;
-  font-size:13px
-}
-
-#start{
-  background:#19d681;
-  color:#03130b
-}
-
-#next{
-  background:#fff;
-  color:#05080c
-}
-
-#stop{
-  background:#252e38;
-  color:#fff
-}
-
-button:disabled{
-  opacity:.4
-}
-
-.note{
-  color:#6f7b89;
-  font-size:10px;
-  line-height:1.5;
-  margin-top:10px
-}
-</style>
+    .error {
+      color: #ff7b72;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="app">
 
-<div class="header">
-  <div class="logo">TRADER <span>PRO</span></div>
-  <div id="status" class="status">● READY</div>
-</div>
+  <h1>TRADER PRO</h1>
+  <div class="subtitle">Deriv Volatility Matches Edge Engine</div>
 
-
-<!-- MARKET -->
-
-<div class="card">
-
-  <div class="label">Volatility Index</div>
-
-  <select id="market">
-    <option>Loading Volatility...</option>
-  </select>
-
-  <div class="label" style="margin-top:15px">
-    Live Price
-  </div>
-
-  <div id="price" class="price">—</div>
-
-  <div id="error" class="error"></div>
-
-</div>
-
-
-<!-- WINDOW -->
-
-<div class="card center">
-
-  <div class="label">Analysis Window</div>
-
-  <select id="window">
-    <option value="30">30 Seconds</option>
-    <option value="60" selected>1 Minute</option>
-    <option value="120">2 Minutes</option>
-    <option value="300">5 Minutes</option>
-  </select>
-
-  <div class="label" style="margin-top:16px">
-    Time Remaining
-  </div>
-
-  <div id="timer" class="timer">01:00</div>
-
-  <div id="windowState">
-    Waiting to start
-  </div>
-
-</div>
-
-
-<!-- MAIN MATCHES RESULT -->
-
-<div class="card center">
-
-  <div class="result-label">
-    MATCHES CANDIDATE
-  </div>
-
-  <div class="label" style="margin-top:10px">
-    Last Digit
-  </div>
-
-  <div id="candidate" class="big-digit">—</div>
-
-  <div id="resultState">
-    No completed analysis
-  </div>
-
-</div>
-
-
-<!-- EDGE -->
-
-<div class="card">
-
-  <div class="label">
-    Matches Edge Engine
-  </div>
-
-  <div id="edge" class="edge">
-    WAITING
-  </div>
-
-  <div class="label">
-    Confidence
-  </div>
-
-  <div id="confidence" class="confidence">
-    —
-  </div>
-
-  <div id="insight" class="insight">
-    Start an analysis window to evaluate the
-    last-digit structure of the selected
-    Volatility Index.
-  </div>
-
-</div>
-
-
-<!-- MATCHES / DIFFERS -->
-
-<div class="card">
-
-  <div class="label">
-    Historical Sample
-  </div>
-
-  <div class="grid">
-
-    <div class="stat">
-      <div class="stat-title">Candidate Matches</div>
-      <div id="matches" class="stat-value">—</div>
+  <div class="card">
+    <div class="status">
+      <span class="dot" id="statusDot"></span>
+      <span id="status">Connecting to Deriv...</span>
     </div>
+  </div>
 
-    <div class="stat">
-      <div class="stat-title">Candidate Differs</div>
-      <div id="differs" class="stat-value">—</div>
-    </div>
+  <div class="card">
 
-    <div class="stat">
-      <div class="stat-title">Sample Size</div>
-      <div id="sample" class="stat-value">0</div>
-    </div>
+    <label>VOLATILITY INDEX</label>
 
-    <div class="stat">
-      <div class="stat-title">Recent Agreement</div>
-      <div id="agreement" class="stat-value">—</div>
+    <select id="market">
+      <option value="1HZ100V">Volatility 100 (1s)</option>
+      <option value="1HZ75V">Volatility 75 (1s)</option>
+      <option value="1HZ50V">Volatility 50 (1s)</option>
+      <option value="1HZ25V">Volatility 25 (1s)</option>
+      <option value="1HZ10V">Volatility 10 (1s)</option>
+      <option value="R_100">Volatility 100</option>
+      <option value="R_75">Volatility 75</option>
+      <option value="R_50">Volatility 50</option>
+      <option value="R_25">Volatility 25</option>
+      <option value="R_10">Volatility 10</option>
+    </select>
+
+  </div>
+
+  <div class="card">
+
+    <label>ANALYSIS WINDOW</label>
+
+    <select id="window">
+      <option value="30000">30 Seconds</option>
+      <option value="60000" selected>1 Minute</option>
+      <option value="120000">2 Minutes</option>
+      <option value="300000">5 Minutes</option>
+    </select>
+
+    <div class="timer" id="timer">01:00</div>
+
+    <div class="buttons">
+      <button id="startBtn">START</button>
+      <button id="nextBtn" class="secondary" disabled>NEXT ANALYSIS</button>
     </div>
 
   </div>
 
-  <div class="note">
-    Matches/Differs figures describe the completed
-    sample. They are not a guarantee of the next tick.
+  <div class="card main-result">
+
+    <div class="small-title">MATCHES CANDIDATE</div>
+
+    <div class="digit" id="candidate">—</div>
+
+    <div class="edge" id="edge">WAITING</div>
+
+    <div class="confidence">
+      Confidence: <span id="confidence">—</span>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="grid">
+
+      <div class="stat">
+        <div class="stat-name">TICKS</div>
+        <div class="stat-value" id="sample">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-name">MATCHES RATE</div>
+        <div class="stat-value" id="matches">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-name">DIFFERS RATE</div>
+        <div class="stat-value" id="differs">—</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-name">EDGE GAP</div>
+        <div class="stat-value" id="gap">—</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="small-title">DIGIT DISTRIBUTION</div>
+
+    <div class="digits" id="digits"></div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="small-title">AI / STATISTICAL INSIGHT</div>
+
+    <p class="insight" id="insight">
+      Waiting for enough live Volatility ticks.
+    </p>
+
+  </div>
+
+  <div class="card">
+
+    <div class="small-title">LIVE TICK FEED</div>
+
+    <div class="feed" id="feed"></div>
+
   </div>
 
 </div>
-
-
-<!-- DIGIT DISTRIBUTION -->
-
-<div class="card">
-
-  <div class="label">
-    Digit Distribution
-  </div>
-
-  <div id="digits" class="digits"></div>
-
-</div>
-
-
-<!-- LIVE FEED -->
-
-<div class="card">
-
-  <div class="label">
-    Live Volatility Tick Feed
-  </div>
-
-  <div id="feed" class="tickfeed">
-    Waiting for ticks...
-  </div>
-
-</div>
-
-
-<!-- CONTROLS -->
-
-<div class="buttons">
-
-  <button id="start">
-    START
-  </button>
-
-  <button id="next" disabled>
-    NEXT ANALYSIS
-  </button>
-
-  <button id="stop">
-    STOP
-  </button>
-
-</div>
-
-</div>
-
 
 <script>
 
-/* ==================================================
-   TRADER PRO
-   VOLATILITY-ONLY MATCHES EDGE ENGINE
-   ================================================== */
+const DERIV_URL =
+  "wss://api.derivws.com/trading/v1/options/ws/public";
 
-const WS_URL =
-"wss://api.derivws.com/trading/v1/options/ws/public";
-
-
-/* ONLY THESE MARKETS ARE ALLOWED */
-
-const VOLATILITY = {
-
-  "R_10":
-  "Volatility 10 Index",
-
-  "1HZ10V":
-  "Volatility 10 (1s) Index",
-
-  "R_25":
-  "Volatility 25 Index",
-
-  "1HZ25V":
-  "Volatility 25 (1s) Index",
-
-  "R_50":
-  "Volatility 50 Index",
-
-  "1HZ50V":
-  "Volatility 50 (1s) Index",
-
-  "R_75":
-  "Volatility 75 Index",
-
-  "1HZ75V":
-  "Volatility 75 (1s) Index",
-
-  "R_100":
-  "Volatility 100 Index",
-
-  "1HZ100V":
-  "Volatility 100 (1s) Index"
-
-};
-
-
-/* STATE */
+const markets = [
+  "R_10",
+  "1HZ10V",
+  "R_25",
+  "1HZ25V",
+  "R_50",
+  "1HZ50V",
+  "R_75",
+  "1HZ75V",
+  "R_100",
+  "1HZ100V"
+];
 
 let ws = null;
 
 let running = false;
-
 let collecting = false;
 
-let timerLoop = null;
-
-let reconnectLoop = null;
-
-let symbol = "";
-
 let ticks = [];
-
-let liveFeed = [];
-
 let counts = Array(10).fill(0);
 
-let startedAt = 0;
+let startTime = 0;
+let endTime = 0;
 
-let endsAt = 0;
+let timerInterval = null;
 
+let selectedMarket = "1HZ100V";
 
-/* ELEMENTS */
+const statusEl = document.getElementById("status");
+const statusDot = document.getElementById("statusDot");
 
-const status =
-document.getElementById("status");
+const marketEl = document.getElementById("market");
+const windowEl = document.getElementById("window");
 
-const market =
-document.getElementById("market");
+const startBtn = document.getElementById("startBtn");
+const nextBtn = document.getElementById("nextBtn");
 
-const price =
-document.getElementById("price");
+const timerEl = document.getElementById("timer");
 
-const error =
-document.getElementById("error");
+const candidateEl = document.getElementById("candidate");
+const edgeEl = document.getElementById("edge");
+const confidenceEl = document.getElementById("confidence");
 
-const windowSelect =
-document.getElementById("window");
+const sampleEl = document.getElementById("sample");
+const matchesEl = document.getElementById("matches");
+const differsEl = document.getElementById("differs");
+const gapEl = document.getElementById("gap");
 
-const timer =
-document.getElementById("timer");
-
-const windowState =
-document.getElementById("windowState");
-
-const candidate =
-document.getElementById("candidate");
-
-const resultState =
-document.getElementById("resultState");
-
-const edge =
-document.getElementById("edge");
-
-const confidence =
-document.getElementById("confidence");
-
-const insight =
-document.getElementById("insight");
-
-const matches =
-document.getElementById("matches");
-
-const differs =
-document.getElementById("differs");
-
-const sample =
-document.getElementById("sample");
-
-const agreement =
-document.getElementById("agreement");
-
-const digits =
-document.getElementById("digits");
-
-const feed =
-document.getElementById("feed");
-
-const startButton =
-document.getElementById("start");
-
-const nextButton =
-document.getElementById("next");
-
-const stopButton =
-document.getElementById("stop");
+const digitsEl = document.getElementById("digits");
+const insightEl = document.getElementById("insight");
+const feedEl = document.getElementById("feed");
 
 
-/* STATUS */
+function setStatus(text, error = false) {
 
-function setStatus(text){
-  status.textContent = text;
-}
+  statusEl.textContent = text;
 
-
-/* ERROR */
-
-function showError(text){
-
-  error.style.display = "block";
-
-  error.textContent =
-    "Deriv: " + text;
-}
-
-function clearError(){
-
-  error.style.display = "none";
-
-  error.textContent = "";
-}
-
-
-/* SEND */
-
-function send(data){
-
-  if(
-    !ws ||
-    ws.readyState !== WebSocket.OPEN
-  ){
-    return false;
+  if (error) {
+    statusDot.style.background = "#ff7b72";
+    statusEl.classList.add("error");
+  } else {
+    statusDot.style.background = "#7ee787";
+    statusEl.classList.remove("error");
   }
 
-  ws.send(JSON.stringify(data));
-
-  return true;
 }
 
 
-/* CONNECT */
+function connect() {
 
-function connect(){
+  setStatus("Connecting to Deriv...");
 
-  clearError();
+  ws = new WebSocket(DERIV_URL);
 
-  setStatus("● CONNECTING");
+  ws.onopen = function() {
 
-  try{
+    running = true;
 
-    ws =
-    new WebSocket(WS_URL);
+    setStatus("Connected — loading Volatility markets...");
 
-  }catch(e){
-
-    showError(e.message);
-
-    return;
-
-  }
-
-
-  ws.onopen = function(){
-
-    setStatus("● CONNECTED");
-
-    send({
-      active_symbols:"brief",
-      req_id:1
-    });
+    ws.send(JSON.stringify({
+      active_symbols: "brief",
+      req_id: 1
+    }));
 
   };
 
 
-  ws.onmessage = function(event){
+  ws.onmessage = function(event) {
 
-    let data;
+    try {
 
-    try{
+      const data = JSON.parse(event.data);
 
-      data =
-      JSON.parse(event.data);
+      if (data.error) {
 
-    }catch(e){
+        setStatus(
+          "API error: " + data.error.message,
+          true
+        );
 
-      return;
-
-    }
-
-
-    console.log(data);
+        return;
+      }
 
 
-    if(data.error){
+      if (data.msg_type === "active_symbols") {
 
-      showError(
-        data.error.message ||
-        data.error.code ||
-        "API error"
-      );
+        const available =
+          data.active_symbols || [];
 
-      setStatus("● API ERROR");
+        const found =
+          available.filter(x =>
+            markets.includes(x.underlying_symbol)
+          );
 
-      return;
-    }
+        if (found.length === 0) {
+
+          setStatus(
+            "No Volatility markets returned",
+            true
+          );
+
+          return;
+        }
+
+        setStatus("Connected — Volatility ready");
+
+        subscribe();
+
+      }
 
 
-    if(
-      data.msg_type ===
-      "active_symbols"
-    ){
+      if (data.msg_type === "tick") {
 
-      loadMarkets(
-        data.active_symbols
-      );
+        receiveTick(data.tick);
 
-      return;
-    }
+      }
 
+    } catch (error) {
 
-    if(
-      data.msg_type ===
-      "tick"
-    ){
-
-      receiveTick(
-        data.tick
-      );
+      console.log(error);
 
     }
 
   };
 
 
-  ws.onerror = function(){
+  ws.onerror = function() {
 
-    setStatus("● CONNECTION ERROR");
+    setStatus("Connection error", true);
 
   };
 
 
-  ws.onclose = function(){
+  ws.onclose = function() {
 
-    if(running){
+    if (running) {
 
-      setStatus("● DISCONNECTED");
+      setStatus("Disconnected — reconnecting...");
 
-      reconnectLoop =
-      setTimeout(
-        connect,
-        3000
-      );
+      setTimeout(connect, 2000);
 
     }
 
@@ -733,370 +505,162 @@ function connect(){
 }
 
 
-/* MARKETS */
+function subscribe() {
 
-function loadMarkets(list){
-
-  market.innerHTML = "";
-
-  if(!Array.isArray(list)){
-
-    showError(
-      "No market list received."
-    );
-
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
     return;
   }
 
+  ws.send(JSON.stringify({
 
-  /*
-   Only known Volatility symbols
-   are inserted into the select.
-  */
+    forget_all: "ticks"
 
-  const available =
-  list.filter(
-    item =>
-      item &&
-      VOLATILITY[
-        item.underlying_symbol
-      ]
+  }));
+
+  ws.send(JSON.stringify({
+
+    ticks: selectedMarket,
+    subscribe: 1,
+    req_id: 2
+
+  }));
+
+}
+
+
+function receiveTick(tick) {
+
+  if (!tick) return;
+
+  const quote = Number(tick.quote);
+
+  if (!Number.isFinite(quote)) return;
+
+  const priceString = String(tick.quote);
+
+  let digit = 0;
+
+  if (priceString.includes(".")) {
+
+    const decimal =
+      priceString.split(".")[1];
+
+    digit =
+      Number(decimal.slice(-1));
+
+  } else {
+
+    digit =
+      Number(priceString.slice(-1));
+
+  }
+
+  if (digit < 0 || digit > 9) return;
+
+
+  const time =
+    new Date().toLocaleTimeString();
+
+
+  feedEl.insertAdjacentHTML(
+    "afterbegin",
+    `<div>${time} → ${quote} → digit ${digit}</div>`
   );
 
 
-  available.forEach(
-    item => {
+  while (feedEl.children.length > 25) {
 
-      const option =
-      document.createElement("option");
-
-      option.value =
-      item.underlying_symbol;
-
-      option.textContent =
-      VOLATILITY[
-        item.underlying_symbol
-      ];
-
-      market.appendChild(option);
-
-    }
-  );
-
-
-  if(
-    market.options.length === 0
-  ){
-
-    showError(
-      "Deriv returned no Volatility Indices."
-    );
-
-    return;
-  }
-
-
-  /*
-   Prefer Volatility 100 (1s).
-  */
-
-  const preferred =
-  [...market.options]
-  .find(
-    x =>
-      x.value === "1HZ100V"
-  );
-
-
-  if(preferred){
-
-    market.value =
-    preferred.value;
+    feedEl.removeChild(feedEl.lastChild);
 
   }
 
 
-  symbol =
-  market.value;
+  if (!collecting) return;
 
 
-  clearError();
-
-  subscribe();
-
-}
-
-
-/* SUBSCRIBE */
-
-function subscribe(){
-
-  if(
-    !symbol ||
-    !VOLATILITY[symbol]
-  ){
-
-    showError(
-      "Invalid Volatility symbol."
-    );
-
-    return;
-  }
-
-
-  send({
-    ticks:symbol,
-    subscribe:1,
-    req_id:2
+  ticks.push({
+    digit: digit,
+    price: quote,
+    time: Date.now()
   });
 
+  counts[digit]++;
 
-  setStatus(
-    "● LIVE " +
-    VOLATILITY[symbol]
-  );
+  sampleEl.textContent = ticks.length;
 
-}
-
-
-/* TICK */
-
-function receiveTick(tick){
-
-  if(!tick){
-
-    return;
-  }
-
-
-  const quote =
-  String(tick.quote);
-
-
-  const numeric =
-  Number(tick.quote);
-
-
-  if(
-    !Number.isFinite(numeric)
-  ){
-
-    return;
-  }
-
-
-  let decimalPart =
-  quote.includes(".")
-  ? quote.split(".")[1]
-  : "0";
-
-
-  if(!decimalPart){
-
-    decimalPart = "0";
-  }
-
-
-  const digit =
-  Number(
-    decimalPart[
-      decimalPart.length - 1
-    ]
-  );
-
-
-  if(
-    !Number.isInteger(digit)
-  ){
-
-    return;
-  }
-
-
-  price.textContent =
-  quote;
-
-
-  const item = {
-
-    price:numeric,
-
-    digit:digit,
-
-    time:
-    Date.now()
-
-  };
-
-
-  liveFeed.push(item);
-
-
-  if(
-    liveFeed.length > 80
-  ){
-
-    liveFeed.shift();
-
-  }
-
-
-  renderFeed();
-
-
-  /*
-   ONLY add to the analysis
-   when a window is active.
-  */
-
-  if(collecting){
-
-    ticks.push(item);
-
-    counts[digit]++;
-
-    updateStats();
-
-  }
+  renderDigits();
 
 }
 
 
-/* START NEW WINDOW */
+function startAnalysis() {
 
-function startWindow(){
-
-  if(
-    !symbol ||
-    !VOLATILITY[symbol]
-  ){
-
-    showError(
-      "Choose a Volatility Index."
-    );
-
-    return;
-  }
-
-
-  clearError();
-
-
-  /*
-   Fresh sample.
-  */
+  if (collecting) return;
 
   ticks = [];
+  counts = Array(10).fill(0);
 
-  counts =
-  Array(10).fill(0);
+  candidateEl.textContent = "—";
+  edgeEl.textContent = "COLLECTING";
+  confidenceEl.textContent = "—";
 
+  matchesEl.textContent = "—";
+  differsEl.textContent = "—";
+  gapEl.textContent = "—";
+
+  insightEl.textContent =
+    "Collecting live Volatility ticks and measuring digit behavior...";
+
+  sampleEl.textContent = "0";
+
+  renderDigits();
+
+  const duration =
+    Number(windowEl.value);
+
+  startTime = Date.now();
+  endTime = startTime + duration;
 
   collecting = true;
 
-  startedAt =
-  Date.now();
+  startBtn.textContent = "RUNNING...";
+  startBtn.disabled = true;
 
-
-  endsAt =
-  startedAt +
-  Number(
-    windowSelect.value
-  ) * 1000;
-
-
-  /*
-   Remove previous result.
-  */
-
-  candidate.textContent = "—";
-
-  resultState.textContent =
-    "Collecting a fresh sample...";
-
-
-  edge.textContent =
-    "ANALYSING";
-
-
-  confidence.textContent =
-    "—";
-
-
-  insight.textContent =
-    "The engine is collecting Volatility ticks and evaluating all ten possible last digits.";
-
-
-  matches.textContent = "—";
-
-  differs.textContent = "—";
-
-  agreement.textContent = "—";
-
-  sample.textContent = "0";
-
-
-  timer.className =
-    "timer live";
-
-
-  windowState.textContent =
-    "Collecting ticks...";
-
-
-  startButton.disabled = true;
-
-  nextButton.disabled = true;
-
-
-  setStatus(
-    "● ANALYSING"
-  );
-
-
-  clearInterval(timerLoop);
-
+  nextBtn.disabled = true;
 
   updateTimer();
 
+  clearInterval(timerInterval);
 
-  timerLoop =
-  setInterval(
-    updateTimer,
-    200
-  );
+  timerInterval =
+    setInterval(updateTimer, 100);
 
 }
 
 
-/* TIMER */
+function updateTimer() {
 
-function updateTimer(){
-
-  if(!collecting){
-
-    return;
-  }
-
+  if (!collecting) return;
 
   const remaining =
-  Math.max(
-    0,
-    endsAt - Date.now()
-  );
+    Math.max(0, endTime - Date.now());
+
+  const seconds =
+    Math.ceil(remaining / 1000);
+
+  const mins =
+    Math.floor(seconds / 60);
+
+  const secs =
+    seconds % 60;
+
+  timerEl.textContent =
+    String(mins).padStart(2, "0") +
+    ":" +
+    String(secs).padStart(2, "0");
 
 
-  timer.textContent =
-  formatTime(
-    Math.ceil(
-      remaining / 1000
-    )
-  );
-
-
-  if(
-    remaining <= 0
-  ){
+  if (remaining <= 0) {
 
     finishAnalysis();
 
@@ -1105,598 +669,334 @@ function updateTimer(){
 }
 
 
-/* ==================================================
-   MATCHES EDGE ENGINE
-   ================================================== */
+function finishAnalysis() {
 
-function calculateEdge(){
+  if (!collecting) return;
 
-  const total =
-  ticks.length;
+  collecting = false;
+
+  clearInterval(timerInterval);
+
+  timerEl.textContent = "DONE";
+
+  startBtn.textContent = "START";
+  startBtn.disabled = false;
+
+  nextBtn.disabled = false;
+
+  calculateEdge();
+
+}
 
 
-  if(total < 10){
+function calculateEdge() {
 
-    return {
-      valid:false
-    };
+  const total = ticks.length;
+
+  if (total < 20) {
+
+    edgeEl.textContent = "NO CLEAR EDGE";
+
+    confidenceEl.textContent = "LOW";
+
+    insightEl.textContent =
+      "Not enough ticks were collected. A stronger sample is required before treating any digit as a candidate.";
+
+    return;
 
   }
 
 
-  /*
-   STEP 1
-   Frequency score
-  */
-
-  const frequency =
-  counts.map(
-    count =>
-      count / total
-  );
+  const scores = [];
 
 
-  /*
-   STEP 2
-   Recent sample
-
-   Only ticks from this
-   completed window.
-  */
+  const recentCount =
+    Math.min(30, total);
 
   const recent =
-  ticks.slice(
-    -Math.min(
-      30,
-      total
-    )
-  );
+    ticks.slice(-recentCount);
 
 
   const recentCounts =
-  Array(10).fill(0);
+    Array(10).fill(0);
 
-
-  recent.forEach(
-    item => {
-
-      recentCounts[
-        item.digit
-      ]++;
-
-    }
+  recent.forEach(t =>
+    recentCounts[t.digit]++
   );
 
 
-  const recentTotal =
-  recent.length;
+  for (let digit = 0; digit <= 9; digit++) {
 
+    const frequency =
+      counts[digit] / total;
 
-  const recentFrequency =
-  recentCounts.map(
-    count =>
-      count /
-      recentTotal
-  );
+    const recentFrequency =
+      recentCounts[digit] / recentCount;
 
-
-  /*
-   STEP 3
-   Consistency.
-
-   Split the window into
-   three sections.
-  */
-
-  const sectionSize =
-  Math.max(
-    1,
-    Math.floor(
-      total / 3
-    )
-  );
-
-
-  const sections = [
-
-    ticks.slice(
-      0,
-      sectionSize
-    ),
-
-    ticks.slice(
-      sectionSize,
-      sectionSize * 2
-    ),
-
-    ticks.slice(
-      sectionSize * 2
-    )
-
-  ];
-
-
-  /*
-   Score every digit.
-  */
-
-  const scores =
-  Array(10).fill(0);
-
-
-  for(
-    let d = 0;
-    d < 10;
-    d++
-  ){
-
-    /*
-     Frequency component
-    */
-
-    const freqScore =
-    frequency[d] * 100;
-
-
-    /*
-     Recent component
-    */
-
-    const recentScore =
-    recentFrequency[d] * 100;
-
-
-    /*
-     Consistency component
-    */
 
     let consistency = 0;
 
-
-    sections.forEach(
-      section => {
-
-        if(!section.length){
-
-          return;
-
-        }
+    const sectionSize =
+      Math.floor(total / 3);
 
 
-        const occurrences =
-        section.filter(
-          x =>
-            x.digit === d
+    for (let section = 0; section < 3; section++) {
+
+      const from =
+        section * sectionSize;
+
+      const to =
+        section === 2
+          ? total
+          : from + sectionSize;
+
+      const sectionTicks =
+        ticks.slice(from, to);
+
+      if (sectionTicks.length === 0)
+        continue;
+
+      const appearances =
+        sectionTicks.filter(
+          t => t.digit === digit
         ).length;
 
+      const rate =
+        appearances / sectionTicks.length;
 
-        const rate =
-        occurrences /
-        section.length;
-
-
-        /*
-         Reward digits that
-         remain present across
-         different parts of
-         the window.
-        */
-
-        if(rate >= 0.10){
-
-          consistency += 1;
-
-        }
-
+      if (rate >= 0.10) {
+        consistency++;
       }
-    );
+
+    }
 
 
-    /*
-     Cluster / recency component.
+    const lastTen =
+      ticks.slice(-10);
 
-     Count appearances among
-     the last 10 ticks.
-    */
-
-    const last10 =
-    ticks.slice(-10);
+    const cluster =
+      lastTen.filter(
+        t => t.digit === digit
+      ).length;
 
 
-    const recent10Count =
-    last10.filter(
-      x =>
-        x.digit === d
-    ).length;
-
-
-    const clusterScore =
-    recent10Count * 2;
-
-
-    /*
-     Combined score.
-
-     Frequency alone is NOT
-     enough to select a digit.
-    */
-
-    scores[d] =
-      (freqScore * 0.45) +
-      (recentScore * 0.30) +
+    const score =
+      (frequency * 100 * 0.45) +
+      (recentFrequency * 100 * 0.30) +
       (consistency * 4) +
-      clusterScore;
+      (cluster * 2);
+
+
+    scores.push({
+      digit,
+      score,
+      frequency,
+      recentFrequency
+    });
 
   }
 
 
-  /*
-   Sort digits by score.
-  */
-
-  const ranking =
-  Array.from(
-    {length:10},
-    (_,d) => ({
-      digit:d,
-      score:scores[d],
-      frequency:frequency[d],
-      recentFrequency:
-      recentFrequency[d]
-    })
-  ).sort(
-    (a,b) =>
-      b.score - a.score
+  scores.sort(
+    (a, b) => b.score - a.score
   );
 
 
   const best =
-  ranking[0];
-
+    scores[0];
 
   const second =
-  ranking[1];
+    scores[1];
 
 
-  /*
-   Edge strength.
-
-   The larger the gap between
-   first and second, the more
-   distinct the candidate is.
-  */
-
-  const gap =
-  best.score -
-  second.score;
+  const edgeGap =
+    best.score - second.score;
 
 
-  /*
-   Convert to a bounded
-   confidence-style score.
-  */
-
-  let confidenceScore =
-  45 +
-  gap * 1.5;
+  gapEl.textContent =
+    edgeGap.toFixed(1);
 
 
-  /*
-   Reward enough data.
-  */
+  const matchesRate =
+    best.frequency * 100;
 
-  if(total >= 30){
-
-    confidenceScore += 5;
-
-  }
-
-  if(total >= 60){
-
-    confidenceScore += 5;
-
-  }
-
-  if(total >= 100){
-
-    confidenceScore += 5;
-
-  }
+  const differsRate =
+    100 - matchesRate;
 
 
-  /*
-   Reward recent agreement.
-  */
+  matchesEl.textContent =
+    matchesRate.toFixed(1) + "%";
 
-  if(
-    best.digit ===
-    getDominant(recentCounts)
-  ){
+  differsEl.textContent =
+    differsRate.toFixed(1) + "%";
 
-    confidenceScore += 8;
+
+  let confidence =
+    45 + edgeGap * 1.5;
+
+
+  if (total >= 30)
+    confidence += 5;
+
+  if (total >= 60)
+    confidence += 5;
+
+  if (total >= 100)
+    confidence += 5;
+
+
+  if (
+    best.recentFrequency >
+    best.frequency
+  ) {
+
+    confidence += 8;
 
   }
 
 
-  confidenceScore =
-  Math.round(
-    Math.min(
-      90,
-      Math.max(
-        0,
-        confidenceScore
-      )
-    )
-  );
+  confidence =
+    Math.min(90, confidence);
 
 
-  /*
-   Edge classification.
-
-   We deliberately require
-   enough separation.
-  */
-
-  let edgeLevel;
+  candidateEl.textContent =
+    best.digit;
 
 
-  if(
-    total < 20 ||
-    gap < 3
-  ){
+  confidenceEl.textContent =
+    Math.round(confidence) + "%";
 
-    edgeLevel =
-    "NO CLEAR EDGE";
 
-  }
-  else if(
-    gap < 6
-  ){
+  if (edgeGap < 3) {
 
-    edgeLevel =
-    "WEAK EDGE";
+    edgeEl.textContent =
+      "NO CLEAR EDGE";
 
-  }
-  else if(
-    gap < 10
-  ){
+  } else if (edgeGap < 6) {
 
-    edgeLevel =
-    "MODERATE EDGE";
+    edgeEl.textContent =
+      "WEAK EDGE";
 
-  }
-  else{
+  } else if (edgeGap < 10) {
 
-    edgeLevel =
-    "STRONG EDGE";
+    edgeEl.textContent =
+      "MODERATE EDGE";
+
+  } else {
+
+    edgeEl.textContent =
+      "STRONGER EDGE";
 
   }
 
 
-  return {
+  insightEl.textContent =
+    "Candidate digit " +
+    best.digit +
+    " has the highest combined score from frequency, recent activity, consistency and clustering. This is a statistical candidate, not a guaranteed next digit.";
 
-    valid:true,
 
-    candidate:best.digit,
-
-    confidence:
-    confidenceScore,
-
-    edge:edgeLevel,
-
-    ranking:ranking,
-
-    frequency:
-    frequency,
-
-    recentFrequency:
-    recentFrequency,
-
-    recentDigit:
-    getDominant(
-      recentCounts
-    )
-
-  };
+  renderDigits(scores);
 
 }
 
 
-/* DOMINANT */
+function renderDigits(ranking = null) {
 
-function getDominant(arr){
-
-  let best = 0;
+  digitsEl.innerHTML = "";
 
 
-  for(
-    let i = 1;
-    i < 10;
-    i++
-  ){
+  let order =
+    ranking ||
+    Array.from(
+      { length: 10 },
+      (_, digit) => ({
+        digit
+      })
+    );
 
-    if(
-      arr[i] >
-      arr[best]
-    ){
 
-      best = i;
+  order.forEach(item => {
+
+    const digit =
+      item.digit;
+
+    const count =
+      counts[digit];
+
+    const total =
+      ticks.length;
+
+    const rate =
+      total > 0
+        ? ((count / total) * 100).toFixed(0)
+        : "0";
+
+
+    const box =
+      document.createElement("div");
+
+    box.className =
+      "digit-box";
+
+
+    box.innerHTML =
+      digit +
+      "<strong>" +
+      rate +
+      "%</strong>";
+
+
+    digitsEl.appendChild(box);
+
+  });
+
+}
+
+
+startBtn.addEventListener(
+  "click",
+  startAnalysis
+);
+
+
+nextBtn.addEventListener(
+  "click",
+  startAnalysis
+);
+
+
+marketEl.addEventListener(
+  "change",
+  function() {
+
+    selectedMarket =
+      marketEl.value;
+
+    if (collecting) {
+
+      finishAnalysis();
+
+    }
+
+    candidateEl.textContent = "—";
+    edgeEl.textContent = "WAITING";
+    confidenceEl.textContent = "—";
+
+    if (ws &&
+        ws.readyState === WebSocket.OPEN) {
+
+      subscribe();
 
     }
 
   }
+);
 
 
-  return best;
+connect();
 
-}
+</script>
 
-
-/* FINISH */
-
-function finishAnalysis(){
-
-  if(!collecting){
-
-    return;
-  }
-
-
-  collecting = false;
-
-
-  clearInterval(
-    timerLoop
-  );
-
-
-  timerLoop = null;
-
-
-  timer.textContent =
-  "00:00";
-
-
-  timer.className =
-  "timer done";
-
-
-  windowState.textContent =
-  "Window complete — result frozen";
-
-
-  const result =
-  calculateEdge();
-
-
-  if(!result.valid){
-
-    candidate.textContent =
-    "—";
-
-
-    resultState.textContent =
-    "Not enough ticks";
-
-
-    edge.textContent =
-    "NO EDGE";
-
-
-    confidence.textContent =
-    "0%";
-
-
-    insight.textContent =
-    "The completed window did not contain enough usable ticks to calculate a meaningful Matches signal.";
-
-
-    startButton.disabled =
-    false;
-
-
-    nextButton.disabled =
-    false;
-
-
-    setStatus(
-      "● NO EDGE"
-    );
-
-
-    return;
-
-  }
-
-
-  const d =
-  result.candidate;
-
-
-  const freq =
-  result.frequency[d] *
-  100;
-
-
-  const recentFreq =
-  result.recentFrequency[d] *
-  100;
-
-
-  candidate.textContent =
-  d;
-
-
-  resultState.textContent =
-  "FROZEN — candidate will not change";
-
-
-  edge.textContent =
-  result.edge;
-
-
-  confidence.textContent =
-  result.confidence +
-  "%";
-
-
-  matches.textContent =
-  freq.toFixed(1) +
-  "%";
-
-
-  differs.textContent =
-  (
-    100 - freq
-  ).toFixed(1) +
-  "%";
-
-
-  sample.textContent =
-  ticks.length;
-
-
-  agreement.textContent =
-  recentFreq.toFixed(1) +
-  "%";
-
-
-  /*
-   IMPORTANT:
-   We don't tell the user that
-   the next tick MUST be this digit.
-  */
-
-  insight.innerHTML =
-
-  "Candidate last digit: <strong>" +
-  d +
-  "</strong><br><br>" +
-
-  "This digit received the highest combined " +
-  "score from frequency, recent activity, " +
-  "window consistency and short-term clustering." +
-
-  "<br><br>" +
-
-  "Observed Matches rate in the completed sample: " +
-  "<strong>" +
-  freq.toFixed(1) +
-  "%</strong>." +
-
-  "<br><br>" +
-
-  "Recent sample agreement: " +
-  "<strong>" +
-  recentFreq.toFixed(1) +
-  "%</strong>." +
-
-  "<br><br>" +
-
-  "<strong>RESULT FROZEN.</strong> " +
-
-  "Press NEXT ANALYSIS to calculate a completely " +
-  "new candidate from a fresh window.";
-
-
-  renderDigits(
+</body>
+</html>
