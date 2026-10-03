@@ -14,11 +14,12 @@
 body {
   margin: 0;
   background: #070a0f;
-  color: #f5f7fa;
+  color: #f4f7fb;
   font-family: Arial, sans-serif;
 }
 
 .app {
+  width: 100%;
   max-width: 720px;
   margin: auto;
   padding: 18px 14px 40px;
@@ -40,78 +41,84 @@ body {
   color: #19d681;
 }
 
-.connection {
-  padding: 7px 10px;
+.status {
+  padding: 7px 11px;
   border-radius: 20px;
   background: #151b24;
-  color: #aab4c2;
+  color: #aeb8c5;
   font-size: 12px;
 }
 
 .card {
   background: #10151d;
-  border: 1px solid #222b38;
+  border: 1px solid #252e3b;
   border-radius: 16px;
   padding: 16px;
   margin-bottom: 13px;
 }
 
 .label {
-  color: #8995a5;
-  font-size: 12px;
-  margin-bottom: 7px;
+  color: #8793a2;
+  font-size: 11px;
   text-transform: uppercase;
-}
-
-.market-row {
-  display: flex;
-  gap: 10px;
+  letter-spacing: .7px;
+  margin-bottom: 8px;
 }
 
 select {
-  flex: 1;
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: 1px solid #303a48;
   background: #080c12;
   color: white;
-  border: 1px solid #303a48;
-  border-radius: 10px;
-  padding: 13px;
   font-size: 15px;
 }
 
 .price {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 800;
-  margin-top: 12px;
+  margin-top: 10px;
+  word-break: break-all;
 }
 
-.digit {
-  font-size: 48px;
-  font-weight: 900;
+.big-digit {
   text-align: center;
-  margin: 8px 0;
+  font-size: 54px;
+  font-weight: 900;
+  margin: 5px 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.muted {
+  color: #7f8b9b;
 }
 
 .buttons {
   display: flex;
   gap: 10px;
+  margin-bottom: 14px;
 }
 
 button {
   flex: 1;
+  padding: 15px;
   border: 0;
   border-radius: 11px;
-  padding: 14px;
   font-size: 15px;
   font-weight: 800;
 }
 
-#start {
+#startButton {
   background: #19d681;
   color: #03130b;
 }
 
-#stop {
-  background: #242c38;
+#stopButton {
+  background: #252e3a;
   color: white;
 }
 
@@ -120,37 +127,14 @@ button {
 }
 
 .confidence {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 900;
   margin: 5px 0 12px;
 }
 
 .insight {
   line-height: 1.65;
-  color: #c5ced9;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 7px;
-}
-
-.digit-box {
-  background: #080c12;
-  border: 1px solid #27303d;
-  border-radius: 9px;
-  padding: 9px 4px;
-  text-align: center;
-}
-
-.digit-box strong {
-  display: block;
-  font-size: 17px;
-}
-
-.digit-box small {
-  color: #8793a2;
+  color: #c3ccd7;
 }
 
 .match-grid {
@@ -165,31 +149,63 @@ button {
   padding: 15px;
 }
 
-.match-value {
-  font-size: 25px;
-  font-weight: 800;
-  margin-top: 5px;
+.match-title {
+  color: #8793a2;
+  font-size: 12px;
 }
 
-.ticks {
-  max-height: 180px;
+.match-value {
+  font-size: 26px;
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.digits {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+.digit-card {
+  background: #080c12;
+  border: 1px solid #27313e;
+  border-radius: 9px;
+  padding: 9px 3px;
+  text-align: center;
+}
+
+.digit-card strong {
+  display: block;
+  font-size: 17px;
+}
+
+.digit-card small {
+  color: #8793a2;
+}
+
+.tick-list {
+  max-height: 190px;
   overflow-y: auto;
   font-family: monospace;
-  color: #aeb8c5;
   line-height: 1.7;
+  color: #aeb8c5;
 }
 
-.muted {
-  color: #7f8a99;
+.error {
+  color: #ff7777;
 }
 
 @media (max-width: 430px) {
-  .price {
-    font-size: 27px;
+  .app {
+    padding: 15px 11px 30px;
   }
 
-  .grid {
-    gap: 5px;
+  .logo {
+    font-size: 22px;
+  }
+
+  .price {
+    font-size: 25px;
   }
 }
 </style>
@@ -200,39 +216,29 @@ button {
 <div class="app">
 
   <div class="header">
-    <div class="logo">TRADER <span>PRO</span></div>
-    <div id="connection" class="connection">
-      ● Offline
+    <div class="logo">
+      TRADER <span>PRO</span>
+    </div>
+
+    <div id="status" class="status">
+      ● Ready
     </div>
   </div>
 
+
   <div class="card">
 
-    <div class="label">Market</div>
-
-    <div class="market-row">
-
-      <select id="market">
-        <option value="1HZ100V">
-          Volatility 100 (1s)
-        </option>
-        <option value="1HZ75V">
-          Volatility 75 (1s)
-        </option>
-        <option value="1HZ50V">
-          Volatility 50 (1s)
-        </option>
-        <option value="1HZ25V">
-          Volatility 25 (1s)
-        </option>
-        <option value="1HZ10V">
-          Volatility 10 (1s)
-        </option>
-      </select>
-
+    <div class="label">
+      Market
     </div>
 
-    <div class="label" style="margin-top:15px;">
+    <select id="marketSelect">
+      <option value="">
+        Loading markets...
+      </option>
+    </select>
+
+    <div class="label" style="margin-top:16px;">
       Live price
     </div>
 
@@ -243,19 +249,18 @@ button {
   </div>
 
 
-  <div class="card">
+  <div class="card center">
 
     <div class="label">
       Latest last digit
     </div>
 
-    <div id="lastDigit" class="digit">
+    <div id="lastDigit" class="big-digit">
       —
     </div>
 
-    <div id="tickCount" class="muted"
-         style="text-align:center;">
-      Waiting for live ticks
+    <div id="tickCount" class="muted">
+      0 ticks analysed
     </div>
 
   </div>
@@ -273,8 +278,8 @@ button {
     </div>
 
     <div id="insight" class="insight">
-      Start analysis to build a live
-      statistical picture of the last digits.
+      Start Analysis to begin collecting
+      live Deriv tick data.
     </div>
 
   </div>
@@ -289,7 +294,7 @@ button {
     <div class="match-grid">
 
       <div class="match">
-        <div class="muted">
+        <div class="match-title">
           Matches
         </div>
 
@@ -300,7 +305,7 @@ button {
       </div>
 
       <div class="match">
-        <div class="muted">
+        <div class="match-title">
           Differs
         </div>
 
@@ -318,62 +323,11 @@ button {
   <div class="card">
 
     <div class="label">
-      Digit distribution
+      Digit Distribution
     </div>
 
     <div id="distribution"
-         class="grid">
-
-      <div class="digit-box">
-        <strong>0</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>1</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>2</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>3</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>4</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>5</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>6</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>7</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>8</strong>
-        <small>0%</small>
-      </div>
-
-      <div class="digit-box">
-        <strong>9</strong>
-        <small>0%</small>
-      </div>
-
+         class="digits">
     </div>
 
   </div>
@@ -382,11 +336,12 @@ button {
   <div class="card">
 
     <div class="label">
-      Recent ticks
+      Recent Ticks
     </div>
 
-    <div id="ticks" class="ticks">
-      No ticks received yet.
+    <div id="ticks"
+         class="tick-list">
+      No ticks yet.
     </div>
 
   </div>
@@ -394,11 +349,11 @@ button {
 
   <div class="buttons">
 
-    <button id="start">
+    <button id="startButton">
       START ANALYSIS
     </button>
 
-    <button id="stop">
+    <button id="stopButton">
       STOP
     </button>
 
@@ -410,9 +365,9 @@ button {
 <script>
 
 const WS_URL =
-  "wss://ws.binaryws.com/websockets/v3";
+  "wss://api.derivws.com/trading/v1/options/ws/public";
 
-let ws = null;
+let socket = null;
 
 let running = false;
 
@@ -420,23 +375,25 @@ let reconnectTimer = null;
 
 let reconnectAttempts = 0;
 
-let selectedSymbol =
-  "1HZ100V";
+let selectedSymbol = "";
 
-let data = [];
+let tickData = [];
 
-let counts =
-  Array(10).fill(0);
+let counts = Array(10).fill(0);
+
+const MAX_TICKS = 200;
+
+const RECENT_TICKS = 30;
 
 
-const connection =
+const status =
   document.getElementById(
-    "connection"
+    "status"
   );
 
-const market =
+const marketSelect =
   document.getElementById(
-    "market"
+    "marketSelect"
   );
 
 const price =
@@ -479,18 +436,49 @@ const distribution =
     "distribution"
   );
 
-const ticksBox =
+const ticks =
   document.getElementById(
     "ticks"
   );
 
 
-function setConnection(
-  text
-) {
+function setStatus(text) {
 
-  connection.textContent =
-    text;
+  status.textContent = text;
+
+  console.log(
+    "[Trader Pro]",
+    text
+  );
+
+}
+
+
+function send(request) {
+
+  if (
+    !socket ||
+    socket.readyState !==
+    WebSocket.OPEN
+  ) {
+    return false;
+  }
+
+  try {
+
+    socket.send(
+      JSON.stringify(request)
+    );
+
+    return true;
+
+  } catch (error) {
+
+    console.error(error);
+
+    return false;
+
+  }
 
 }
 
@@ -501,116 +489,88 @@ function connect() {
     reconnectTimer
   );
 
-  setConnection(
+  setStatus(
     "● Connecting"
   );
 
   try {
 
-    ws =
+    socket =
       new WebSocket(
         WS_URL
       );
 
   } catch (error) {
 
-    setConnection(
-      "● Connection error"
+    console.error(error);
+
+    setStatus(
+      "● Connection failed"
     );
 
-    reconnect();
+    scheduleReconnect();
 
     return;
 
   }
 
 
-  ws.onopen =
+  socket.onopen =
     function() {
 
-      reconnectAttempts =
-        0;
+      reconnectAttempts = 0;
 
-      setConnection(
+      setStatus(
         "● Connected"
       );
 
-      subscribe();
+      requestMarkets();
 
     };
 
 
-  ws.onmessage =
+  socket.onmessage =
     function(event) {
 
-      let message;
-
-      try {
-
-        message =
-          JSON.parse(
-            event.data
-          );
-
-      } catch (error) {
-
-        return;
-
-      }
-
-
-      if (
-        message.error
-      ) {
-
-        console.error(
-          message.error
-        );
-
-        setConnection(
-          "● API error"
-        );
-
-        return;
-
-      }
-
-
-      if (
-        message.msg_type ===
-        "tick"
-      ) {
-
-        processTick(
-          message.tick
-        );
-
-      }
+      handleMessage(
+        event.data
+      );
 
     };
 
 
-  ws.onerror =
-    function() {
+  socket.onerror =
+    function(error) {
 
-      setConnection(
+      console.error(
+        "WebSocket error",
+        error
+      );
+
+      setStatus(
         "● Connection error"
       );
 
     };
 
 
-  ws.onclose =
+  socket.onclose =
     function(event) {
 
-      setConnection(
+      console.log(
+        "Closed:",
+        event.code,
+        event.reason
+      );
+
+      setStatus(
         "● Disconnected " +
         event.code
       );
 
       if (running) {
 
-        reconnect();
+        scheduleReconnect();
 
       }
 
@@ -619,11 +579,15 @@ function connect() {
 }
 
 
-function reconnect() {
+function scheduleReconnect() {
 
   if (!running) {
     return;
   }
+
+  clearTimeout(
+    reconnectTimer
+  );
 
   reconnectAttempts++;
 
@@ -637,7 +601,7 @@ function reconnect() {
       15000
     );
 
-  setConnection(
+  setStatus(
     "● Reconnecting"
   );
 
@@ -650,12 +614,107 @@ function reconnect() {
 }
 
 
-function subscribe() {
+function requestMarkets() {
+
+  send({
+
+    active_symbols:
+      "brief",
+
+    product_type:
+      "basic",
+
+    req_id:
+      1
+
+  });
+
+}
+
+
+function handleMessage(raw) {
+
+  let data;
+
+  try {
+
+    data =
+      JSON.parse(
+        raw
+      );
+
+  } catch (error) {
+
+    console.error(
+      "Invalid message:",
+      raw
+    );
+
+    return;
+
+  }
+
+
+  console.log(
+    "Deriv:",
+    data
+  );
+
+
+  if (data.error) {
+
+    console.error(
+      "Deriv API error:",
+      data.error
+    );
+
+    setStatus(
+      "● API error"
+    );
+
+    insight.textContent =
+      data.error.message ||
+      "Deriv returned an error.";
+
+    return;
+
+  }
+
 
   if (
-    !ws ||
-    ws.readyState !==
-    WebSocket.OPEN
+    data.msg_type ===
+    "active_symbols"
+  ) {
+
+    loadMarkets(
+      data.active_symbols
+    );
+
+    return;
+
+  }
+
+
+  if (
+    data.msg_type ===
+    "tick"
+  ) {
+
+    processTick(
+      data.tick
+    );
+
+  }
+
+}
+
+
+function loadMarkets(markets) {
+
+  if (
+    !Array.isArray(
+      markets
+    )
   ) {
 
     return;
@@ -663,24 +722,130 @@ function subscribe() {
   }
 
 
-  ws.send(
-    JSON.stringify({
+  const usable =
+    markets.filter(
+      item =>
+        item &&
+        (
+          item.symbol ||
+          item.underlying_symbol
+        )
+    );
 
-      ticks:
-        selectedSymbol,
 
-      subscribe:
-        1
+  marketSelect.innerHTML =
+    "";
 
-    })
+
+  usable
+    .slice(0, 100)
+    .forEach(
+      function(item) {
+
+        const symbol =
+          item.symbol ||
+          item.underlying_symbol;
+
+        const name =
+          item.display_name ||
+          item.underlying_symbol_name ||
+          symbol;
+
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          symbol;
+
+        option.textContent =
+          name +
+          " (" +
+          symbol +
+          ")";
+
+        marketSelect.appendChild(
+          option
+        );
+
+      }
+    );
+
+
+  if (
+    !marketSelect.options.length
+  ) {
+
+    setStatus(
+      "● No markets received"
+    );
+
+    return;
+
+  }
+
+
+  selectedSymbol =
+    marketSelect.value;
+
+
+  setStatus(
+    "● Markets loaded"
+  );
+
+  subscribe();
+
+}
+
+
+function subscribe() {
+
+  if (!selectedSymbol) {
+    return;
+  }
+
+
+  tickData = [];
+
+  counts =
+    Array(10).fill(0);
+
+
+  price.textContent =
+    "—";
+
+  lastDigit.textContent =
+    "—";
+
+  tickCount.textContent =
+    "0 ticks analysed";
+
+
+  send({
+
+    ticks:
+      selectedSymbol,
+
+    subscribe:
+      1,
+
+    req_id:
+      2
+
+  });
+
+
+  setStatus(
+    "● LIVE " +
+    selectedSymbol
   );
 
 }
 
 
-function processTick(
-  tick
-) {
+function processTick(tick) {
 
   if (!tick) {
     return;
@@ -709,9 +874,7 @@ function processTick(
     "";
 
 
-  if (
-    decimals.length === 0
-  ) {
+  if (!decimals.length) {
 
     decimals = "0";
 
@@ -727,8 +890,9 @@ function processTick(
 
 
   if (
-    digit < 0 ||
-    digit > 9
+    !Number.isInteger(
+      digit
+    )
   ) {
 
     return;
@@ -736,18 +900,30 @@ function processTick(
   }
 
 
-  data.push({
-    price: value,
-    digit: digit
+  tickData.push({
+
+    price:
+      value,
+
+    digit:
+      digit,
+
+    time:
+      Date.now()
+
   });
 
 
+  counts[digit]++;
+
+
   if (
-    data.length > 200
+    tickData.length >
+    MAX_TICKS
   ) {
 
     const removed =
-      data.shift();
+      tickData.shift();
 
     counts[
       removed.digit
@@ -756,37 +932,37 @@ function processTick(
   }
 
 
-  counts[digit]++;
-
-  updateInterface();
+  updateAnalysis();
 
 }
 
 
-function updateInterface() {
+function updateAnalysis() {
 
-  if (!data.length) {
+  const total =
+    tickData.length;
+
+
+  if (!total) {
     return;
   }
 
 
   const latest =
-    data[
-      data.length - 1
+    tickData[
+      total - 1
     ];
 
 
   price.textContent =
     latest.price;
 
-
   lastDigit.textContent =
     latest.digit;
 
-
   tickCount.textContent =
-    data.length +
-    " live ticks analysed";
+    total +
+    " ticks analysed";
 
 
   let dominant =
@@ -811,19 +987,16 @@ function updateInterface() {
   }
 
 
-  const total =
-    data.length;
-
-
   const dominantPercent =
-    (
-      counts[dominant] /
-      total
-    ) * 100;
+    counts[dominant] /
+    total *
+    100;
 
 
   const recent =
-    data.slice(-30);
+    tickData.slice(
+      -RECENT_TICKS
+    );
 
 
   const recentCounts =
@@ -866,12 +1039,13 @@ function updateInterface() {
 
 
   const recentPercent =
-    (
-      recentCounts[
-        recentDominant
-      ] /
-      recent.length
-    ) * 100;
+    recent.length
+      ? recentCounts[
+          recentDominant
+        ] /
+        recent.length *
+        100
+      : 0;
 
 
   let modelConfidence =
@@ -883,25 +1057,30 @@ function updateInterface() {
     recentDominant
   ) {
 
-    modelConfidence += 15;
+    modelConfidence +=
+      15;
 
   }
 
 
   if (
-    dominantPercent >= 15
+    dominantPercent >=
+    15
   ) {
 
-    modelConfidence += 10;
+    modelConfidence +=
+      10;
 
   }
 
 
   if (
-    recentPercent >= 20
+    recentPercent >=
+    20
   ) {
 
-    modelConfidence += 10;
+    modelConfidence +=
+      10;
 
   }
 
@@ -910,7 +1089,8 @@ function updateInterface() {
     total >= 100
   ) {
 
-    modelConfidence += 5;
+    modelConfidence +=
+      5;
 
   }
 
@@ -928,23 +1108,27 @@ function updateInterface() {
 
 
   insight.innerHTML =
-    "Current dominant digit: <strong>" +
+
+    "Dominant digit: <strong>" +
     dominant +
     "</strong><br>" +
 
-    "Recent dominant digit: <strong>" +
+    "Recent dominant: <strong>" +
     recentDominant +
     "</strong><br>" +
 
-    "The current sample shows " +
+    "Dominant frequency: <strong>" +
     dominantPercent.toFixed(1) +
-    "% frequency for digit " +
-    dominant +
-    ".<br><br>" +
+    "%</strong><br>" +
 
-    "<strong>Important:</strong> this is " +
-    "statistical analysis, not a guaranteed " +
-    "prediction of the next tick.";
+    "Recent frequency: <strong>" +
+    recentPercent.toFixed(1) +
+    "%</strong><br><br>" +
+
+    "This confidence score measures " +
+    "agreement within the observed sample. " +
+    "It is not a guaranteed probability " +
+    "of the next contract outcome.";
 
 
   matches.textContent =
@@ -961,30 +1145,31 @@ function updateInterface() {
 
 
   distribution.innerHTML =
-    counts.map(
-      function(count, digit) {
+    counts
+      .map(
+        function(count, digit) {
 
-        const percent =
-          (
+          const percent =
             count /
-            total
-          ) * 100;
+            total *
+            100;
 
-        return `
-          <div class="digit-box">
-            <strong>${digit}</strong>
-            <small>
-              ${percent.toFixed(1)}%
-            </small>
-          </div>
-        `;
+          return `
+            <div class="digit-card">
+              <strong>${digit}</strong>
+              <small>
+                ${percent.toFixed(1)}%
+              </small>
+            </div>
+          `;
 
-      }
-    ).join("");
+        }
+      )
+      .join("");
 
 
-  ticksBox.innerHTML =
-    data
+  ticks.innerHTML =
+    tickData
       .slice(-30)
       .reverse()
       .map(
@@ -995,38 +1180,25 @@ function updateInterface() {
       )
       .join("<br>");
 
+
+  setStatus(
+    "● LIVE " +
+    selectedSymbol
+  );
+
 }
 
 
-market.addEventListener(
+marketSelect.addEventListener(
   "change",
   function() {
 
     selectedSymbol =
-      market.value;
-
-    data = [];
-
-    counts =
-      Array(10).fill(0);
-
-    price.textContent =
-      "—";
-
-    lastDigit.textContent =
-      "—";
+      marketSelect.value;
 
     if (running) {
 
-      if (ws) {
-
-        try {
-          ws.close();
-        } catch (error) {}
-
-      }
-
-      connect();
+      subscribe();
 
     }
 
@@ -1035,7 +1207,9 @@ market.addEventListener(
 
 
 document
-  .getElementById("start")
+  .getElementById(
+    "startButton"
+  )
   .addEventListener(
     "click",
     function() {
@@ -1046,11 +1220,6 @@ document
 
       running = true;
 
-      data = [];
-
-      counts =
-        Array(10).fill(0);
-
       connect();
 
     }
@@ -1058,7 +1227,9 @@ document
 
 
 document
-  .getElementById("stop")
+  .getElementById(
+    "stopButton"
+  )
   .addEventListener(
     "click",
     function() {
@@ -1069,24 +1240,51 @@ document
         reconnectTimer
       );
 
-      if (ws) {
+      if (socket) {
 
         try {
-          ws.close();
+          socket.close();
         } catch (error) {}
 
       }
 
-      ws = null;
+      socket = null;
 
-      setConnection(
+      setStatus(
         "● Stopped"
       );
 
     }
   );
 
+
+for (
+  let i = 0;
+  i < 10;
+  i++
+) {
+
+  const box =
+    document.createElement(
+      "div"
+    );
+
+  box.className =
+    "digit-card";
+
+  box.innerHTML =
+    "<strong>" +
+    i +
+    "</strong>" +
+    "<small>0.0%</small>";
+
+  distribution.appendChild(
+    box
+  );
+
+}
+
 </script>
 
 </body>
-  </html>
+</html>
