@@ -1,128 +1,153 @@
-/* =========================================================
-   TRADER PRO — DERIV LIVE DIGIT ANALYZER
-   ========================================================= */
-
 "use strict";
 
-/* -----------------------------
-   CONFIG
------------------------------ */
+/*
+  TRADER PRO
+  Current Deriv Public WebSocket
+  Public market data only — no token required.
+*/
 
-const DERIV_WS = "wss://ws.binaryws.com/websockets/v3";
+const DERIV_WS =
+  "wss://api.derivws.com/trading/v1/options/ws/public";
 
 let socket = null;
 let reconnectTimer = null;
-let reconnectAttempts = 0;
 let analysisRunning = false;
-let currentSymbol = null;
+let reconnectAttempts = 0;
+
 let tickHistory = [];
 let digitCounts = Array(10).fill(0);
-let markets = [];
+
+const MAX_TICKS = 100;
 
 /* -----------------------------
-   FIND / CREATE UI
+   UI HELPERS
 ----------------------------- */
 
-function findButtonByText(text) {
-  const buttons = Array.from(document.querySelectorAll("button"));
-  return buttons.find(
-    b => b.textContent.trim().toLowerCase() === text.toLowerCase()
-  );
+function findButton(text) {
+  return [...document.querySelectorAll("button")]
+    .find(button =>
+      button.textContent.trim().toLowerCase() ===
+      text.toLowerCase()
+    );
 }
 
-let startButton =
-  document.getElementById("startAnalysis") ||
-  document.getElementById("start") ||
-  findButtonByText("Start Analysis");
+function getOrCreate(id) {
+  let element = document.getElementById(id);
 
-let stopButton =
-  document.getElementById("stopAnalysis") ||
-  document.getElementById("stop") ||
-  findButtonByText("Stop Analysis");
-
-function createElementIfMissing(id, tag = "div") {
-  let el = document.getElementById(id);
-
-  if (!el) {
-    el = document.createElement(tag);
-    el.id = id;
-    document.body.appendChild(el);
+  if (!element) {
+    element = document.createElement("div");
+    element.id = id;
+    document.body.appendChild(element);
   }
 
-  return el;
+  return element;
 }
 
-const statusBox = createElementIfMissing("connectionStatus");
-const marketBox = createElementIfMissing("marketStatus");
-const digitBox = createElementIfMissing("digitAnalysis");
-const predictionBox = createElementIfMissing("prediction");
-const historyBox = createElementIfMissing("tickHistory");
+const statusBox = getOrCreate("connectionStatus");
+const marketBox = getOrCreate("marketStatus");
+const digitBox = getOrCreate("digitAnalysis");
+const predictionBox = getOrCreate("prediction");
+const historyBox = getOrCreate("tickHistory");
 
-statusBox.style.marginTop = "12px";
-marketBox.style.marginTop = "8px";
-digitBox.style.marginTop = "8px";
-predictionBox.style.marginTop = "8px";
-historyBox.style.marginTop = "8px";
+const startButton =
+  document.getElementById("startAnalysis") ||
+  document.getElementById("start") ||
+  findButton("Start Analysis");
 
-function setConnection(message, connected = false) {
+const stopButton =
+  document.getElementById("stopAnalysis") ||
+  document.getElementById("stop") ||
+  findButton("Stop Analysis");
+
+function setStatus(message) {
   statusBox.textContent = message;
-  statusBox.dataset.connected = connected ? "true" : "false";
-}
-
-function showError(message) {
-  setConnection("❌ " + message, false);
-  console.error("Trader Pro:", message);
+  console.log(message);
 }
 
 /* -----------------------------
-   CONNECT TO DERIV
+   CONNECT
 ----------------------------- */
 
 function connectDeriv() {
+
   clearTimeout(reconnectTimer);
 
   if (socket) {
     try {
       socket.close();
-    } catch (e) {}
+    } catch (error) {}
   }
 
-  setConnection("Connecting to Deriv...", false);
+  setStatus("Connecting to live Deriv data...");
 
   try {
+
     socket = new WebSocket(DERIV_WS);
+
   } catch (error) {
-    showError("Could not create WebSocket.");
+
+    console.error(
+      "WebSocket creation error:",
+      error
+    );
+
+    setStatus(
+      "Could not create WebSocket."
+    );
+
     scheduleReconnect();
+
     return;
   }
 
   socket.onopen = function () {
+
     reconnectAttempts = 0;
 
-    setConnection(
-      "🟢 Connected to Deriv — loading markets...",
-      true
+    setStatus(
+      "🟢 Connected to live Deriv data"
     );
 
-    requestMarkets();
+    subscribeToTicks();
+
   };
 
   socket.onmessage = function (event) {
+
     handleMessage(event.data);
+
   };
 
-  socket.onerror = function (error) {
-    console.error("Deriv WebSocket error:", error);
-    setConnection("⚠️ Deriv WebSocket error", false);
+  socket.onerror = function (event) {
+
+    console.error(
+      "Deriv WebSocket error:",
+      event
+    );
+
+    setStatus(
+      "⚠️ Deriv WebSocket error"
+    );
+
   };
 
-  socket.onclose = function () {
-    setConnection("🔴 Disconnected from Deriv", false);
+  socket.onclose = function (event) {
+
+    console.log(
+      "WebSocket closed:",
+      event.code,
+      event.reason
+    );
+
+    setStatus(
+      "🔴 Disconnected — code " +
+      event.code
+    );
 
     if (analysisRunning) {
       scheduleReconnect();
     }
+
   };
 }
 
@@ -131,52 +156,97 @@ function connectDeriv() {
 ----------------------------- */
 
 function scheduleReconnect() {
-  if (!analysisRunning) return;
+
+  if (!analysisRunning) {
+    return;
+  }
 
   clearTimeout(reconnectTimer);
 
   reconnectAttempts++;
 
-  const delay = Math.min(
-    1000 * Math.pow(2, reconnectAttempts),
-    10000
+  const delay =
+    Math.min(
+      1000 *
+      Math.pow(2, reconnectAttempts - 1),
+      15000
+    );
+
+  setStatus(
+    "Reconnecting in " +
+    Math.ceil(delay / 1000) +
+    " seconds..."
   );
 
-  setConnection(
-    "Reconnecting to Deriv in " +
-      Math.round(delay / 1000) +
-      "s..."
+  reconnectTimer = setTimeout(
+    connectDeriv,
+    delay
   );
-
-  reconnectTimer = setTimeout(() => {
-    connectDeriv();
-  }, delay);
 }
 
 /* -----------------------------
-   SEND REQUEST
+   SEND
 ----------------------------- */
 
-function sendRequest(request) {
-  if (!socket || socket.readyState !== WebSocket.OPEN) {
-    showError("Deriv is not connected.");
+function send(data) {
+
+  if (
+    !socket ||
+    socket.readyState !== WebSocket.OPEN
+  ) {
+
+    console.warn(
+      "Socket is not open."
+    );
+
     return false;
   }
 
-  socket.send(JSON.stringify(request));
-  return true;
+  try {
+
+    socket.send(
+      JSON.stringify(data)
+    );
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "Send error:",
+      error
+    );
+
+    return false;
+  }
 }
 
 /* -----------------------------
-   GET MARKETS
+   LIVE TICKS
 ----------------------------- */
 
-function requestMarkets() {
-  sendRequest({
-    active_symbols: "brief",
-    product_type: "basic",
-    req_id: 1
-  });
+/*
+  Current Deriv public market-data
+  endpoint.
+
+  We request the 1HZ100V stream.
+*/
+
+function subscribeToTicks() {
+
+  const request = {
+    ticks: "1HZ100V",
+    subscribe: true
+  };
+
+  marketBox.textContent =
+    "Market: 1HZ100V";
+
+  tickHistory = [];
+  digitCounts = Array(10).fill(0);
+
+  send(request);
+
 }
 
 /* -----------------------------
@@ -184,344 +254,414 @@ function requestMarkets() {
 ----------------------------- */
 
 function handleMessage(raw) {
+
   let data;
 
   try {
+
     data = JSON.parse(raw);
+
   } catch (error) {
-    console.error("Invalid Deriv message:", raw);
+
+    console.error(
+      "Invalid WebSocket message:",
+      raw
+    );
+
     return;
   }
 
-  console.log("Deriv:", data);
+  console.log(
+    "Deriv message:",
+    data
+  );
 
   if (data.error) {
-    showError(
-      "Deriv: " +
-        (data.error.message || "Unknown API error")
+
+    console.error(
+      "Deriv API error:",
+      data.error
     );
+
+    setStatus(
+      "Deriv error: " +
+      (
+        data.error.message ||
+        "Unknown error"
+      )
+    );
+
     return;
   }
 
-  /* Markets received */
-  if (data.msg_type === "active_symbols") {
-    handleMarkets(data.active_symbols || []);
+  /*
+    Support the common tick response
+    structures so the analyzer can
+    process incoming price data.
+  */
+
+  if (data.tick) {
+
+    processTick(data.tick);
     return;
+
   }
 
-  /* Live tick received */
   if (data.msg_type === "tick") {
-    handleTick(data.tick);
+
+    processTick(data.tick);
     return;
+
   }
+
 }
 
 /* -----------------------------
-   SELECT MARKET
+   PROCESS TICK
 ----------------------------- */
 
-function handleMarkets(symbols) {
-  markets = symbols.filter(symbol => {
-    const code = symbol.symbol || "";
+function processTick(tick) {
 
-    return (
-      code.startsWith("R_") ||
-      code.startsWith("1HZ") ||
-      code.startsWith("BOOM") ||
-      code.startsWith("CRASH")
+  if (!tick) {
+    return;
+  }
+
+  const quote =
+    Number(
+      tick.quote ??
+      tick.price ??
+      tick.last
     );
-  });
-
-  if (markets.length === 0) {
-    markets = symbols;
-  }
-
-  if (markets.length === 0) {
-    showError("No Deriv markets were returned.");
-    return;
-  }
-
-  /* Prefer Volatility 100 / 1HZ100 */
-  let preferred =
-    markets.find(m =>
-      String(m.symbol).includes("1HZ100")
-    ) ||
-    markets.find(m =>
-      String(m.symbol).includes("R_100")
-    ) ||
-    markets[0];
-
-  currentSymbol = preferred.symbol;
-
-  marketBox.textContent =
-    "Market: " +
-    (preferred.display_name || currentSymbol);
-
-  subscribeToTicks(currentSymbol);
-}
-
-/* -----------------------------
-   SUBSCRIBE TO TICKS
------------------------------ */
-
-function subscribeToTicks(symbol) {
-  currentSymbol = symbol;
-
-  tickHistory = [];
-  digitCounts = Array(10).fill(0);
-
-  marketBox.textContent =
-    "📊 Market: " +
-    (symbol || "Unknown");
-
-  sendRequest({
-    ticks: symbol,
-    subscribe: 1,
-    req_id: 2
-  });
-
-  digitBox.textContent =
-    "Waiting for live ticks...";
-}
-
-/* -----------------------------
-   HANDLE TICK
------------------------------ */
-
-function handleTick(tick) {
-  if (!tick || tick.quote === undefined) {
-    return;
-  }
-
-  const quote = Number(tick.quote);
 
   if (!Number.isFinite(quote)) {
     return;
   }
 
   /*
-    Deriv supplies pip_size in many tick responses.
-    We use it when available to preserve the displayed
-    last decimal digit.
+    Convert the displayed quote
+    into a last digit.
+
+    We preserve enough decimal
+    precision for synthetic indices.
   */
 
-  const pipSize =
-    Number.isInteger(tick.pip_size)
-      ? tick.pip_size
-      : 2;
+  const quoteString =
+    String(quote);
 
-  const formatted = quote.toFixed(pipSize);
+  const clean =
+    quoteString.replace(
+      /[^0-9]/g,
+      ""
+    );
 
-  const lastCharacter =
-    formatted.charAt(formatted.length - 1);
+  if (!clean.length) {
+    return;
+  }
 
-  const digit = Number(lastCharacter);
+  const digit =
+    Number(
+      clean.charAt(
+        clean.length - 1
+      )
+    );
 
-  if (!Number.isInteger(digit)) {
+  if (
+    !Number.isInteger(digit) ||
+    digit < 0 ||
+    digit > 9
+  ) {
     return;
   }
 
   tickHistory.push({
-    quote,
-    digit,
-    epoch: tick.epoch
+    price: quote,
+    digit: digit,
+    time: Date.now()
   });
 
-  if (tickHistory.length > 100) {
+  if (
+    tickHistory.length >
+    MAX_TICKS
+  ) {
+
     tickHistory.shift();
+
   }
 
   digitCounts[digit]++;
 
-  updateAnalysis(quote, digit);
+  updateAnalysis(
+    quote,
+    digit
+  );
 }
 
 /* -----------------------------
    ANALYSIS
 ----------------------------- */
 
-function updateAnalysis(quote, lastDigit) {
-  const total = digitCounts.reduce(
-    (sum, value) => sum + value,
-    0
+function updateAnalysis(
+  price,
+  lastDigit
+) {
+
+  const total =
+    digitCounts.reduce(
+      (a, b) => a + b,
+      0
+    );
+
+  if (!total) {
+    return;
+  }
+
+  let mostFrequentDigit = 0;
+
+  for (
+    let i = 1;
+    i < 10;
+    i++
+  ) {
+
+    if (
+      digitCounts[i] >
+      digitCounts[
+        mostFrequentDigit
+      ]
+    ) {
+
+      mostFrequentDigit = i;
+
+    }
+  }
+
+  const frequency =
+    (
+      digitCounts[
+        mostFrequentDigit
+      ] /
+      total
+    ) * 100;
+
+  /*
+    Recent sample
+  */
+
+  const recent =
+    tickHistory.slice(-20);
+
+  const recentCounts =
+    Array(10).fill(0);
+
+  recent.forEach(
+    tick => {
+
+      recentCounts[
+        tick.digit
+      ]++;
+
+    }
   );
 
-  if (total === 0) return;
+  let recentDigit = 0;
 
-  let highestDigit = 0;
-  let highestCount = digitCounts[0];
+  for (
+    let i = 1;
+    i < 10;
+    i++
+  ) {
 
-  for (let i = 1; i < 10; i++) {
-    if (digitCounts[i] > highestCount) {
-      highestDigit = i;
-      highestCount = digitCounts[i];
-    }
-  }
-
-  const probability =
-    (highestCount / total) * 100;
-
-  const recent = tickHistory.slice(-20);
-
-  const recentCounts = Array(10).fill(0);
-
-  recent.forEach(item => {
-    recentCounts[item.digit]++;
-  });
-
-  let recentHighest = 0;
-
-  for (let i = 1; i < 10; i++) {
     if (
       recentCounts[i] >
-      recentCounts[recentHighest]
+      recentCounts[
+        recentDigit
+      ]
     ) {
-      recentHighest = i;
+
+      recentDigit = i;
+
     }
   }
 
-  const recentProbability =
-    recent.length > 0
-      ? (recentCounts[recentHighest] / recent.length) * 100
+  const recentFrequency =
+    recent.length
+      ? (
+          recentCounts[
+            recentDigit
+          ] /
+          recent.length
+        ) * 100
       : 0;
 
   /*
-    Simple consistency measure:
-    compare long-run and recent dominant digits.
+    Simple statistical confidence.
+
+    This is NOT a guaranteed prediction.
   */
 
   let confidence = 50;
 
-  if (highestDigit === recentHighest) {
+  if (
+    mostFrequentDigit ===
+    recentDigit
+  ) {
+
     confidence += 15;
+
   }
 
-  if (probability >= 15) {
+  if (frequency >= 15) {
+
     confidence += 10;
+
   }
 
-  if (recentProbability >= 20) {
+  if (
+    recentFrequency >= 20
+  ) {
+
     confidence += 10;
+
   }
 
-  if (recent.length >= 20) {
-    confidence += 5;
-  }
-
-  confidence = Math.min(confidence, 90);
+  confidence =
+    Math.min(
+      confidence,
+      90
+    );
 
   predictionBox.innerHTML =
+    "Latest price: <strong>" +
+    price +
+    "</strong><br>" +
+
     "Last digit: <strong>" +
     lastDigit +
     "</strong><br>" +
+
     "Most frequent digit: <strong>" +
-    highestDigit +
+    mostFrequentDigit +
     "</strong><br>" +
-    "Observed frequency: <strong>" +
-    probability.toFixed(1) +
+
+    "Frequency: <strong>" +
+    frequency.toFixed(1) +
     "%</strong><br>" +
+
     "Recent dominant digit: <strong>" +
-    recentHighest +
+    recentDigit +
     "</strong><br>" +
+
     "Analysis confidence: <strong>" +
     confidence +
     "%</strong>";
 
   digitBox.innerHTML =
     "<strong>Digit distribution</strong><br>" +
-    digitCounts
-      .map((count, digit) => {
-        const pct =
-          total > 0
-            ? ((count / total) * 100).toFixed(1)
-            : "0.0";
 
-        return (
-          digit +
-          ": " +
-          count +
-          " (" +
-          pct +
-          "%)"
-        );
-      })
+    digitCounts
+      .map(
+        (count, digit) => {
+
+          const percent =
+            (
+              count /
+              total
+            ) * 100;
+
+          return (
+            digit +
+            ": " +
+            count +
+            " (" +
+            percent.toFixed(1) +
+            "%)"
+          );
+
+        }
+      )
       .join(" | ");
 
   historyBox.innerHTML =
-    "<strong>Latest price:</strong> " +
-    quote +
-    "<br><strong>Ticks analysed:</strong> " +
+    "<strong>Ticks analysed:</strong> " +
     total;
 }
 
 /* -----------------------------
-   START ANALYSIS
+   START
 ----------------------------- */
 
 function startAnalysis() {
-  if (analysisRunning) return;
+
+  if (analysisRunning) {
+    return;
+  }
 
   analysisRunning = true;
 
-  setConnection(
-    "Starting Trader Pro..."
-  );
-
   tickHistory = [];
-  digitCounts = Array(10).fill(0);
+  digitCounts =
+    Array(10).fill(0);
 
   connectDeriv();
 }
 
 /* -----------------------------
-   STOP ANALYSIS
+   STOP
 ----------------------------- */
 
 function stopAnalysis() {
+
   analysisRunning = false;
 
-  clearTimeout(reconnectTimer);
+  clearTimeout(
+    reconnectTimer
+  );
 
   if (socket) {
+
     try {
       socket.close();
-    } catch (e) {}
+    } catch (error) {}
+
   }
 
   socket = null;
 
-  setConnection(
-    "⏹ Analysis stopped",
-    false
+  setStatus(
+    "⏹ Analysis stopped"
   );
 }
 
 /* -----------------------------
-   BUTTONS
+   BUTTON EVENTS
 ----------------------------- */
 
 if (startButton) {
+
   startButton.addEventListener(
     "click",
     startAnalysis
   );
+
 }
 
 if (stopButton) {
+
   stopButton.addEventListener(
     "click",
     stopAnalysis
   );
+
 }
 
 /* -----------------------------
    INITIAL STATUS
 ----------------------------- */
 
-setConnection(
+setStatus(
   "Ready — press Start Analysis"
 );
 
 console.log(
-  "Trader Pro loaded successfully."
-); 
+  "Trader Pro loaded."
+);
