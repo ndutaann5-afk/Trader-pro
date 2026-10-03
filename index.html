@@ -1,468 +1,670 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8"><meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
 
-<head>
+«»
 
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>Trader Pro</title>
-
-  <link
+  <title>Trader Pro VNO</title>  <link
     rel="stylesheet"
     href="style.css"
+  ></head><body>  <main class="app"><!-- HEADER -->
+
+<header class="header">
+
+  <div>
+
+    <h1>Trader Pro VNO</h1>
+
+    <p>Expert Market Analysis</p>
+
+  </div>
+
+  <button
+    class="menu-button"
+    type="button"
+    aria-label="Menu"
   >
+    ☰
+  </button>
 
-</head>
+</header>
 
 
-<body>
 
-  <main class="app">
+<!-- DERIV CONNECTION -->
 
+<section class="dashboard">
 
-    <!-- HEADER -->
+  <div class="dashboard-title">
 
-    <header class="header">
+    <h2>Deriv Connection</h2>
 
-      <div>
+    <p>
+      Connect your Deriv account securely
+      using OAuth 2.0.
+    </p>
 
-        <h1>Trader Pro</h1>
+  </div>
 
-        <p>Expert Market Analysis</p>
 
-      </div>
+  <button
+    id="connectDerivButton"
+    class="analysis-button"
+    type="button"
+    onclick="connectDeriv()"
+  >
+    CONNECT DERIV DEMO
+  </button>
 
-      <button
-        class="menu-button"
-        type="button"
-        aria-label="Menu"
-      >
-        ☰
-      </button>
 
-    </header>
+  <div
+    id="derivConnection"
+    class="connection"
+  >
+    Not connected
+  </div>
 
+</section>
 
 
-    <!-- LIVE DASHBOARD -->
 
-    <section class="dashboard">
+<!-- LIVE DASHBOARD -->
 
-      <div class="dashboard-title">
+<section class="dashboard">
 
-        <h2>Live Dashboard</h2>
+  <div class="dashboard-title">
 
-        <p>
-          Choose a market and contract type,
-          then start analysis.
-        </p>
+    <h2>Live Dashboard</h2>
 
-      </div>
+    <p>
+      Choose a market and contract type,
+      then start analysis.
+    </p>
 
+  </div>
 
 
-      <!-- CONTRACT TYPE -->
 
-      <div class="field">
+  <!-- CONTRACT TYPE -->
 
-        <label for="contractSelect">
-          CONTRACT TYPE
-        </label>
+  <div class="field">
 
-        <select
-          id="contractSelect"
-          class="market-select"
-        >
+    <label for="contractSelect">
+      CONTRACT TYPE
+    </label>
 
-          <option value="MATCHES">
-            Matches
-          </option>
+    <select
+      id="contractSelect"
+      class="market-select"
+    >
 
-          <option value="DIFFERS">
-            Differs
-          </option>
+      <option value="MATCHES">
+        Matches
+      </option>
 
-        </select>
+      <option value="DIFFERS">
+        Differs
+      </option>
 
-      </div>
+    </select>
 
+  </div>
 
 
-      <!-- MARKET -->
 
-      <div class="field">
+  <!-- MARKET -->
 
-        <label for="marketSelect">
-          MARKET
-        </label>
+  <div class="field">
 
-        <select
-          id="marketSelect"
-          class="market-select"
-        >
+    <label for="marketSelect">
+      MARKET
+    </label>
 
-          <option value="">
-            Loading markets...
-          </option>
+    <select
+      id="marketSelect"
+      class="market-select"
+    >
 
-        </select>
+      <option value="">
+        Loading markets...
+      </option>
 
-      </div>
+    </select>
 
+  </div>
 
 
-      <!-- LIVE PRICE -->
 
-      <div class="live-price">
+  <!-- LIVE PRICE -->
 
-        <div
-          id="market"
-          class="price"
-        >
-          Connecting...
-        </div>
+  <div class="live-price">
 
-        <div
-          id="connection"
-          class="connection"
-        >
-          Connecting to live data...
-        </div>
+    <div
+      id="market"
+      class="price"
+    >
+      Connecting...
+    </div>
 
-      </div>
+    <div
+      id="connection"
+      class="connection"
+    >
+      Connecting to live data...
+    </div>
 
+  </div>
 
 
-      <!-- ANALYSIS BUTTON -->
 
-      <button
-        id="analysisButton"
-        class="analysis-button"
-        type="button"
-        onclick="toggleAnalysis()"
-      >
-        START ANALYSIS
-      </button>
+  <!-- ANALYSIS BUTTON -->
 
-    </section>
+  <button
+    id="analysisButton"
+    class="analysis-button"
+    type="button"
+    onclick="toggleAnalysis()"
+  >
+    START ANALYSIS
+  </button>
 
+</section>
 
 
-    <!-- ANALYZER -->
 
-    <section class="analyzer">
+<!-- ANALYZER -->
 
+<section class="analyzer">
 
-      <div class="section-heading">
 
-        <span class="ai-icon">
-          ✦
-        </span>
+  <div class="section-heading">
 
-        <div>
+    <span class="ai-icon">
+      ✦
+    </span>
 
-          <h2>
-            AI Market Analyzer
-          </h2>
-
-          <p>
-            Live statistical analysis
-          </p>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- TREND -->
-
-      <div class="analysis-row">
-
-        <span>
-          Current Trend
-        </span>
-
-        <strong id="trend">
-          Waiting
-        </strong>
-
-      </div>
-
-
-
-      <!-- STRENGTH -->
-
-      <div class="analysis-row">
-
-        <span>
-          Signal Strength
-        </span>
-
-        <strong id="signalStrength">
-          Waiting
-        </strong>
-
-      </div>
-
-
-
-      <!-- PATTERN -->
-
-      <div class="pattern">
-
-        <span>
-          Pattern Detected
-        </span>
-
-        <p id="pattern">
-          Waiting for sufficient
-          live market data.
-        </p>
-
-      </div>
-
-
-
-      <!-- TARGET -->
-
-      <div class="target-section">
-
-        <span class="target-label">
-          TARGET DIGIT
-        </span>
-
-        <div
-          id="targetDigit"
-          class="target-digit"
-        >
-          —
-        </div>
-
-      </div>
-
-
-
-      <!-- MATCH / DIFFER -->
-
-      <div class="contract-buttons">
-
-        <div
-          id="matchesBox"
-          class="contract-box"
-        >
-
-          <span>
-            MATCHES
-          </span>
-
-          <strong id="matchesChance">
-            —
-          </strong>
-
-        </div>
-
-
-
-        <div
-          id="differsBox"
-          class="contract-box"
-        >
-
-          <span>
-            DIFFERS
-          </span>
-
-          <strong id="differsChance">
-            —
-          </strong>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- CONFIDENCE -->
-
-      <div class="confidence-section">
-
-        <span>
-          CONFIDENCE
-        </span>
-
-        <strong id="confidence">
-          —
-        </strong>
-
-      </div>
-
-
-
-      <!-- VALIDITY -->
-
-      <div class="validity">
-
-        <span>
-          SIGNAL VALID FOR
-        </span>
-
-        <strong id="validity">
-          —
-        </strong>
-
-      </div>
-
-
-
-      <!-- SIGNAL -->
-
-      <div
-        id="signal"
-        class="signal-status"
-      >
-        WAIT
-      </div>
-
-
-
-      <div
-        id="message"
-        class="message"
-      >
-        Connect to live data
-        to begin analysis.
-      </div>
-
-    </section>
-
-
-
-    <!-- MARKET DATA -->
-
-    <section class="data-section">
-
-      <div class="data-heading">
-
-        <h2>
-          Market Data
-        </h2>
-
-      </div>
-
-
-
-      <div class="stat-grid">
-
-
-        <div class="stat-card">
-
-          <span>
-            SAMPLE SIZE
-          </span>
-
-          <strong id="sampleSize">
-            0
-          </strong>
-
-        </div>
-
-
-
-        <div class="stat-card">
-
-          <span>
-            HOT DIGIT
-          </span>
-
-          <strong id="hotDigit">
-            —
-          </strong>
-
-        </div>
-
-
-
-        <div class="stat-card">
-
-          <span>
-            COLD DIGIT
-          </span>
-
-          <strong id="coldDigit">
-            —
-          </strong>
-
-        </div>
-
-
-
-        <div class="stat-card">
-
-          <span>
-            CURRENT STREAK
-          </span>
-
-          <strong id="streak">
-            —
-          </strong>
-
-        </div>
-
-
-      </div>
-
-    </section>
-
-
-
-    <!-- DIGIT DISTRIBUTION -->
-
-    <section class="data-section">
+    <div>
 
       <h2>
-        Digit Distribution
+        AI Market Analyzer
       </h2>
 
-      <div
-        id="digitDistribution"
-        class="distribution"
-      >
-        Waiting for data...
-      </div>
+      <p>
+        Live statistical analysis
+      </p>
 
-    </section>
+    </div>
 
+  </div>
 
 
-    <!-- RECENT DIGITS -->
 
-    <section class="data-section">
+  <!-- TREND -->
 
-      <h2>
-        Recent Digits
-      </h2>
+  <div class="analysis-row">
 
-      <div
-        id="digitHistory"
-        class="digit-history"
-      >
+    <span>
+      Current Trend
+    </span>
+
+    <strong id="trend">
+      Waiting
+    </strong>
+
+  </div>
+
+
+
+  <!-- STRENGTH -->
+
+  <div class="analysis-row">
+
+    <span>
+      Signal Strength
+    </span>
+
+    <strong id="signalStrength">
+      Waiting
+    </strong>
+
+  </div>
+
+
+
+  <!-- PATTERN -->
+
+  <div class="pattern">
+
+    <span>
+      Pattern Detected
+    </span>
+
+    <p id="pattern">
+      Waiting for sufficient
+      live market data.
+    </p>
+
+  </div>
+
+
+
+  <!-- TARGET -->
+
+  <div class="target-section">
+
+    <span class="target-label">
+      TARGET DIGIT
+    </span>
+
+    <div
+      id="targetDigit"
+      class="target-digit"
+    >
+      —
+    </div>
+
+  </div>
+
+
+
+  <!-- MATCH / DIFFER -->
+
+  <div class="contract-buttons">
+
+    <div
+      id="matchesBox"
+      class="contract-box"
+    >
+
+      <span>
+        MATCHES
+      </span>
+
+      <strong id="matchesChance">
         —
-      </div>
+      </strong>
 
-    </section>
-
-
-  </main>
+    </div>
 
 
-  <script src="script.js"></script>
 
-</body>
+    <div
+      id="differsBox"
+      class="contract-box"
+    >
 
-</html>
+      <span>
+        DIFFERS
+      </span>
+
+      <strong id="differsChance">
+        —
+      </strong>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- CONFIDENCE -->
+
+  <div class="confidence-section">
+
+    <span>
+      CONFIDENCE
+    </span>
+
+    <strong id="confidence">
+      —
+    </strong>
+
+  </div>
+
+
+
+  <!-- VALIDITY -->
+
+  <div class="validity">
+
+    <span>
+      SIGNAL VALID FOR
+    </span>
+
+    <strong id="validity">
+      —
+    </strong>
+
+  </div>
+
+
+
+  <!-- SIGNAL -->
+
+  <div
+    id="signal"
+    class="signal-status"
+  >
+    WAIT
+  </div>
+
+
+
+  <div
+    id="message"
+    class="message"
+  >
+    Connect to live data
+    to begin analysis.
+  </div>
+
+</section>
+
+
+
+<!-- MARKET DATA -->
+
+<section class="data-section">
+
+  <div class="data-heading">
+
+    <h2>
+      Market Data
+    </h2>
+
+  </div>
+
+
+
+  <div class="stat-grid">
+
+
+    <div class="stat-card">
+
+      <span>
+        SAMPLE SIZE
+      </span>
+
+      <strong id="sampleSize">
+        0
+      </strong>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+      <span>
+        HOT DIGIT
+      </span>
+
+      <strong id="hotDigit">
+        —
+      </strong>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+      <span>
+        COLD DIGIT
+      </span>
+
+      <strong id="coldDigit">
+        —
+      </strong>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+      <span>
+        CURRENT STREAK
+      </span>
+
+      <strong id="streak">
+        —
+      </strong>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- DIGIT DISTRIBUTION -->
+
+<section class="data-section">
+
+  <h2>
+    Digit Distribution
+  </h2>
+
+  <div
+    id="digitDistribution"
+    class="distribution"
+  >
+    Waiting for data...
+  </div>
+
+</section>
+
+
+
+<!-- RECENT DIGITS -->
+
+<section class="data-section">
+
+  <h2>
+    Recent Digits
+  </h2>
+
+  <div
+    id="digitHistory"
+    class="digit-history"
+  >
+    —
+  </div>
+
+</section>
+
+  </main>  <script>
+
+    /*
+      TRADER PRO VNO
+      DERIV OAUTH 2.0 + PKCE
+    */
+
+    const DERIV_CLIENT_ID = "34zdoaF8Uq7vzVpOV3ura";
+
+    const DERIV_REDIRECT_URI =
+      "https://trader-pro-uMac.vercel.app/";
+
+
+
+    function base64UrlEncode(buffer) {
+
+      return btoa(
+        String.fromCharCode(...new Uint8Array(buffer))
+      )
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=/g, "");
+
+    }
+
+
+
+    function generateRandomString(length = 64) {
+
+      const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+      let result = "";
+
+      const randomValues =
+        crypto.getRandomValues(
+          new Uint8Array(length)
+        );
+
+      for (let i = 0; i < length; i++) {
+
+        result +=
+          characters[
+            randomValues[i] % characters.length
+          ];
+
+      }
+
+      return result;
+
+    }
+
+
+
+    async function createCodeChallenge(verifier) {
+
+      const encoder =
+        new TextEncoder();
+
+      const data =
+        encoder.encode(verifier);
+
+      const digest =
+        await crypto.subtle.digest(
+          "SHA-256",
+          data
+        );
+
+      return base64UrlEncode(digest);
+
+    }
+
+
+
+    async function connectDeriv() {
+
+      const button =
+        document.getElementById(
+          "connectDerivButton"
+        );
+
+      const status =
+        document.getElementById(
+          "derivConnection"
+        );
+
+
+      try {
+
+        button.disabled = true;
+
+        button.textContent =
+          "CONNECTING...";
+
+        status.textContent =
+          "Preparing secure Deriv authorization...";
+
+
+        const codeVerifier =
+          generateRandomString();
+
+
+        const codeChallenge =
+          await createCodeChallenge(
+            codeVerifier
+          );
+
+
+        const state =
+          generateRandomString(32);
+
+
+        sessionStorage.setItem(
+          "deriv_code_verifier",
+          codeVerifier
+        );
+
+
+        sessionStorage.setItem(
+          "deriv_oauth_state",
+          state
+        );
+
+
+        const authorizationUrl =
+          new URL(
+            "https://auth.deriv.com/oauth2/auth"
+          );
+
+
+        authorizationUrl.searchParams.set(
+          "app_id",
+          DERIV_CLIENT_ID
+        );
+
+
+        authorizationUrl.searchParams.set(
+          "redirect_uri",
+          DERIV_REDIRECT_URI
+        );
+
+
+        authorizationUrl.searchParams.set(
+          "response_type",
+          "code"
+        );
+
+
+        authorizationUrl.searchParams.set(
+          "code_challenge",
+          codeChallenge
+        );
+
+
+        authorizationUrl.searchParams.set(
+          "code_challenge_method",
+          "S256"
+        );
+
+
+        authorizationUrl.searchParams.set(
+          "state",
+          state
+        );
+
+
+        /*
+          Open Deriv authorization.
+        */
+
+        window.location.href =
+          authorizationUrl.toString();
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+          "Unable to start Deriv authorization.";
+
+        button.disabled = false;
+
+        button.textContent =
+          "CONNECT DERIV DEMO";
+
+      }
+
+    }
+
+  </script>  <script src="script.js"></script></body></html>
