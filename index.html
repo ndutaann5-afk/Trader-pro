@@ -1,997 +1,1144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trader Pro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trader Pro</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+*{box-sizing:border-box}
 
-    body {
-      margin: 0;
-      background: #080b10;
-      color: #ffffff;
-      font-family: Arial, sans-serif;
-    }
+body{
+margin:0;
+background:#080b10;
+color:white;
+font-family:Arial,sans-serif
+}
 
-    .app {
-      max-width: 700px;
-      margin: auto;
-      padding: 18px;
-    }
+.app{
+max-width:700px;
+margin:auto;
+padding:18px
+}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-    }
+h1{margin:0;font-size:28px}
 
-    .subtitle {
-      color: #8d98a8;
-      margin-top: 5px;
-      margin-bottom: 20px;
-    }
+.subtitle{
+color:#8d98a8;
+margin:5px 0 20px
+}
 
-    .card {
-      background: #11161e;
-      border: 1px solid #252c36;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
+.card{
+background:#11161e;
+border:1px solid #252c36;
+border-radius:14px;
+padding:16px;
+margin-bottom:14px
+}
 
-    label {
-      display: block;
-      color: #9ca8b8;
-      font-size: 13px;
-      margin-bottom: 7px;
-    }
+label{
+display:block;
+color:#9ca8b8;
+font-size:13px;
+margin-bottom:7px
+}
 
-    select {
-      width: 100%;
-      padding: 13px;
-      border-radius: 9px;
-      border: 1px solid #303846;
-      background: #080b10;
-      color: white;
-      font-size: 15px;
-    }
+select{
+width:100%;
+padding:13px;
+border-radius:9px;
+border:1px solid #303846;
+background:#080b10;
+color:white;
+font-size:15px
+}
 
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #7ee787;
-      font-size: 14px;
-    }
+.status{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:14px
+}
 
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #7ee787;
-    }
+.dot{
+width:9px;
+height:9px;
+border-radius:50%;
+background:#7ee787
+}
 
-    .main-result {
-      text-align: center;
-      padding: 25px 10px;
-    }
+.timer{
+text-align:center;
+font-size:32px;
+font-weight:bold;
+margin:12px 0 15px
+}
 
-    .small-title {
-      color: #8995a5;
-      font-size: 13px;
-      letter-spacing: 1px;
-    }
+.buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
 
-    .digit {
-      font-size: 76px;
-      font-weight: bold;
-      margin: 8px 0;
-    }
+button{
+width:100%;
+border:0;
+border-radius:10px;
+padding:14px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+background:white;
+color:black
+}
 
-    .edge {
-      font-size: 17px;
-      font-weight: bold;
-    }
+button.secondary{
+background:#252c36;
+color:white
+}
 
-    .confidence {
-      margin-top: 7px;
-      color: #b8c2cf;
-    }
+button:disabled{
+opacity:.45
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+.main-result{
+text-align:center;
+padding:25px 10px
+}
 
-    .stat {
-      background: #0b0f15;
-      border-radius: 10px;
-      padding: 13px;
-    }
+.small-title{
+color:#8995a5;
+font-size:13px;
+letter-spacing:1px
+}
 
-    .stat-name {
-      color: #8995a5;
-      font-size: 12px;
-    }
+.digit{
+font-size:76px;
+font-weight:bold;
+margin:8px 0
+}
 
-    .stat-value {
-      font-size: 20px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
+.edge{
+font-size:17px;
+font-weight:bold
+}
 
-    .timer {
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      margin: 8px 0 15px;
-    }
+.confidence{
+margin-top:7px;
+color:#b8c2cf
+}
 
-    .buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
 
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #ffffff;
-      color: #000000;
-    }
+.stat{
+background:#0b0f15;
+border-radius:10px;
+padding:13px
+}
 
-    button:active {
-      transform: scale(0.98);
-    }
+.stat-name{
+color:#8995a5;
+font-size:12px
+}
 
-    button.secondary {
-      background: #252c36;
-      color: white;
-    }
+.stat-value{
+font-size:20px;
+font-weight:bold;
+margin-top:5px
+}
 
-    button:disabled {
-      opacity: 0.45;
-    }
+.digits{
+display:grid;
+grid-template-columns:repeat(10,1fr);
+gap:5px;
+margin-top:10px
+}
 
-    .feed {
-      max-height: 180px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 13px;
-      color: #aeb8c6;
-    }
+.digit-box{
+background:#0b0f15;
+border-radius:6px;
+text-align:center;
+padding:8px 2px;
+font-size:12px
+}
 
-    .feed div {
-      padding: 5px 0;
-      border-bottom: 1px solid #1c222b;
-    }
+.digit-box strong{
+display:block;
+font-size:14px;
+margin-top:3px
+}
 
-    .digits {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 5px;
-      margin-top: 10px;
-    }
+.insight{
+color:#b9c3d0;
+line-height:1.5;
+font-size:14px
+}
 
-    .digit-box {
-      background: #0b0f15;
-      border-radius: 6px;
-      text-align: center;
-      padding: 8px 2px;
-      font-size: 12px;
-    }
+.feed{
+max-height:180px;
+overflow-y:auto;
+font-family:monospace;
+font-size:13px;
+color:#aeb8c6
+}
 
-    .digit-box strong {
-      display: block;
-      font-size: 14px;
-      margin-top: 3px;
-    }
-
-    .insight {
-      color: #b9c3d0;
-      line-height: 1.5;
-      font-size: 14px;
-    }
-
-    .error {
-      color: #ff7b72;
-    }
-  </style>
+.feed div{
+padding:5px 0;
+border-bottom:1px solid #1c222b
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <h1>TRADER PRO</h1>
-  <div class="subtitle">Deriv Volatility Matches Edge Engine</div>
+<h1>TRADER PRO</h1>
 
-  <div class="card">
-    <div class="status">
-      <span class="dot" id="statusDot"></span>
-      <span id="status">Connecting to Deriv...</span>
-    </div>
-  </div>
+<div class="subtitle">
+Deriv Volatility Matches Edge Engine
+</div>
 
-  <div class="card">
 
-    <label>VOLATILITY INDEX</label>
+<div class="card">
 
-    <select id="market">
-      <option value="1HZ100V">Volatility 100 (1s)</option>
-      <option value="1HZ75V">Volatility 75 (1s)</option>
-      <option value="1HZ50V">Volatility 50 (1s)</option>
-      <option value="1HZ25V">Volatility 25 (1s)</option>
-      <option value="1HZ10V">Volatility 10 (1s)</option>
-      <option value="R_100">Volatility 100</option>
-      <option value="R_75">Volatility 75</option>
-      <option value="R_50">Volatility 50</option>
-      <option value="R_25">Volatility 25</option>
-      <option value="R_10">Volatility 10</option>
-    </select>
-
-  </div>
-
-  <div class="card">
-
-    <label>ANALYSIS WINDOW</label>
-
-    <select id="window">
-      <option value="30000">30 Seconds</option>
-      <option value="60000" selected>1 Minute</option>
-      <option value="120000">2 Minutes</option>
-      <option value="300000">5 Minutes</option>
-    </select>
-
-    <div class="timer" id="timer">01:00</div>
-
-    <div class="buttons">
-      <button id="startBtn">START</button>
-      <button id="nextBtn" class="secondary" disabled>NEXT ANALYSIS</button>
-    </div>
-
-  </div>
-
-  <div class="card main-result">
-
-    <div class="small-title">MATCHES CANDIDATE</div>
-
-    <div class="digit" id="candidate">—</div>
-
-    <div class="edge" id="edge">WAITING</div>
-
-    <div class="confidence">
-      Confidence: <span id="confidence">—</span>
-    </div>
-
-  </div>
-
-  <div class="card">
-
-    <div class="grid">
-
-      <div class="stat">
-        <div class="stat-name">TICKS</div>
-        <div class="stat-value" id="sample">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-name">MATCHES RATE</div>
-        <div class="stat-value" id="matches">—</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-name">DIFFERS RATE</div>
-        <div class="stat-value" id="differs">—</div>
-      </div>
-
-      <div class="stat">
-        <div class="stat-name">EDGE GAP</div>
-        <div class="stat-value" id="gap">—</div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="card">
-
-    <div class="small-title">DIGIT DISTRIBUTION</div>
-
-    <div class="digits" id="digits"></div>
-
-  </div>
-
-  <div class="card">
-
-    <div class="small-title">AI / STATISTICAL INSIGHT</div>
-
-    <p class="insight" id="insight">
-      Waiting for enough live Volatility ticks.
-    </p>
-
-  </div>
-
-  <div class="card">
-
-    <div class="small-title">LIVE TICK FEED</div>
-
-    <div class="feed" id="feed"></div>
-
-  </div>
+<div class="status">
+<span class="dot" id="dot"></span>
+<span id="status">Connecting to Deriv...</span>
+</div>
 
 </div>
 
+
+<div class="card">
+
+<label>VOLATILITY INDEX</label>
+
+<select id="market">
+
+<option value="1HZ100V">
+Volatility 100 (1s)
+</option>
+
+<option value="1HZ75V">
+Volatility 75 (1s)
+</option>
+
+<option value="1HZ50V">
+Volatility 50 (1s)
+</option>
+
+<option value="1HZ25V">
+Volatility 25 (1s)
+</option>
+
+<option value="1HZ10V">
+Volatility 10 (1s)
+</option>
+
+<option value="R_100">
+Volatility 100
+</option>
+
+<option value="R_75">
+Volatility 75
+</option>
+
+<option value="R_50">
+Volatility 50
+</option>
+
+<option value="R_25">
+Volatility 25
+</option>
+
+<option value="R_10">
+Volatility 10
+</option>
+
+</select>
+
+</div>
+
+
+<div class="card">
+
+<label>ANALYSIS WINDOW</label>
+
+<select id="window">
+
+<option value="40000" selected>
+40 Seconds
+</option>
+
+<option value="30000">
+30 Seconds
+</option>
+
+<option value="60000">
+1 Minute
+</option>
+
+<option value="120000">
+2 Minutes
+</option>
+
+</select>
+
+
+<div class="timer" id="timer">
+00:40
+</div>
+
+
+<div class="buttons">
+
+<button id="start">
+START
+</button>
+
+<button id="next" class="secondary" disabled>
+NEXT ANALYSIS
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card main-result">
+
+<div class="small-title">
+MATCHES CANDIDATE
+</div>
+
+<div class="digit" id="candidate">
+—
+</div>
+
+<div class="edge" id="edge">
+WAITING
+</div>
+
+<div class="confidence">
+Confidence:
+<span id="confidence">—</span>
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="grid">
+
+<div class="stat">
+
+<div class="stat-name">
+TICKS
+</div>
+
+<div class="stat-value" id="sample">
+0
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-name">
+MATCHES RATE
+</div>
+
+<div class="stat-value" id="matches">
+—
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-name">
+DIFFERS RATE
+</div>
+
+<div class="stat-value" id="differs">
+—
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-name">
+EDGE GAP
+</div>
+
+<div class="stat-value" id="gap">
+—
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="small-title">
+DIGIT DISTRIBUTION
+</div>
+
+<div class="digits" id="digits">
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="small-title">
+AI / STATISTICAL INSIGHT
+</div>
+
+<p class="insight" id="insight">
+
+Waiting for live Volatility ticks.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<div class="small-title">
+LIVE TICK FEED
+</div>
+
+<div class="feed" id="feed">
+</div>
+
+</div>
+
+</div>
+
+
 <script>
 
-const DERIV_URL =
-  "wss://api.derivws.com/trading/v1/options/ws/public";
+const URL =
+"wss://api.derivws.com/trading/v1/options/ws/public";
 
-const markets = [
-  "R_10",
-  "1HZ10V",
-  "R_25",
-  "1HZ25V",
-  "R_50",
-  "1HZ50V",
-  "R_75",
-  "1HZ75V",
-  "R_100",
-  "1HZ100V"
-];
+let ws=null;
 
-let ws = null;
+let collecting=false;
 
-let running = false;
-let collecting = false;
+let ticks=[];
 
-let ticks = [];
-let counts = Array(10).fill(0);
+let counts=Array(10).fill(0);
 
-let startTime = 0;
-let endTime = 0;
+let endTime=0;
 
-let timerInterval = null;
+let timer=null;
 
-let selectedMarket = "1HZ100V";
-
-const statusEl = document.getElementById("status");
-const statusDot = document.getElementById("statusDot");
-
-const marketEl = document.getElementById("market");
-const windowEl = document.getElementById("window");
-
-const startBtn = document.getElementById("startBtn");
-const nextBtn = document.getElementById("nextBtn");
-
-const timerEl = document.getElementById("timer");
-
-const candidateEl = document.getElementById("candidate");
-const edgeEl = document.getElementById("edge");
-const confidenceEl = document.getElementById("confidence");
-
-const sampleEl = document.getElementById("sample");
-const matchesEl = document.getElementById("matches");
-const differsEl = document.getElementById("differs");
-const gapEl = document.getElementById("gap");
-
-const digitsEl = document.getElementById("digits");
-const insightEl = document.getElementById("insight");
-const feedEl = document.getElementById("feed");
+let symbol="1HZ100V";
 
 
-function setStatus(text, error = false) {
+const status=
+document.getElementById("status");
 
-  statusEl.textContent = text;
+const dot=
+document.getElementById("dot");
 
-  if (error) {
-    statusDot.style.background = "#ff7b72";
-    statusEl.classList.add("error");
-  } else {
-    statusDot.style.background = "#7ee787";
-    statusEl.classList.remove("error");
-  }
+const market=
+document.getElementById("market");
+
+const windowSelect=
+document.getElementById("window");
+
+const start=
+document.getElementById("start");
+
+const next=
+document.getElementById("next");
+
+const timerDisplay=
+document.getElementById("timer");
+
+const candidate=
+document.getElementById("candidate");
+
+const edge=
+document.getElementById("edge");
+
+const confidence=
+document.getElementById("confidence");
+
+const sample=
+document.getElementById("sample");
+
+const matches=
+document.getElementById("matches");
+
+const differs=
+document.getElementById("differs");
+
+const gap=
+document.getElementById("gap");
+
+const digits=
+document.getElementById("digits");
+
+const insight=
+document.getElementById("insight");
+
+const feed=
+document.getElementById("feed");
+
+
+function setStatus(message,error=false){
+
+status.textContent=message;
+
+dot.style.background=
+error ? "#ff7b72" : "#7ee787";
 
 }
 
 
-function connect() {
+function connect(){
 
-  setStatus("Connecting to Deriv...");
+setStatus("Connecting to Deriv...");
 
-  ws = new WebSocket(DERIV_URL);
-
-  ws.onopen = function() {
-
-    running = true;
-
-    setStatus("Connected — loading Volatility markets...");
-
-    ws.send(JSON.stringify({
-      active_symbols: "brief",
-      req_id: 1
-    }));
-
-  };
+ws=new WebSocket(URL);
 
 
-  ws.onmessage = function(event) {
+ws.onopen=()=>{
 
-    try {
+setStatus("Connected — loading Volatility...");
 
-      const data = JSON.parse(event.data);
+ws.send(JSON.stringify({
 
-      if (data.error) {
+active_symbols:"brief",
 
-        setStatus(
-          "API error: " + data.error.message,
-          true
-        );
+req_id:1
 
-        return;
-      }
+}));
+
+};
 
 
-      if (data.msg_type === "active_symbols") {
+ws.onmessage=(event)=>{
 
-        const available =
-          data.active_symbols || [];
-
-        const found =
-          available.filter(x =>
-            markets.includes(x.underlying_symbol)
-          );
-
-        if (found.length === 0) {
-
-          setStatus(
-            "No Volatility markets returned",
-            true
-          );
-
-          return;
-        }
-
-        setStatus("Connected — Volatility ready");
-
-        subscribe();
-
-      }
+const data=JSON.parse(event.data);
 
 
-      if (data.msg_type === "tick") {
+if(data.error){
 
-        receiveTick(data.tick);
+setStatus(
+"API error: "+data.error.message,
+true
+);
 
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  };
-
-
-  ws.onerror = function() {
-
-    setStatus("Connection error", true);
-
-  };
-
-
-  ws.onclose = function() {
-
-    if (running) {
-
-      setStatus("Disconnected — reconnecting...");
-
-      setTimeout(connect, 2000);
-
-    }
-
-  };
+return;
 
 }
 
 
-function subscribe() {
+if(data.msg_type==="active_symbols"){
 
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    return;
-  }
+setStatus(
+"Connected — Volatility ready"
+);
 
-  ws.send(JSON.stringify({
-
-    forget_all: "ticks"
-
-  }));
-
-  ws.send(JSON.stringify({
-
-    ticks: selectedMarket,
-    subscribe: 1,
-    req_id: 2
-
-  }));
+subscribe();
 
 }
 
 
-function receiveTick(tick) {
+if(data.msg_type==="tick"){
 
-  if (!tick) return;
+receiveTick(data.tick);
 
-  const quote = Number(tick.quote);
+}
 
-  if (!Number.isFinite(quote)) return;
-
-  const priceString = String(tick.quote);
-
-  let digit = 0;
-
-  if (priceString.includes(".")) {
-
-    const decimal =
-      priceString.split(".")[1];
-
-    digit =
-      Number(decimal.slice(-1));
-
-  } else {
-
-    digit =
-      Number(priceString.slice(-1));
-
-  }
-
-  if (digit < 0 || digit > 9) return;
+};
 
 
-  const time =
-    new Date().toLocaleTimeString();
+ws.onerror=()=>{
 
+setStatus(
+"Connection error",
+true
+);
 
-  feedEl.insertAdjacentHTML(
-    "afterbegin",
-    `<div>${time} → ${quote} → digit ${digit}</div>`
-  );
-
-
-  while (feedEl.children.length > 25) {
-
-    feedEl.removeChild(feedEl.lastChild);
-
-  }
-
-
-  if (!collecting) return;
-
-
-  ticks.push({
-    digit: digit,
-    price: quote,
-    time: Date.now()
-  });
-
-  counts[digit]++;
-
-  sampleEl.textContent = ticks.length;
-
-  renderDigits();
+};
 
 }
 
 
-function startAnalysis() {
+function subscribe(){
 
-  if (collecting) return;
+if(!ws ||
+ws.readyState!==WebSocket.OPEN)
+return;
 
-  ticks = [];
-  counts = Array(10).fill(0);
 
-  candidateEl.textContent = "—";
-  edgeEl.textContent = "COLLECTING";
-  confidenceEl.textContent = "—";
+ws.send(JSON.stringify({
 
-  matchesEl.textContent = "—";
-  differsEl.textContent = "—";
-  gapEl.textContent = "—";
+forget_all:"ticks"
 
-  insightEl.textContent =
-    "Collecting live Volatility ticks and measuring digit behavior...";
+}));
 
-  sampleEl.textContent = "0";
 
-  renderDigits();
+ws.send(JSON.stringify({
 
-  const duration =
-    Number(windowEl.value);
+ticks:symbol,
 
-  startTime = Date.now();
-  endTime = startTime + duration;
+subscribe:1,
 
-  collecting = true;
+req_id:2
 
-  startBtn.textContent = "RUNNING...";
-  startBtn.disabled = true;
-
-  nextBtn.disabled = true;
-
-  updateTimer();
-
-  clearInterval(timerInterval);
-
-  timerInterval =
-    setInterval(updateTimer, 100);
+}));
 
 }
 
 
-function updateTimer() {
+function getDigit(quote){
 
-  if (!collecting) return;
+const text=String(quote);
 
-  const remaining =
-    Math.max(0, endTime - Date.now());
+if(text.includes(".")){
 
-  const seconds =
-    Math.ceil(remaining / 1000);
+const decimal=
+text.split(".")[1];
 
-  const mins =
-    Math.floor(seconds / 60);
+return Number(
+decimal.slice(-1)
+);
 
-  const secs =
-    seconds % 60;
+}
 
-  timerEl.textContent =
-    String(mins).padStart(2, "0") +
-    ":" +
-    String(secs).padStart(2, "0");
-
-
-  if (remaining <= 0) {
-
-    finishAnalysis();
-
-  }
+return Number(
+text.slice(-1)
+);
 
 }
 
 
-function finishAnalysis() {
+function receiveTick(tick){
 
-  if (!collecting) return;
+if(!tick)return;
 
-  collecting = false;
+const quote=
+Number(tick.quote);
 
-  clearInterval(timerInterval);
+if(!Number.isFinite(quote))
+return;
 
-  timerEl.textContent = "DONE";
 
-  startBtn.textContent = "START";
-  startBtn.disabled = false;
+const digit=
+getDigit(tick.quote);
 
-  nextBtn.disabled = false;
 
-  calculateEdge();
+const time=
+new Date().toLocaleTimeString();
 
-}
 
-
-function calculateEdge() {
-
-  const total = ticks.length;
-
-  if (total < 20) {
-
-    edgeEl.textContent = "NO CLEAR EDGE";
-
-    confidenceEl.textContent = "LOW";
-
-    insightEl.textContent =
-      "Not enough ticks were collected. A stronger sample is required before treating any digit as a candidate.";
-
-    return;
-
-  }
-
-
-  const scores = [];
-
-
-  const recentCount =
-    Math.min(30, total);
-
-  const recent =
-    ticks.slice(-recentCount);
-
-
-  const recentCounts =
-    Array(10).fill(0);
-
-  recent.forEach(t =>
-    recentCounts[t.digit]++
-  );
-
-
-  for (let digit = 0; digit <= 9; digit++) {
-
-    const frequency =
-      counts[digit] / total;
-
-    const recentFrequency =
-      recentCounts[digit] / recentCount;
-
-
-    let consistency = 0;
-
-    const sectionSize =
-      Math.floor(total / 3);
-
-
-    for (let section = 0; section < 3; section++) {
-
-      const from =
-        section * sectionSize;
-
-      const to =
-        section === 2
-          ? total
-          : from + sectionSize;
-
-      const sectionTicks =
-        ticks.slice(from, to);
-
-      if (sectionTicks.length === 0)
-        continue;
-
-      const appearances =
-        sectionTicks.filter(
-          t => t.digit === digit
-        ).length;
-
-      const rate =
-        appearances / sectionTicks.length;
-
-      if (rate >= 0.10) {
-        consistency++;
-      }
-
-    }
-
-
-    const lastTen =
-      ticks.slice(-10);
-
-    const cluster =
-      lastTen.filter(
-        t => t.digit === digit
-      ).length;
-
-
-    const score =
-      (frequency * 100 * 0.45) +
-      (recentFrequency * 100 * 0.30) +
-      (consistency * 4) +
-      (cluster * 2);
-
-
-    scores.push({
-      digit,
-      score,
-      frequency,
-      recentFrequency
-    });
-
-  }
-
-
-  scores.sort(
-    (a, b) => b.score - a.score
-  );
-
-
-  const best =
-    scores[0];
-
-  const second =
-    scores[1];
-
-
-  const edgeGap =
-    best.score - second.score;
-
-
-  gapEl.textContent =
-    edgeGap.toFixed(1);
-
-
-  const matchesRate =
-    best.frequency * 100;
-
-  const differsRate =
-    100 - matchesRate;
-
-
-  matchesEl.textContent =
-    matchesRate.toFixed(1) + "%";
-
-  differsEl.textContent =
-    differsRate.toFixed(1) + "%";
-
-
-  let confidence =
-    45 + edgeGap * 1.5;
-
-
-  if (total >= 30)
-    confidence += 5;
-
-  if (total >= 60)
-    confidence += 5;
-
-  if (total >= 100)
-    confidence += 5;
-
-
-  if (
-    best.recentFrequency >
-    best.frequency
-  ) {
-
-    confidence += 8;
-
-  }
-
-
-  confidence =
-    Math.min(90, confidence);
-
-
-  candidateEl.textContent =
-    best.digit;
-
-
-  confidenceEl.textContent =
-    Math.round(confidence) + "%";
-
-
-  if (edgeGap < 3) {
-
-    edgeEl.textContent =
-      "NO CLEAR EDGE";
-
-  } else if (edgeGap < 6) {
-
-    edgeEl.textContent =
-      "WEAK EDGE";
-
-  } else if (edgeGap < 10) {
-
-    edgeEl.textContent =
-      "MODERATE EDGE";
-
-  } else {
-
-    edgeEl.textContent =
-      "STRONGER EDGE";
-
-  }
-
-
-  insightEl.textContent =
-    "Candidate digit " +
-    best.digit +
-    " has the highest combined score from frequency, recent activity, consistency and clustering. This is a statistical candidate, not a guaranteed next digit.";
-
-
-  renderDigits(scores);
-
-}
-
-
-function renderDigits(ranking = null) {
-
-  digitsEl.innerHTML = "";
-
-
-  let order =
-    ranking ||
-    Array.from(
-      { length: 10 },
-      (_, digit) => ({
-        digit
-      })
-    );
-
-
-  order.forEach(item => {
-
-    const digit =
-      item.digit;
-
-    const count =
-      counts[digit];
-
-    const total =
-      ticks.length;
-
-    const rate =
-      total > 0
-        ? ((count / total) * 100).toFixed(0)
-        : "0";
-
-
-    const box =
-      document.createElement("div");
-
-    box.className =
-      "digit-box";
-
-
-    box.innerHTML =
-      digit +
-      "<strong>" +
-      rate +
-      "%</strong>";
-
-
-    digitsEl.appendChild(box);
-
-  });
-
-}
-
-
-startBtn.addEventListener(
-  "click",
-  startAnalysis
+feed.insertAdjacentHTML(
+"afterbegin",
+`<div>${time} → ${quote} → digit ${digit}</div>`
 );
 
 
-nextBtn.addEventListener(
-  "click",
-  startAnalysis
+while(feed.children.length>25){
+
+feed.removeChild(feed.lastChild);
+
+}
+
+
+if(!collecting)return;
+
+
+ticks.push({
+
+digit:digit,
+
+price:quote,
+
+time:Date.now()
+
+});
+
+
+counts[digit]++;
+
+sample.textContent=
+ticks.length;
+
+renderDigits();
+
+}
+
+
+function startAnalysis(){
+
+if(collecting)return;
+
+
+ticks=[];
+
+counts=Array(10).fill(0);
+
+
+candidate.textContent="—";
+
+edge.textContent="COLLECTING";
+
+confidence.textContent="—";
+
+matches.textContent="—";
+
+differs.textContent="—";
+
+gap.textContent="—";
+
+sample.textContent="0";
+
+
+insight.textContent=
+"Collecting live Volatility ticks for 40 seconds...";
+
+
+renderDigits();
+
+
+const duration=
+Number(windowSelect.value);
+
+
+endTime=
+Date.now()+duration;
+
+
+collecting=true;
+
+
+start.textContent=
+"RUNNING...";
+
+start.disabled=true;
+
+next.disabled=true;
+
+
+clearInterval(timer);
+
+timer=
+setInterval(updateTimer,100);
+
+
+updateTimer();
+
+}
+
+
+function updateTimer(){
+
+if(!collecting)return;
+
+
+const remaining=
+Math.max(
+0,
+endTime-Date.now()
 );
 
 
-marketEl.addEventListener(
-  "change",
-  function() {
+const seconds=
+Math.ceil(remaining/1000);
 
-    selectedMarket =
-      marketEl.value;
 
-    if (collecting) {
+timerDisplay.textContent=
+"00:"+String(seconds)
+.padStart(2,"0");
 
-      finishAnalysis();
 
-    }
+if(remaining<=0){
 
-    candidateEl.textContent = "—";
-    edgeEl.textContent = "WAITING";
-    confidenceEl.textContent = "—";
+finish();
 
-    if (ws &&
-        ws.readyState === WebSocket.OPEN) {
+}
 
-      subscribe();
+}
 
-    }
 
-  }
+function finish(){
+
+if(!collecting)return;
+
+
+collecting=false;
+
+clearInterval(timer);
+
+
+timerDisplay.textContent=
+"DONE";
+
+start.textContent=
+"START";
+
+start.disabled=false;
+
+next.disabled=false;
+
+
+calculate();
+
+}
+
+
+function calculate(){
+
+const total=ticks.length;
+
+
+if(total<20){
+
+candidate.textContent="—";
+
+edge.textContent=
+"NO CLEAR EDGE";
+
+confidence.textContent=
+"LOW";
+
+insight.textContent=
+"Not enough ticks were collected to establish a useful statistical signal.";
+
+return;
+
+}
+
+
+const recent=
+ticks.slice(
+-Math.min(30,total)
 );
+
+
+const recentCounts=
+Array(10).fill(0);
+
+
+recent.forEach(t=>{
+recentCounts[t.digit]++;
+});
+
+
+const scores=[];
+
+
+for(let d=0;d<=9;d++){
+
+const frequency=
+counts[d]/total;
+
+
+const recentFrequency=
+recentCounts[d]/recent.length;
+
+
+let consistency=0;
+
+
+const sectionSize=
+Math.floor(total/3);
+
+
+for(let s=0;s<3;s++){
+
+const from=
+s*sectionSize;
+
+const to=
+s===2
+? total
+: from+sectionSize;
+
+
+const section=
+ticks.slice(from,to);
+
+
+if(!section.length)continue;
+
+
+const appearances=
+section.filter(
+t=>t.digit===d
+).length;
+
+
+if(
+appearances/section.length>=0.10
+){
+
+consistency++;
+
+}
+
+}
+
+
+const cluster=
+ticks
+.slice(-10)
+.filter(
+t=>t.digit===d
+).length;
+
+
+const score=
+
+frequency*100*0.45+
+
+recentFrequency*100*0.30+
+
+consistency*4+
+
+cluster*2;
+
+
+scores.push({
+
+digit:d,
+
+score:score,
+
+frequency:frequency,
+
+recentFrequency:recentFrequency
+
+});
+
+}
+
+
+scores.sort(
+(a,b)=>b.score-a.score
+);
+
+
+const best=scores[0];
+
+const second=scores[1];
+
+
+const edgeGap=
+best.score-second.score;
+
+
+gap.textContent=
+edgeGap.toFixed(1);
+
+
+matches.textContent=
+(best.frequency*100)
+.toFixed(1)+"%";
+
+
+differs.textContent=
+((1-best.frequency)*100)
+.toFixed(1)+"%";
+
+
+let conf=
+45+edgeGap*1.5;
+
+
+if(total>=30)
+conf+=5;
+
+
+if(total>=60)
+conf+=5;
+
+
+if(best.recentFrequency>
+best.frequency)
+conf+=8;
+
+
+conf=
+Math.min(90,conf);
+
+
+if(edgeGap<3){
+
+candidate.textContent="—";
+
+edge.textContent=
+"NO CLEAR EDGE";
+
+confidence.textContent=
+Math.round(conf)+"%";
+
+insight.textContent=
+"Digit "+best.digit+
+" is currently leading, but the separation from the other digits is too small. Wait.";
+
+return;
+
+}
+
+
+candidate.textContent=
+best.digit;
+
+
+confidence.textContent=
+Math.round(conf)+"%";
+
+
+if(edgeGap<6){
+
+edge.textContent=
+"WEAK EDGE";
+
+}else if(edgeGap<10){
+
+edge.textContent=
+"MODERATE EDGE";
+
+}else{
+
+edge.textContent=
+"STRONGER EDGE";
+
+}
+
+
+insight.textContent=
+"Digit "+best.digit+
+" has the strongest combined statistical score from frequency, recent activity, consistency and clustering. This is a statistical signal, not a guaranteed next digit.";
+
+renderRanking(scores);
+
+}
+
+
+function renderDigits(){
+
+digits.innerHTML="";
+
+
+for(let d=0;d<=9;d++){
+
+const box=
+document.createElement("div");
+
+const rate=
+ticks.length
+?
+(counts[d]/ticks.length*100)
+.toFixed(0)
+:"0";
+
+
+box.className=
+"digit-box";
+
+box.innerHTML=
+d+
+"<strong>"+
+rate+
+"%</strong>";
+
+
+digits.appendChild(box);
+
+}
+
+}
+
+
+function renderRanking(scores){
+
+digits.innerHTML="";
+
+
+scores.forEach(item=>{
+
+const box=
+document.createElement("div");
+
+const rate=
+(item.frequency*100)
+.toFixed(0);
+
+
+box.className=
+"digit-box";
+
+box.innerHTML=
+item.digit+
+"<strong>"+
+rate+
+"%</strong>";
+
+
+digits.appendChild(box);
+
+});
+
+}
+
+
+start.addEventListener(
+"click",
+startAnalysis
+);
+
+
+next.addEventListener(
+"click",
+startAnalysis
+);
+
+
+market.addEventListener(
+"change",
+()=>{
+
+symbol=
+market.value;
+
+if(ws &&
+ws.readyState===WebSocket.OPEN){
+
+subscribe();
+
+}
+
+candidate.textContent="—";
+
+edge.textContent="WAITING";
+
+confidence.textContent="—";
+
+});
 
 
 connect();
