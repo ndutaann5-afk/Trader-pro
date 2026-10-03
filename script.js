@@ -4,7 +4,7 @@
 // ==========================================
 
 const DERIV_WS =
-  "wss://ws.binaryws.com/websockets/v3";
+  "https://derivws.com/trading/v1/options/ws/public";
 
 let socket = null;
 let reconnectTimer = null;
