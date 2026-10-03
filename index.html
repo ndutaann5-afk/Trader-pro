@@ -3,125 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trader Pro — Expert Pattern Engine</title>
+<title>Trader Pro</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#071018;
+  background:#050505;
   color:#fff;
 }
+
 .container{
-  max-width:650px;
+  max-width:520px;
   margin:auto;
-  padding:18px;
+  padding:20px;
 }
+
 h1{
-  margin:0 0 5px;
-  font-size:27px;
+  text-align:center;
+  margin:5px 0;
 }
+
 .subtitle{
-  color:#8fa3b8;
-  margin-bottom:18px;
+  text-align:center;
+  color:#888;
+  margin-bottom:20px;
 }
+
 .card{
-  background:#0d1a25;
-  border:1px solid #1c3040;
-  border-radius:16px;
+  background:#111;
+  border:1px solid #222;
+  border-radius:14px;
   padding:16px;
-  margin-bottom:14px;
+  margin-bottom:15px;
 }
+
 label{
   display:block;
-  color:#9fb2c4;
   margin-bottom:7px;
+  color:#aaa;
   font-size:14px;
 }
-select,button{
-  width:100%;
-  padding:13px;
-  border-radius:10px;
-  border:1px solid #294152;
-  background:#111f2b;
-  color:white;
-  font-size:15px;
-}
+
+select,
 button{
-  margin-top:12px;
-  background:#176b4c;
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #333;
+  background:#181818;
+  color:#fff;
+  font-size:16px;
+  margin-bottom:14px;
+}
+
+button{
+  background:#fff;
+  color:#000;
+  font-weight:bold;
   border:none;
-  font-weight:bold;
 }
-button:disabled{
-  opacity:.5;
+
+button:active{
+  transform:scale(.98);
 }
-.status{
-  font-weight:bold;
+
+.signal-box{
+  text-align:center;
+  padding:25px 10px;
+  border-radius:14px;
+  background:#090909;
+  border:1px solid #292929;
+}
+
+.signal-title{
+  color:#777;
+  font-size:13px;
   margin-bottom:10px;
 }
-.live{color:#36d98b}
-.wait{color:#f0b84b}
-.error{color:#ff6262}
+
 .signal{
-  text-align:center;
-  padding:20px 10px;
+  font-size:32px;
+  font-weight:bold;
+  letter-spacing:1px;
 }
-.signal-title{
-  color:#7e95aa;
+
+.status{
+  text-align:center;
+  margin-top:10px;
+  color:#aaa;
   font-size:14px;
 }
-.digit{
-  font-size:80px;
-  font-weight:bold;
-  margin:8px 0;
-}
-.clear{
-  font-size:24px;
-  font-weight:bold;
-  color:#f0b84b;
-  padding:20px 0;
-}
-.reason{
-  color:#9fb2c4;
-  font-size:13px;
-  line-height:1.5;
-}
-.grid{
+
+.stats{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
 }
+
 .stat{
-  background:#09141d;
+  background:#181818;
   border-radius:10px;
   padding:12px;
+  text-align:center;
 }
-.stat small{
-  color:#7e95aa;
-}
-.stat strong{
+
+.stat span{
   display:block;
-  margin-top:4px;
+  color:#777;
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.stat strong{
   font-size:20px;
 }
-.history{
-  max-height:220px;
-  overflow:auto;
+
+.rounds{
+  font-size:14px;
+  line-height:1.7;
+  color:#bbb;
 }
-.row{
-  display:flex;
-  justify-content:space-between;
-  padding:9px 0;
-  border-bottom:1px solid #1b2c38;
-  font-size:13px;
-}
-.win{color:#36d98b}
-.loss{color:#ff6262}
+
 .warning{
-  color:#aebdca;
+  color:#777;
   font-size:12px;
+  text-align:center;
   line-height:1.5;
 }
 </style>
@@ -132,13 +143,11 @@ button:disabled{
 <div class="container">
 
   <h1>Trader Pro</h1>
-  <div class="subtitle">Expert Pattern Engine — One Round Mode</div>
+  <div class="subtitle">
+    Expert Pattern Engine • One Round Mode
+  </div>
 
   <div class="card">
-
-    <div id="status" class="status wait">
-      CONNECTING TO DERIV...
-    </div>
 
     <label>Volatility Market</label>
 
@@ -155,7 +164,7 @@ button:disabled{
       <option value="R_100">Volatility 100</option>
     </select>
 
-    <label style="margin-top:14px">Contract Duration</label>
+    <label>Contract Duration</label>
 
     <select id="duration">
       <option value="1">1 Tick</option>
@@ -170,55 +179,64 @@ button:disabled{
       <option value="10">10 Ticks</option>
     </select>
 
-    <button id="startBtn">START EXPERT ANALYSIS</button>
+    <button id="startBtn">
+      START EXPERT ANALYSIS
+    </button>
 
   </div>
 
-  <div class="card signal">
+  <div class="card">
 
-    <div class="signal-title">CURRENT SIGNAL</div>
+    <div class="signal-box">
 
-    <div id="signalArea">
-      <div class="clear">WAITING FOR ANALYSIS</div>
-      <div id="reason" class="reason">
-        Collecting live market data...
+      <div class="signal-title">
+        CURRENT SIGNAL
       </div>
+
+      <div id="signal" class="signal">
+        CONNECTING...
+      </div>
+
+    </div>
+
+    <div id="status" class="status">
+      Connecting to Deriv...
     </div>
 
   </div>
 
   <div class="card">
 
-    <div class="grid">
+    <div class="stats">
 
       <div class="stat">
-        <small>Historical ticks</small>
-        <strong id="historyCount">0</strong>
+        <span>Historical</span>
+        <strong id="historical">0</strong>
       </div>
 
       <div class="stat">
-        <small>Live ticks</small>
-        <strong id="liveCount">0</strong>
+        <span>Live ticks</span>
+        <strong id="liveTicks">0</strong>
       </div>
 
       <div class="stat">
-        <small>Total signals</small>
+        <span>Signals</span>
         <strong id="signals">0</strong>
       </div>
 
       <div class="stat">
-        <small>Wins</small>
+        <span>Wins</span>
         <strong id="wins">0</strong>
       </div>
 
       <div class="stat">
-        <small>Losses</small>
+        <span>Losses</span>
         <strong id="losses">0</strong>
       </div>
 
       <div class="stat">
-        <small>Hit rate</small>
-        <strong id="hitRate">—</strong>
+        <span>Hit rate</span>
+        <strong id="hitRate">0%</strong>
       </div>
 
     </div>
@@ -227,22 +245,21 @@ button:disabled{
 
   <div class="card">
 
-    <strong>LAST SIGNALS</strong>
+    <h3>Last 10 Rounds</h3>
 
-    <div id="history" class="history" style="margin-top:10px">
-      No completed rounds yet.
+    <div id="rounds" class="rounds">
+      No rounds yet.
     </div>
 
   </div>
 
-  <div class="card warning">
-    This is a statistical analysis tool, not a guarantee of future ticks.
-    A digit becoming frequent does not mathematically guarantee the next tick.
-    No Martingale or automatic recovery is used.
+  <div class="warning">
+    Trader Pro provides statistical signals only.
+    No signal can guarantee the next digit.
+    One round only. No Martingale or recovery betting.
   </div>
 
 </div>
-
 
 <script>
 
@@ -251,132 +268,138 @@ const WS_URL =
 
 let ws = null;
 
-let symbol = document.getElementById("symbol").value;
+let running = false;
 
-let historicalTicks = [];
-let liveTicks = [];
+let history = [];
+let live = [];
+
+let signalDigit = null;
+let signalStart = 0;
+
+let lastLossDigit = null;
 
 let pipSize = 2;
 
-let running = false;
-let analyzing = false;
-let contractActive = false;
+let duration = 1;
 
-let selectedDigit = null;
-let signalStartIndex = 0;
-
-let previousLostDigit = null;
-
-let totalSignals = 0;
+let signals = 0;
 let wins = 0;
 let losses = 0;
 
-let analysisTimer = null;
+let rounds = [];
 
-const MAX_TICKS = 1200;
+let reconnectTimer = null;
 
 
 /* -----------------------------
-   UI
+   ELEMENTS
 ----------------------------- */
 
-function setStatus(text, type="wait"){
-  const el = document.getElementById("status");
+const symbolEl =
+  document.getElementById("symbol");
 
-  el.textContent = text;
+const durationEl =
+  document.getElementById("duration");
 
-  el.className = "status " + type;
-}
+const startBtn =
+  document.getElementById("startBtn");
 
+const signalEl =
+  document.getElementById("signal");
 
-function updateStats(){
+const statusEl =
+  document.getElementById("status");
 
-  document.getElementById("historyCount").textContent =
-    historicalTicks.length;
+const historicalEl =
+  document.getElementById("historical");
 
-  document.getElementById("liveCount").textContent =
-    liveTicks.length;
+const liveTicksEl =
+  document.getElementById("liveTicks");
 
-  document.getElementById("signals").textContent =
-    totalSignals;
+const signalsEl =
+  document.getElementById("signals");
 
-  document.getElementById("wins").textContent =
-    wins;
+const winsEl =
+  document.getElementById("wins");
 
-  document.getElementById("losses").textContent =
-    losses;
+const lossesEl =
+  document.getElementById("losses");
 
-  if(totalSignals > 0){
+const hitRateEl =
+  document.getElementById("hitRate");
 
-    const rate =
-      (wins / totalSignals) * 100;
-
-    document.getElementById("hitRate").textContent =
-      rate.toFixed(1) + "%";
-
-  }else{
-
-    document.getElementById("hitRate").textContent =
-      "—";
-  }
-}
+const roundsEl =
+  document.getElementById("rounds");
 
 
 /* -----------------------------
-   LAST DIGIT
-   ----------------------------- */
+   DIGIT EXTRACTION
+----------------------------- */
 
-function getLastDigit(quote){
+function digitFromQuote(quote, ps){
 
-  if(quote === undefined || quote === null){
-    return null;
+  let decimals = Number(ps);
+
+  if(!Number.isFinite(decimals)){
+    decimals = 2;
   }
 
   let text =
-    Number(quote).toFixed(pipSize);
+    Number(quote).toFixed(decimals);
 
-  const clean =
-    text.replace(".", "");
+  let parts =
+    text.split(".");
 
-  return Number(clean.slice(-1));
+  let decimalPart =
+    parts[1] || "0";
+
+  return Number(
+    decimalPart.charAt(
+      decimalPart.length - 1
+    )
+  );
 }
 
 
 /* -----------------------------
-   DERIV CONNECTION
-   ----------------------------- */
+   WEBSOCKET
+----------------------------- */
 
 function connect(){
 
   if(ws){
-
     try{
       ws.close();
     }catch(e){}
-
   }
 
-  setStatus("CONNECTING TO DERIV...", "wait");
+  const symbol =
+    symbolEl.value;
 
-  ws = new WebSocket(WS_URL);
+  statusEl.textContent =
+    "Connecting to Deriv...";
+
+  signalEl.textContent =
+    "CONNECTING...";
+
+  ws =
+    new WebSocket(WS_URL);
+
 
   ws.onopen = function(){
 
-    setStatus("LOADING MARKET HISTORY...", "wait");
+    statusEl.textContent =
+      "Connected • Loading market history";
 
-    ws.send(JSON.stringify({
-
-      ticks_history: symbol,
-
-      end: "latest",
-
-      count: 1000,
-
-      style: "ticks",
-
-      subscribe: 0
-
-    }));
+    ws.send(
+      JSON.stringify({
+        ticks_history:symbol,
+        end:"latest",
+        count:1000,
+        style:"ticks",
+        subscribe:0
+      })
+    );
 
   };
 
@@ -386,42 +409,49 @@ function connect(){
     let data;
 
     try{
-
-      data = JSON.parse(event.data);
-
+      data =
+        JSON.parse(event.data);
     }catch(e){
-
       return;
     }
 
 
     /* HISTORY */
 
-    if(data.history && data.history.prices){
+    if(data.history){
 
-      pipSize =
-        Number(data.pip_size ?? 2);
+      history = [];
 
-      historicalTicks =
-        data.history.prices
-          .map(getLastDigit)
-          .filter(x => x !== null);
+      if(data.pip_size !== undefined){
+        pipSize =
+          Number(data.pip_size);
+      }
 
-      liveTicks = [];
+      const prices =
+        data.history.prices || [];
 
-      updateStats();
+      for(const price of prices){
 
-      ws.send(JSON.stringify({
+        history.push(
+          digitFromQuote(
+            price,
+            pipSize
+          )
+        );
 
-        ticks: symbol,
+      }
 
-        subscribe: 1
+      historicalEl.textContent =
+        history.length;
 
-      }));
+      statusEl.textContent =
+        "History loaded • Connecting live ticks";
 
-      setStatus(
-        "LIVE — READY FOR EXPERT ANALYSIS",
-        "live"
+      ws.send(
+        JSON.stringify({
+          ticks:symbol,
+          subscribe:1
+        })
       );
 
       return;
@@ -432,40 +462,33 @@ function connect(){
 
     if(data.tick){
 
+      if(
+        data.tick.pip_size !== undefined
+      ){
+        pipSize =
+          Number(data.tick.pip_size);
+      }
+
       const digit =
-        getLastDigit(data.tick.quote);
+        digitFromQuote(
+          data.tick.quote,
+          pipSize
+        );
 
-      if(digit === null){
-        return;
+      live.push(digit);
+
+      if(live.length > 1500){
+        live.shift();
       }
 
-      liveTicks.push(digit);
+      liveTicksEl.textContent =
+        live.length;
 
-      if(liveTicks.length > MAX_TICKS){
+      statusEl.textContent =
+        "LIVE • Receiving ticks";
 
-        liveTicks.shift();
-      }
-
-      updateStats();
-
-
-      /* If a contract is active,
-         check whether its required
-         number of ticks has arrived. */
-
-      if(contractActive){
-
-        checkContract();
-
-        return;
-      }
-
-
-      /* Continuous analysis */
-
-      if(running && !analyzing){
-
-        maybeAnalyze();
+      if(running){
+        processLiveTick();
       }
 
     }
@@ -475,24 +498,26 @@ function connect(){
 
   ws.onerror = function(){
 
-    setStatus(
-      "DERIV CONNECTION ERROR",
-      "error"
-    );
+    statusEl.textContent =
+      "DERIV ERROR";
 
   };
 
 
   ws.onclose = function(){
 
+    statusEl.textContent =
+      "CONNECTION CLOSED";
+
     if(running){
 
-      setStatus(
-        "CONNECTION CLOSED — RECONNECTING...",
-        "wait"
-      );
+      clearTimeout(reconnectTimer);
 
-      setTimeout(connect, 2500);
+      reconnectTimer =
+        setTimeout(
+          connect,
+          3000
+        );
 
     }
 
@@ -502,254 +527,408 @@ function connect(){
 
 
 /* -----------------------------
-   DATASET
-   ----------------------------- */
+   START
+----------------------------- */
 
-function combinedData(){
+startBtn.addEventListener(
+  "click",
+  function(){
 
-  return historicalTicks
-    .concat(liveTicks)
-    .slice(-1200);
+    duration =
+      Number(durationEl.value);
 
-}
+    if(running){
+
+      running = false;
+
+      startBtn.textContent =
+        "START EXPERT ANALYSIS";
+
+      signalDigit = null;
+
+      signalEl.textContent =
+        "STOPPED";
+
+      statusEl.textContent =
+        "Analysis stopped";
+
+      return;
+    }
+
+
+    running = true;
+
+    startBtn.textContent =
+      "STOP EXPERT ANALYSIS";
+
+    signalEl.textContent =
+      "ANALYZING...";
+
+    statusEl.textContent =
+      "Scanning live market...";
+
+    analyze();
+
+  }
+);
 
 
 /* -----------------------------
-   DIGIT FREQUENCY
-   ----------------------------- */
+   LIVE TICK PROCESSING
+----------------------------- */
 
-function frequency(data){
+function processLiveTick(){
 
-  const counts =
-    Array(10).fill(0);
+  if(
+    signalDigit !== null
+  ){
 
-  for(const d of data){
+    const elapsed =
+      live.length -
+      signalStart;
 
-    if(Number.isInteger(d)){
-      counts[d]++;
+
+    if(elapsed >= duration){
+
+      const finalIndex =
+        signalStart +
+        duration -
+        1;
+
+      const finalDigit =
+        live[finalIndex];
+
+
+      if(
+        finalDigit ===
+        signalDigit
+      ){
+
+        wins++;
+
+        rounds.unshift(
+          "WIN • Matches " +
+          signalDigit +
+          " • Final digit " +
+          finalDigit
+        );
+
+      }else{
+
+        losses++;
+
+        lastLossDigit =
+          signalDigit;
+
+        rounds.unshift(
+          "LOSS • Matches " +
+          signalDigit +
+          " • Final digit " +
+          finalDigit
+        );
+
+      }
+
+
+      if(rounds.length > 10){
+        rounds.pop();
+      }
+
+
+      signals++;
+
+      signalDigit = null;
+
+      updateStats();
+
+      renderRounds();
+
+
+      signalEl.textContent =
+        "ANALYZING...";
+
+      statusEl.textContent =
+        "Round complete • Searching for fresh edge";
+
+
+      setTimeout(
+        function(){
+
+          if(running){
+            analyze();
+          }
+
+        },
+        1200
+      );
+
     }
 
   }
 
-  const result = [];
-
-  for(let i=0;i<10;i++){
-
-    result.push({
-      digit:i,
-      count:counts[i],
-      rate:data.length
-        ? counts[i] / data.length
-        : 0
-    });
-
-  }
-
-  return result;
 }
 
 
 /* -----------------------------
-   TRANSITIONS
-   ----------------------------- */
+   ANALYSIS ENGINE
+----------------------------- */
 
-function transitionRates(data){
+function analyze(){
 
-  const matrix =
+  if(!running){
+    return;
+  }
+
+
+  const combined =
+    history
+      .concat(live)
+      .slice(-1200);
+
+
+  if(combined.length < 500){
+
+    signalEl.textContent =
+      "LOADING...";
+
+    statusEl.textContent =
+      "Need at least 500 ticks for analysis";
+
+    setTimeout(
+      analyze,
+      1000
+    );
+
+    return;
+  }
+
+
+  /* LONG FREQUENCY */
+
+  const longCount =
+    Array(10).fill(0);
+
+  for(
+    const d of combined
+  ){
+    longCount[d]++;
+  }
+
+
+  const total =
+    combined.length;
+
+
+  const longFreq =
+    longCount.map(
+      x => x / total
+    );
+
+
+  /* RECENT */
+
+  const recent =
+    combined.slice(-100);
+
+
+  const recentCount =
+    Array(10).fill(0);
+
+  for(
+    const d of recent
+  ){
+    recentCount[d]++;
+  }
+
+
+  const recentFreq =
+    recentCount.map(
+      x => x / recent.length
+    );
+
+
+  /* TRANSITIONS */
+
+  const transitionCount =
     Array.from(
       {length:10},
       () => Array(10).fill(0)
     );
 
-  const totals =
-    Array(10).fill(0);
 
-  for(let i=1;i<data.length;i++){
+  for(
+    let i = 1;
+    i < combined.length;
+    i++
+  ){
 
     const previous =
-      data[i-1];
+      combined[i - 1];
 
     const current =
-      data[i];
+      combined[i];
 
-    matrix[previous][current]++;
-
-    totals[previous]++;
+    transitionCount
+      [previous]
+      [current]++;
 
   }
 
-  return {matrix, totals};
 
-}
+  const previousDigit =
+    combined[
+      combined.length - 1
+    ];
 
 
-/* -----------------------------
-   STABILITY
-   ----------------------------- */
+  const transitionTotal =
+    transitionCount[
+      previousDigit
+    ].reduce(
+      (a,b) => a+b,
+      0
+    );
 
-function windowRate(data, digit, size){
 
-  const part =
-    data.slice(-size);
+  const transitionFreq =
+    Array(10).fill(0);
 
-  if(!part.length){
-    return 0;
-  }
 
-  let count = 0;
+  if(transitionTotal > 0){
 
-  for(const d of part){
+    for(
+      let d = 0;
+      d < 10;
+      d++
+    ){
 
-    if(d === digit){
-      count++;
+      transitionFreq[d] =
+        transitionCount[
+          previousDigit
+        ][d] /
+        transitionTotal;
+
     }
 
   }
 
-  return count / part.length;
-}
 
+  /* STABILITY */
 
-function stabilityScore(data, digit){
+  function windowFrequency(size){
 
-  const r50 =
-    windowRate(data,digit,50);
+    const arr =
+      combined.slice(-size);
 
-  const r100 =
-    windowRate(data,digit,100);
+    const count =
+      Array(10).fill(0);
 
-  const r250 =
-    windowRate(data,digit,250);
+    for(
+      const d of arr
+    ){
+      count[d]++;
+    }
 
-  const average =
-    (r50 + r100 + r250) / 3;
-
-  const variance =
-    (
-      Math.pow(r50-average,2) +
-      Math.pow(r100-average,2) +
-      Math.pow(r250-average,2)
-    ) / 3;
-
-  return Math.max(
-    0,
-    Math.min(
-      1,
-      1 - variance * 100
-    )
-  );
-}
-
-
-/* -----------------------------
-   EXPERT ANALYSIS
-   ----------------------------- */
-
-function analyze(){
-
-  const data =
-    combinedData();
-
-
-  if(data.length < 500){
-
-    return {
-      qualified:false,
-      reason:
-        "Collecting enough ticks: " +
-        data.length +
-        "/500"
-    };
+    return count.map(
+      x => x / arr.length
+    );
 
   }
 
 
-  const longData =
-    data;
+  const f50 =
+    windowFrequency(50);
 
-  const recentData =
-    data.slice(-100);
+  const f100 =
+    windowFrequency(100);
 
-
-  const freq =
-    frequency(longData);
-
-  const recentFreq =
-    frequency(recentData);
-
-  const trans =
-    transitionRates(data);
+  const f250 =
+    windowFrequency(250);
 
 
-  const previous =
-    data[data.length - 1];
+  /*
+     Stability checks how consistently
+     the digit appears across windows.
+  */
 
+  const stability =
+    Array(10).fill(0);
+
+
+  for(
+    let d = 0;
+    d < 10;
+    d++
+  ){
+
+    const values = [
+      f50[d],
+      f100[d],
+      f250[d]
+    ];
+
+    const average =
+      values.reduce(
+        (a,b)=>a+b,
+        0
+      ) / 3;
+
+    const deviation =
+      Math.max(...values) -
+      Math.min(...values);
+
+    stability[d] =
+      Math.max(
+        0,
+        1 -
+        deviation /
+        Math.max(
+          average,
+          0.001
+        )
+      );
+
+  }
+
+
+  /* SCORE */
 
   const candidates = [];
 
 
-  for(let digit=0;digit<10;digit++){
-
-    /*
-      Never immediately reuse the digit
-      that just produced a loss.
-    */
+  for(
+    let d = 0;
+    d < 10;
+    d++
+  ){
 
     if(
-      previousLostDigit !== null &&
-      digit === previousLostDigit
+      d === lastLossDigit
     ){
       continue;
     }
 
 
-    const longRate =
-      freq[digit].rate;
-
-    const recentRate =
-      recentFreq[digit].rate;
-
-
-    let transitionRate = 0;
-
-    if(trans.totals[previous] > 0){
-
-      transitionRate =
-        trans.matrix[previous][digit] /
-        trans.totals[previous];
-
-    }
-
-
-    const stability =
-      stabilityScore(
-        data,
-        digit
-      );
-
-
-    /*
-      Weighted statistical score.
-
-      This is a ranking score,
-      NOT a probability of winning.
-    */
-
     const score =
-      (longRate * 0.35) +
-      (recentRate * 0.30) +
-      (transitionRate * 0.20) +
-      (stability * 0.15);
+      longFreq[d] * 0.35 +
+      recentFreq[d] * 0.30 +
+      transitionFreq[d] * 0.20 +
+      stability[d] * 0.15;
 
 
     candidates.push({
 
-      digit,
-      longRate,
-      recentRate,
-      transitionRate,
-      stability,
-      score
+      digit:d,
+
+      long:longFreq[d],
+
+      recent:recentFreq[d],
+
+      transition:transitionFreq[d],
+
+      stable:stability[d],
+
+      score:score
 
     });
 
@@ -762,16 +941,6 @@ function analyze(){
   );
 
 
-  if(!candidates.length){
-
-    return {
-      qualified:false,
-      reason:"No eligible digits."
-    };
-
-  }
-
-
   const best =
     candidates[0];
 
@@ -780,517 +949,217 @@ function analyze(){
 
 
   /*
-    Adaptive filters.
-
-    For 1 tick we still require
-    multiple pieces of evidence.
+     STRICT QUALIFICATION
   */
 
-  const minimumLong =
-    0.105;
-
-  const minimumRecent =
-    0.105;
-
-  const minimumGap =
-    0.010;
-
-
-  const gap =
-    best.longRate -
-    second.longRate;
-
-
-  if(best.longRate < minimumLong){
-
-    return {
-      qualified:false,
-      reason:
-        "No qualifying digit: long-term frequency is too weak."
-    };
-
-  }
-
-
-  if(best.recentRate < minimumRecent){
-
-    return {
-      qualified:false,
-      reason:
-        "No qualifying digit: recent frequency is too weak."
-    };
-
-  }
-
-
-  if(gap < minimumGap){
-
-    return {
-      qualified:false,
-      reason:
-        "No qualifying digit: digits are too close."
-    };
-
-  }
-
-
-  /*
-    Require the ranking evidence
-    to be reasonably stable.
-  */
-
-  if(best.stability < 0.94){
-
-    return {
-      qualified:false,
-      reason:
-        "No qualifying digit: pattern is unstable."
-    };
-
-  }
-
-
-  return {
-
-    qualified:true,
-
-    digit:best.digit,
-
-    score:best.score,
-
-    longRate:best.longRate,
-
-    recentRate:best.recentRate,
-
-    transitionRate:best.transitionRate,
-
-    stability:best.stability
-
-  };
-
-}
-
-
-/* -----------------------------
-   ANALYSIS LOOP
-   ----------------------------- */
-
-function maybeAnalyze(){
-
-  if(!running){
-    return;
-  }
-
-  if(analyzing){
-    return;
-  }
-
-  if(contractActive){
-    return;
-  }
-
-
-  analyzing = true;
-
-  setStatus(
-    "ANALYZING LIVE PATTERN...",
-    "wait"
-  );
-
-
-  /*
-    Small delay makes the engine
-    actually inspect the current
-    tick stream rather than firing
-    instantly.
-  */
-
-  setTimeout(() => {
-
-    const result =
-      analyze();
-
-
-    if(!running){
-
-      analyzing = false;
-      return;
-
-    }
-
-
-    if(!result.qualified){
-
-      document.getElementById(
-        "signalArea"
-      ).innerHTML =
-
-        '<div class="clear">NO CLEAR EDGE</div>' +
-
-        '<div id="reason" class="reason">' +
-        result.reason +
-        '<br><br>' +
-        'Waiting for the next qualifying pattern...' +
-        '</div>';
-
-
-      setStatus(
-        "WAITING — CONTINUING ANALYSIS",
-        "wait"
-      );
-
-
-      analyzing = false;
-
-      return;
-
-    }
-
-
-    /*
-      QUALIFIED SIGNAL
-    */
-
-    selectedDigit =
-      result.digit;
-
-    signalStartIndex =
-      liveTicks.length;
-
-    contractActive = true;
-
-    totalSignals++;
-
-    updateStats();
-
-
-    document.getElementById(
-      "signalArea"
-    ).innerHTML =
-
-      '<div class="signal-title">MATCHES</div>' +
-
-      '<div class="digit">' +
-      result.digit +
-      '</div>' +
-
-      '<div class="reason">' +
-      'ONE ROUND ONLY • ' +
-      document.getElementById("duration").value +
-      ' TICK' +
-      '</div>';
-
-
-    setStatus(
-      "SIGNAL ACTIVE — ONE ROUND ONLY",
-      "live"
-    );
-
-
-    analyzing = false;
-
-
-  }, 2500);
-
-}
-
-
-/* -----------------------------
-   CONTRACT CHECK
-   ----------------------------- */
-
-function checkContract(){
-
-  if(!contractActive){
-    return;
-  }
-
-
-  const duration =
-    Number(
-      document.getElementById("duration").value
-    );
-
-
-  const ticksSinceSignal =
-    liveTicks.length -
-    signalStartIndex;
+  const longOK =
+    best.long >= 0.105;
+
+  const recentOK =
+    best.recent >= 0.105;
+
+  const gapOK =
+    (
+      best.long -
+      second.long
+    ) >= 0.010;
+
+  const stableOK =
+    best.stable >= 0.94;
 
 
   if(
-    ticksSinceSignal <
-    duration
+    !longOK ||
+    !recentOK ||
+    !gapOK ||
+    !stableOK
   ){
 
-    setStatus(
-      "ROUND ACTIVE — " +
-      ticksSinceSignal +
-      "/" +
-      duration +
-      " TICKS",
-      "live"
+    signalDigit = null;
+
+    signalEl.textContent =
+      "NO CLEAR EDGE";
+
+    let reason = [];
+
+    if(!longOK){
+      reason.push(
+        "long frequency weak"
+      );
+    }
+
+    if(!recentOK){
+      reason.push(
+        "recent frequency weak"
+      );
+    }
+
+    if(!gapOK){
+      reason.push(
+        "digits too close"
+      );
+    }
+
+    if(!stableOK){
+      reason.push(
+        "unstable pattern"
+      );
+    }
+
+
+    statusEl.textContent =
+      "Waiting • " +
+      reason.join(", ");
+
+
+    setTimeout(
+      analyze,
+      1500
     );
 
     return;
-
   }
 
 
-  const index =
-    signalStartIndex +
-    duration -
-    1;
+  /* -----------------------------
+     QUALIFIED SIGNAL
+  ----------------------------- */
+
+  signalDigit =
+    best.digit;
+
+  signalStart =
+    live.length;
 
 
-  const finalDigit =
-    liveTicks[index];
-
-
-  if(finalDigit === undefined){
-
-    return;
-
-  }
-
-
-  const won =
-    finalDigit === selectedDigit;
-
-
-  if(won){
-
-    wins++;
-
-  }else{
-
-    losses++;
-
-    /*
-      Prevent the same losing digit
-      from immediately being selected
-      again.
-    */
-
-    previousLostDigit =
-      selectedDigit;
-
-  }
-
-
-  addHistory(
-    selectedDigit,
-    finalDigit,
-    won
-  );
-
+  signals++;
 
   updateStats();
 
 
-  contractActive = false;
-
-  selectedDigit = null;
-
-
-  document.getElementById(
-    "signalArea"
-  ).innerHTML =
-
-    '<div class="clear">' +
-    (won ? "ROUND WON" : "ROUND LOST") +
-    '</div>' +
-
-    '<div class="reason">' +
-    'Signal digit: ' +
-    (won ? finalDigit : finalDigit) +
-    '<br>' +
-    'Fresh analysis will now begin.' +
-    '</div>';
+  signalEl.textContent =
+    "MATCHES " +
+    signalDigit;
 
 
-  setStatus(
-    won
-      ? "ROUND COMPLETE — ANALYZING AGAIN"
-      : "LOSS RECORDED — ANALYZING AGAIN",
-    won ? "live" : "wait"
-  );
+  statusEl.textContent =
+    "QUALIFIED • " +
+    duration +
+    " tick round • Signal locked";
 
-
-  /*
-    Start a fresh analysis after
-    a short pause.
-  */
-
-  setTimeout(() => {
-
-    if(running){
-
-      maybeAnalyze();
-
-    }
-
-  }, 1500);
 
 }
 
 
 /* -----------------------------
-   HISTORY
-   ----------------------------- */
+   STATS
+----------------------------- */
 
-function addHistory(
-  signalDigit,
-  finalDigit,
-  won
-){
+function updateStats(){
 
-  const container =
-    document.getElementById("history");
+  historicalEl.textContent =
+    history.length;
 
+  liveTicksEl.textContent =
+    live.length;
 
-  if(
-    container.textContent.trim() ===
-    "No completed rounds yet."
-  ){
+  signalsEl.textContent =
+    signals;
 
-    container.innerHTML = "";
+  winsEl.textContent =
+    wins;
 
-  }
+  lossesEl.textContent =
+    losses;
 
 
-  const row =
-    document.createElement("div");
-
-  row.className =
-    "row " +
-    (won ? "win" : "loss");
+  const completed =
+    wins + losses;
 
 
-  row.innerHTML =
-    "<span>MATCHES " +
-    signalDigit +
-    "</span>" +
-
-    "<span>" +
-    (won ? "WIN" : "LOSS") +
-    " — final " +
-    finalDigit +
-    "</span>";
+  const rate =
+    completed > 0
+      ? (
+          wins /
+          completed *
+          100
+        ).toFixed(1)
+      : "0";
 
 
-  container.prepend(row);
-
-
-  while(container.children.length > 10){
-
-    container.removeChild(
-      container.lastChild
-    );
-
-  }
+  hitRateEl.textContent =
+    rate + "%";
 
 }
 
 
 /* -----------------------------
-   START / STOP
-   ----------------------------- */
+   ROUNDS
+----------------------------- */
 
-document
-  .getElementById("startBtn")
-  .addEventListener(
-    "click",
-    function(){
+function renderRounds(){
 
-      if(running){
+  if(rounds.length === 0){
 
-        running = false;
+    roundsEl.textContent =
+      "No rounds yet.";
 
-        contractActive = false;
+    return;
 
-        analyzing = false;
-
-        selectedDigit = null;
-
-        this.textContent =
-          "START EXPERT ANALYSIS";
-
-        setStatus(
-          "ANALYSIS STOPPED",
-          "wait"
-        );
-
-        return;
-
-      }
+  }
 
 
-      running = true;
+  roundsEl.innerHTML =
+    rounds
+      .map(
+        r =>
+          "<div>" +
+          r +
+          "</div>"
+      )
+      .join("");
 
-      previousLostDigit = null;
-
-      this.textContent =
-        "STOP EXPERT ANALYSIS";
-
-
-      if(
-        historicalTicks.length >= 500
-      ){
-
-        setStatus(
-          "ANALYZING LIVE PATTERN...",
-          "wait"
-        );
-
-        maybeAnalyze();
-
-      }else{
-
-        setStatus(
-          "COLLECTING MARKET DATA...",
-          "wait"
-        );
-
-      }
-
-    }
-  );
+}
 
 
 /* -----------------------------
    MARKET CHANGE
-   ----------------------------- */
+----------------------------- */
 
-document
-  .getElementById("symbol")
-  .addEventListener(
-    "change",
-    function(){
+symbolEl.addEventListener(
+  "change",
+  function(){
 
-      symbol = this.value;
+    if(running){
 
-      historicalTicks = [];
-      liveTicks = [];
+      running = false;
 
-      contractActive = false;
-      analyzing = false;
-      selectedDigit = null;
+      signalDigit = null;
 
-      if(running){
+      startBtn.textContent =
+        "START EXPERT ANALYSIS";
 
-        connect();
+      signalEl.textContent =
+        "CHANGING MARKET...";
 
-      }
+      history = [];
+      live = [];
+
+      connect();
 
     }
-  );
+
+  }
+);
 
 
 /* -----------------------------
    INITIAL CONNECTION
-   ----------------------------- */
+----------------------------- */
 
 connect();
+
+updateStats();
 
 </script>
 
