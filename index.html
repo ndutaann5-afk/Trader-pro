@@ -687,7 +687,7 @@ content="width=device-width, initial-scale=1.0"
     document.getElementById("derivConnection").textContent =
       "Connecting to Deriv...";
 
-    const response = await fetch("/api/token.js", {
+    const response = await fetch("/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
