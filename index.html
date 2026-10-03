@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trader Pro — Digit Analyzer</title>
+
+  <title>Trader Pro — Live Digit Analyzer</title>
 
   <style>
     * {
@@ -12,38 +13,39 @@
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 0;
       background: #080b12;
       color: #ffffff;
+      font-family: Arial, sans-serif;
     }
 
     .container {
-      width: 100%;
       max-width: 900px;
       margin: auto;
       padding: 18px;
     }
 
     h1 {
-      margin: 0 0 5px;
+      margin: 0;
       font-size: 28px;
     }
 
     .subtitle {
       color: #9ca3af;
-      margin-bottom: 20px;
+      margin-top: 5px;
+      margin-bottom: 18px;
     }
 
     .card {
       background: #111827;
       border: 1px solid #263244;
       border-radius: 14px;
-      padding: 18px;
+      padding: 17px;
       margin-bottom: 15px;
     }
 
     .status {
-      padding: 12px;
+      padding: 13px;
       border-radius: 10px;
       background: #1f2937;
       margin-bottom: 15px;
@@ -65,11 +67,16 @@
       color: #fde68a;
     }
 
+    .live {
+      background: #064e3b;
+      color: #6ee7b7;
+    }
+
     label {
       display: block;
       color: #9ca3af;
-      margin-bottom: 7px;
       font-size: 14px;
+      margin-bottom: 6px;
     }
 
     select,
@@ -89,37 +96,10 @@
       background: #2563eb;
       border: none;
       font-weight: bold;
-      cursor: pointer;
     }
 
     button:active {
       transform: scale(0.98);
-    }
-
-    .decision {
-      text-align: center;
-      padding: 20px;
-      border-radius: 12px;
-      background: #172033;
-      margin-top: 15px;
-    }
-
-    .decision-title {
-      font-size: 25px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .wait {
-      color: #fbbf24;
-    }
-
-    .possible {
-      color: #34d399;
-    }
-
-    .danger {
-      color: #f87171;
     }
 
     .grid {
@@ -145,11 +125,35 @@
       margin-top: 5px;
     }
 
+    .decision {
+      text-align: center;
+      padding: 20px;
+      border-radius: 12px;
+      background: #172033;
+    }
+
+    .decision-title {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .wait {
+      color: #fbbf24;
+    }
+
+    .possible {
+      color: #34d399;
+    }
+
+    .danger {
+      color: #f87171;
+    }
+
     .digits {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      margin-top: 12px;
     }
 
     .digit {
@@ -184,24 +188,6 @@
       width: 0%;
     }
 
-    .log {
-      max-height: 250px;
-      overflow-y: auto;
-      font-size: 13px;
-      color: #cbd5e1;
-    }
-
-    .log div {
-      padding: 7px 0;
-      border-bottom: 1px solid #1f2937;
-    }
-
-    .small {
-      color: #9ca3af;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
     .integrity-ok {
       color: #34d399;
       font-weight: bold;
@@ -210,6 +196,31 @@
     .integrity-bad {
       color: #f87171;
       font-weight: bold;
+    }
+
+    .small {
+      color: #9ca3af;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .log {
+      max-height: 280px;
+      overflow-y: auto;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .log div {
+      padding: 8px 0;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .live-digit {
+      font-size: 42px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
     }
 
     @media (min-width: 650px) {
@@ -225,25 +236,49 @@
 <div class="container">
 
   <h1>Trader Pro</h1>
+
   <div class="subtitle">
-    Live Deriv Digit Analysis
+    Live Deriv Digit Analyzer
   </div>
 
+
+  <!-- CONNECTION STATUS -->
+
   <div id="status" class="status">
-    🔴 Connecting to Deriv...
+    🔴 Not connected
   </div>
+
+
+  <!-- CONTROLS -->
 
   <div class="card">
 
     <label>Market</label>
 
     <select id="symbol">
-      <option value="R_10">Volatility 10 Index</option>
-      <option value="R_25">Volatility 25 Index</option>
-      <option value="R_50">Volatility 50 Index</option>
-      <option value="R_75">Volatility 75 Index</option>
-      <option value="R_100">Volatility 100 Index</option>
+
+      <option value="R_10">
+        Volatility 10 Index
+      </option>
+
+      <option value="R_25">
+        Volatility 25 Index
+      </option>
+
+      <option value="R_50">
+        Volatility 50 Index
+      </option>
+
+      <option value="R_75">
+        Volatility 75 Index
+      </option>
+
+      <option value="R_100">
+        Volatility 100 Index
+      </option>
+
     </select>
+
 
     <label>Payout %</label>
 
@@ -255,9 +290,11 @@
       max="1000"
     >
 
+
     <button id="startBtn">
       START LIVE ANALYSIS
     </button>
+
 
     <button id="stopBtn">
       STOP ANALYSIS
@@ -265,43 +302,200 @@
 
   </div>
 
+
+  <!-- LIVE STREAM -->
+
+  <div class="card">
+
+    <h3>Live Stream</h3>
+
+    <div class="grid">
+
+      <div class="stat">
+
+        <div class="stat-name">
+          Historical Ticks
+        </div>
+
+        <div
+          id="historicalTicks"
+          class="stat-value"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-name">
+          Live Ticks Received
+        </div>
+
+        <div
+          id="liveTicks"
+          class="stat-value"
+        >
+          0
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-name">
+          Total Stored
+        </div>
+
+        <div
+          id="ticksCollected"
+          class="stat-value"
+        >
+          0
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="liveStatus"
+      class="small"
+      style="margin-top:15px;"
+    >
+      Live stream has not started.
+    </div>
+
+
+    <div
+      id="lastDigit"
+      class="live-digit"
+    >
+      —
+    </div>
+
+
+    <div
+      id="lastQuote"
+      class="small"
+      style="text-align:center;"
+    >
+      Last quote: —
+    </div>
+
+  </div>
+
+
+  <!-- MAIN STATS -->
+
   <div class="card">
 
     <div class="grid">
 
       <div class="stat">
-        <div class="stat-name">Ticks Collected</div>
-        <div id="ticksCollected" class="stat-value">0</div>
+
+        <div class="stat-name">
+          Break-even
+        </div>
+
+        <div
+          id="breakEven"
+          class="stat-value"
+        >
+          52.63%
+        </div>
+
       </div>
 
-      <div class="stat">
-        <div class="stat-name">Target</div>
-        <div class="stat-value">1000</div>
-      </div>
 
       <div class="stat">
-        <div class="stat-name">Break-even</div>
-        <div id="breakEven" class="stat-value">52.63%</div>
+
+        <div class="stat-name">
+          Best Digit
+        </div>
+
+        <div
+          id="bestDigit"
+          class="stat-value"
+        >
+          —
+        </div>
+
       </div>
 
-      <div class="stat">
-        <div class="stat-name">Best Digit</div>
-        <div id="bestDigit" class="stat-value">—</div>
-      </div>
 
       <div class="stat">
-        <div class="stat-name">Probability</div>
-        <div id="bestProbability" class="stat-value">—</div>
+
+        <div class="stat-name">
+          Probability
+        </div>
+
+        <div
+          id="bestProbability"
+          class="stat-value"
+        >
+          —
+        </div>
+
       </div>
 
+
       <div class="stat">
-        <div class="stat-name">Estimated Edge</div>
-        <div id="edge" class="stat-value">—</div>
+
+        <div class="stat-name">
+          Estimated Edge
+        </div>
+
+        <div
+          id="edge"
+          class="stat-value"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-name">
+          Recent Probability
+        </div>
+
+        <div
+          id="recentProbability"
+          class="stat-value"
+        >
+          —
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-name">
+          Long Probability
+        </div>
+
+        <div
+          id="longProbability"
+          class="stat-value"
+        >
+          —
+        </div>
+
       </div>
 
     </div>
 
   </div>
+
+
+  <!-- DATA INTEGRITY -->
 
   <div class="card">
 
@@ -312,11 +506,15 @@
     </div>
 
     <p class="small">
-      Digit counts must always equal the total number of collected ticks.
-      If they do not match, Trader Pro will block the signal.
+      Every valid digit must correspond to exactly one
+      collected tick. If the numbers do not match,
+      Trader Pro blocks the signal.
     </p>
 
   </div>
+
+
+  <!-- DECISION -->
 
   <div class="card">
 
@@ -324,11 +522,17 @@
 
     <div class="decision">
 
-      <div id="decision" class="decision-title wait">
+      <div
+        id="decision"
+        class="decision-title wait"
+      >
         NO EDGE — WAIT
       </div>
 
-      <div id="decisionDetails" class="small">
+      <div
+        id="decisionDetails"
+        class="small"
+      >
         Waiting for enough valid data.
       </div>
 
@@ -336,21 +540,31 @@
 
   </div>
 
+
+  <!-- DIGITS -->
+
   <div class="card">
 
     <h3>Digit Distribution</h3>
 
-    <div id="digits" class="digits"></div>
+    <div
+      id="digits"
+      class="digits"
+    ></div>
 
   </div>
+
+
+  <!-- LOG -->
 
   <div class="card">
 
     <h3>Analysis Log</h3>
 
-    <div id="log" class="log">
-      <div>Waiting for analysis...</div>
-    </div>
+    <div
+      id="log"
+      class="log"
+    ></div>
 
   </div>
 
@@ -360,21 +574,38 @@
 <script>
 
   /* =========================================================
-     TRADER PRO
-     LIVE DERIV DIGIT ANALYZER
+     TRADER PRO CONFIGURATION
      ========================================================= */
 
   const WS_URL =
     "wss://api.derivws.com/trading/v1/options/ws/public";
 
   const MAX_TICKS = 1000;
+
   const RECENT_WINDOW = 50;
+
   const LONG_WINDOW = 200;
 
+
+  /* =========================================================
+     VARIABLES
+     ========================================================= */
+
   let socket = null;
+
   let ticks = [];
+
   let running = false;
+
+  let liveTickCount = 0;
+
+  let historicalTickCount = 0;
+
+  let lastLiveTickTime = 0;
+
   let reconnectTimer = null;
+
+  let watchdogTimer = null;
 
 
   /* =========================================================
@@ -390,8 +621,23 @@
   const payoutEl =
     document.getElementById("payout");
 
+  const historicalTicksEl =
+    document.getElementById("historicalTicks");
+
+  const liveTicksEl =
+    document.getElementById("liveTicks");
+
   const ticksCollectedEl =
     document.getElementById("ticksCollected");
+
+  const liveStatusEl =
+    document.getElementById("liveStatus");
+
+  const lastDigitEl =
+    document.getElementById("lastDigit");
+
+  const lastQuoteEl =
+    document.getElementById("lastQuote");
 
   const breakEvenEl =
     document.getElementById("breakEven");
@@ -405,6 +651,16 @@
   const edgeEl =
     document.getElementById("edge");
 
+  const recentProbabilityEl =
+    document.getElementById(
+      "recentProbability"
+    );
+
+  const longProbabilityEl =
+    document.getElementById(
+      "longProbability"
+    );
+
   const integrityEl =
     document.getElementById("integrity");
 
@@ -412,7 +668,9 @@
     document.getElementById("decision");
 
   const decisionDetailsEl =
-    document.getElementById("decisionDetails");
+    document.getElementById(
+      "decisionDetails"
+    );
 
   const digitsEl =
     document.getElementById("digits");
@@ -422,7 +680,7 @@
 
 
   /* =========================================================
-     LOG
+     LOGGING
      ========================================================= */
 
   function log(message) {
@@ -438,8 +696,12 @@
 
     logEl.prepend(row);
 
-    while (logEl.children.length > 50) {
-      logEl.removeChild(logEl.lastChild);
+    while (
+      logEl.children.length > 100
+    ) {
+      logEl.removeChild(
+        logEl.lastChild
+      );
     }
   }
 
@@ -448,11 +710,16 @@
      STATUS
      ========================================================= */
 
-  function setStatus(message, type = "") {
+  function setStatus(
+    message,
+    type = ""
+  ) {
 
-    statusEl.textContent = message;
+    statusEl.textContent =
+      message;
 
-    statusEl.className = "status";
+    statusEl.className =
+      "status";
 
     if (type) {
       statusEl.classList.add(type);
@@ -461,80 +728,128 @@
 
 
   /* =========================================================
-     CONNECT
+     CONNECT TO DERIV
      ========================================================= */
 
   function connect() {
 
     if (socket) {
+
       try {
         socket.close();
-      } catch (e) {}
+      } catch (error) {}
+
     }
 
-    setStatus("🟡 Connecting to Deriv...");
 
-    socket = new WebSocket(WS_URL);
+    setStatus(
+      "🟡 Connecting to Deriv..."
+    );
+
+    liveStatusEl.textContent =
+      "Connecting to live tick stream...";
+
+
+    socket =
+      new WebSocket(WS_URL);
 
 
     socket.onopen = function () {
 
       setStatus(
-        "🟢 Connected — receiving live ticks.",
+        "🟢 Connected — live stream active.",
         "connected"
       );
 
-      log("Connected to Deriv.");
+      liveStatusEl.textContent =
+        "🟢 Connected successfully. Waiting for live ticks...";
 
-      subscribe();
-    };
-
-
-    socket.onmessage = function (event) {
-
-      try {
-
-        const data =
-          JSON.parse(event.data);
-
-        handleMessage(data);
-
-      } catch (error) {
-
-        log("Invalid WebSocket message.");
-      }
-    };
-
-
-    socket.onerror = function () {
-
-      setStatus(
-        "🔴 Deriv connection error.",
-        "error"
+      log(
+        "Successfully connected to Deriv."
       );
 
-      log("WebSocket error.");
+      log(
+        "Starting live tick stream..."
+      );
+
+      subscribe();
+
+      startWatchdog();
     };
 
 
-    socket.onclose = function () {
+    socket.onmessage =
+      function(event) {
 
-      if (running) {
+        try {
+
+          const data =
+            JSON.parse(event.data);
+
+          handleMessage(data);
+
+        } catch (error) {
+
+          log(
+            "⚠️ Could not parse Deriv message."
+          );
+
+        }
+
+      };
+
+
+    socket.onerror =
+      function() {
 
         setStatus(
-          "🟠 Connection closed — reconnecting...",
-          "warning"
+          "🔴 Deriv connection error.",
+          "error"
         );
 
-        reconnectTimer =
-          setTimeout(connect, 3000);
-      }
-    };
+        liveStatusEl.textContent =
+          "🔴 Live stream connection error.";
+
+        log(
+          "Deriv WebSocket error."
+        );
+
+      };
+
+
+    socket.onclose =
+      function() {
+
+        stopWatchdog();
+
+        if (running) {
+
+          setStatus(
+            "🟠 Connection closed — reconnecting...",
+            "warning"
+          );
+
+          liveStatusEl.textContent =
+            "Connection closed. Reconnecting...";
+
+          log(
+            "Connection closed."
+          );
+
+          reconnectTimer =
+            setTimeout(
+              connect,
+              3000
+            );
+        }
+
+      };
+
   }
 
 
   /* =========================================================
-     SUBSCRIBE
+     REQUEST DATA
      ========================================================= */
 
   function subscribe() {
@@ -556,20 +871,23 @@
 
     };
 
+
     socket.send(
       JSON.stringify(request)
     );
+
 
     log(
       "Requesting " +
       MAX_TICKS +
       " historical ticks..."
     );
+
   }
 
 
   /* =========================================================
-     MESSAGE HANDLER
+     HANDLE DERIV MESSAGES
      ========================================================= */
 
   function handleMessage(data) {
@@ -591,16 +909,22 @@
     }
 
 
-    /* Historical ticks */
+    /* =========================================
+       HISTORICAL DATA
+       ========================================= */
 
     if (data.history) {
 
       const prices =
         data.history.prices || [];
 
+
       ticks = [];
 
-      for (const price of prices) {
+
+      for (
+        const price of prices
+      ) {
 
         const digit =
           getLastDigit(price);
@@ -608,16 +932,43 @@
         if (digit !== null) {
           ticks.push(digit);
         }
+
       }
 
+
       ticks =
-        ticks.slice(-MAX_TICKS);
+        ticks.slice(
+          -MAX_TICKS
+        );
+
+
+      historicalTickCount =
+        ticks.length;
+
+
+      historicalTicksEl.textContent =
+        historicalTickCount;
+
+
+      ticksCollectedEl.textContent =
+        ticks.length;
+
 
       log(
-        "Loaded " +
-        ticks.length +
+        "✅ Loaded " +
+        historicalTickCount +
         " valid historical ticks."
       );
+
+
+      log(
+        "🟢 Historical data ready."
+      );
+
+
+      liveStatusEl.textContent =
+        "🟢 Historical data loaded. Monitoring live tick stream...";
+
 
       updateUI();
 
@@ -627,29 +978,89 @@
     }
 
 
-    /* Live tick */
+    /* =========================================
+       LIVE TICK
+       ========================================= */
 
     if (data.tick) {
 
       const quote =
         data.tick.quote;
 
+
       const digit =
         getLastDigit(quote);
+
 
       if (digit === null) {
         return;
       }
 
+
+      /* Add live tick */
+
       ticks.push(digit);
 
+
       ticks =
-        ticks.slice(-MAX_TICKS);
+        ticks.slice(
+          -MAX_TICKS
+        );
+
+
+      liveTickCount++;
+
+
+      lastLiveTickTime =
+        Date.now();
+
+
+      liveTicksEl.textContent =
+        liveTickCount;
+
+
+      lastDigitEl.textContent =
+        digit;
+
+
+      lastQuoteEl.textContent =
+        "Last quote: " +
+        quote;
+
+
+      liveStatusEl.textContent =
+        "🟢 LIVE DATA ACTIVE — receiving ticks";
+
+
+      setStatus(
+        "🟢 Live tick stream active.",
+        "live"
+      );
+
+
+      /* Log live activity periodically */
+
+      if (
+        liveTickCount === 1 ||
+        liveTickCount % 25 === 0
+      ) {
+
+        log(
+          "🟢 Live tick #" +
+          liveTickCount +
+          " received — digit: " +
+          digit
+        );
+
+      }
+
 
       updateUI();
 
       analyze();
+
     }
+
   }
 
 
@@ -666,21 +1077,29 @@
       return null;
     }
 
+
     const text =
       String(value);
 
+
     const digits =
-      text.replace(/\D/g, "");
+      text.replace(
+        /\D/g,
+        ""
+      );
+
 
     if (!digits.length) {
       return null;
     }
+
 
     return Number(
       digits.charAt(
         digits.length - 1
       )
     );
+
   }
 
 
@@ -693,16 +1112,23 @@
     const counts =
       Array(10).fill(0);
 
-    for (const digit of list) {
+
+    for (
+      const digit of list
+    ) {
 
       if (
         Number.isInteger(digit) &&
         digit >= 0 &&
         digit <= 9
       ) {
+
         counts[digit]++;
+
       }
+
     }
+
 
     return counts;
   }
@@ -717,8 +1143,10 @@
     ticksCollectedEl.textContent =
       ticks.length;
 
+
     const counts =
       getCounts(ticks);
+
 
     const countTotal =
       counts.reduce(
@@ -728,7 +1156,7 @@
       );
 
 
-    /* Data integrity */
+    /* DATA INTEGRITY */
 
     if (
       countTotal === ticks.length
@@ -749,12 +1177,14 @@
         </span>
         — Counts: ${countTotal},
         Ticks: ${ticks.length}`;
+
     }
 
 
-    /* Draw digits */
+    /* DIGIT DISPLAY */
 
     digitsEl.innerHTML = "";
+
 
     for (
       let digit = 0;
@@ -765,15 +1195,25 @@
       const count =
         counts[digit];
 
-      const percent =
+
+      const percentage =
         ticks.length > 0
-          ? (count / ticks.length) * 100
+          ? (
+              count /
+              ticks.length
+            ) * 100
           : 0;
 
-      const box =
-        document.createElement("div");
 
-      box.className = "digit";
+      const box =
+        document.createElement(
+          "div"
+        );
+
+
+      box.className =
+        "digit";
+
 
       box.innerHTML = `
 
@@ -786,19 +1226,28 @@
         </div>
 
         <div class="digit-count">
-          ${percent.toFixed(2)}%
+          ${percentage.toFixed(2)}%
         </div>
 
         <div class="bar">
+
           <div
             class="bar-inner"
-            style="width:${Math.min(percent,100)}%"
+            style="width:${Math.min(
+              percentage,
+              100
+            )}%"
           ></div>
+
         </div>
+
       `;
 
+
       digitsEl.appendChild(box);
+
     }
+
   }
 
 
@@ -808,7 +1257,7 @@
 
   function analyze() {
 
-    if (ticks.length < 50) {
+    if (ticks.length < RECENT_WINDOW) {
 
       decisionEl.textContent =
         "NO EDGE — WAIT";
@@ -817,7 +1266,7 @@
         "decision-title wait";
 
       decisionDetailsEl.textContent =
-        "Collecting more data...";
+        "Collecting enough data for analysis...";
 
       return;
     }
@@ -825,6 +1274,7 @@
 
     const counts =
       getCounts(ticks);
+
 
     const countTotal =
       counts.reduce(
@@ -849,22 +1299,14 @@
       decisionDetailsEl.textContent =
         "Digit counts do not match tick count.";
 
-      bestDigitEl.textContent =
-        "—";
-
-      bestProbabilityEl.textContent =
-        "—";
-
-      edgeEl.textContent =
-        "—";
-
       return;
     }
 
 
-    /* Find highest digit */
+    /* FIND BEST DIGIT */
 
     let bestDigit = 0;
+
 
     for (
       let digit = 1;
@@ -876,127 +1318,154 @@
         counts[digit] >
         counts[bestDigit]
       ) {
-        bestDigit = digit;
+
+        bestDigit =
+          digit;
+
       }
+
     }
 
 
-    /* Long probability */
+    /* LONG PROBABILITY */
 
     const longProbability =
       counts[bestDigit] /
       ticks.length;
 
 
-    /* Recent window */
+    /* RECENT */
 
     const recent =
       ticks.slice(
         -RECENT_WINDOW
       );
 
+
     const recentCounts =
       getCounts(recent);
+
 
     const recentProbability =
       recentCounts[bestDigit] /
       recent.length;
 
 
-    /* Long window */
+    /* LONG WINDOW */
 
     const long =
       ticks.slice(
         -LONG_WINDOW
       );
 
+
     const longCounts =
       getCounts(long);
+
 
     const longWindowProbability =
       longCounts[bestDigit] /
       long.length;
 
 
-    /* Payout */
+    /* PAYOUT */
 
     let payout =
-      Number(payoutEl.value);
+      Number(
+        payoutEl.value
+      );
+
 
     if (
       !Number.isFinite(payout) ||
       payout <= 0
     ) {
+
       payout = 90;
+
     }
 
 
-    /*
-      Break-even probability.
-
-      Example:
-      payout = 90%
-
-      Profit if win = 90
-      Loss if lose = 100
-
-      Break-even:
-      100 / (100 + 90)
-      = 52.63%
-    */
+    /* BREAK EVEN */
 
     const breakEven =
       100 /
       (100 + payout);
 
 
+    /* EDGE */
+
     const edge =
       longProbability -
       breakEven;
 
 
+    /* DISPLAY */
+
     breakEvenEl.textContent =
-      (breakEven * 100).toFixed(2) +
+      (
+        breakEven *
+        100
+      ).toFixed(2) +
       "%";
+
 
     bestDigitEl.textContent =
       bestDigit;
 
+
     bestProbabilityEl.textContent =
-      (longProbability * 100).toFixed(2) +
+      (
+        longProbability *
+        100
+      ).toFixed(2) +
       "%";
+
+
+    recentProbabilityEl.textContent =
+      (
+        recentProbability *
+        100
+      ).toFixed(2) +
+      "%";
+
+
+    longProbabilityEl.textContent =
+      (
+        longWindowProbability *
+        100
+      ).toFixed(2) +
+      "%";
+
 
     edgeEl.textContent =
-      (edge * 100).toFixed(2) +
+      (
+        edge *
+        100
+      ).toFixed(2) +
       "%";
 
 
-    /*
-      Conservative requirement.
-
-      The signal must satisfy ALL:
-
-      1. Long probability above break-even
-      2. Recent probability above break-even
-      3. Long probability at least 2%
-         above break-even
-      4. Recent and long probabilities
-         reasonably agree
-    */
+    /* =========================================
+       CONSERVATIVE EDGE FILTER
+       ========================================= */
 
     const recentAboveBreakEven =
       recentProbability >
       breakEven;
 
+
     const longAboveBreakEven =
       longProbability >
       breakEven;
+
 
     const conservativeEdge =
       longProbability >
       breakEven + 0.02;
 
-    const consistency =
+
+    const consistent =
       Math.abs(
         recentProbability -
         longWindowProbability
@@ -1004,10 +1473,10 @@
 
 
     const possibleEdge =
-      longAboveBreakEven &&
       recentAboveBreakEven &&
+      longAboveBreakEven &&
       conservativeEdge &&
-      consistency;
+      consistent;
 
 
     if (possibleEdge) {
@@ -1020,13 +1489,23 @@
       decisionEl.className =
         "decision-title possible";
 
+
       decisionDetailsEl.textContent =
         "Long: " +
-        (longProbability * 100).toFixed(2) +
+        (
+          longProbability *
+          100
+        ).toFixed(2) +
         "% | Recent: " +
-        (recentProbability * 100).toFixed(2) +
+        (
+          recentProbability *
+          100
+        ).toFixed(2) +
         "% | Break-even: " +
-        (breakEven * 100).toFixed(2) +
+        (
+          breakEven *
+          100
+        ).toFixed(2) +
         "%";
 
     } else {
@@ -1037,14 +1516,14 @@
       decisionEl.className =
         "decision-title wait";
 
+
       decisionDetailsEl.textContent =
-        "Best digit " +
-        bestDigit +
-        " does not currently pass the conservative edge filters.";
+        "No statistically sufficient edge under the current filters.";
+
     }
 
 
-    /* Log periodically */
+    /* ANALYSIS LOG */
 
     if (
       ticks.length === 50 ||
@@ -1055,82 +1534,245 @@
     ) {
 
       log(
-        "Analysis: Best digit " +
+        "Analysis checkpoint: " +
+        ticks.length +
+        " ticks | Best digit: " +
         bestDigit +
-        " | Probability " +
-        (longProbability * 100).toFixed(2) +
-        "% | Break-even " +
-        (breakEven * 100).toFixed(2) +
-        "% | Edge " +
-        (edge * 100).toFixed(2) +
+        " | Probability: " +
+        (
+          longProbability *
+          100
+        ).toFixed(2) +
+        "% | Break-even: " +
+        (
+          breakEven *
+          100
+        ).toFixed(2) +
+        "% | Edge: " +
+        (
+          edge *
+          100
+        ).toFixed(2) +
         "%"
       );
+
     }
+
   }
 
 
   /* =========================================================
-     START
+     LIVE STREAM WATCHDOG
+     ========================================================= */
+
+  function startWatchdog() {
+
+    stopWatchdog();
+
+
+    watchdogTimer =
+      setInterval(
+        function() {
+
+          if (!running) {
+            return;
+          }
+
+
+          if (
+            liveTickCount === 0
+          ) {
+
+            liveStatusEl.textContent =
+              "🟡 Connected, waiting for first live tick...";
+
+            return;
+          }
+
+
+          const secondsSinceLastTick =
+            (
+              Date.now() -
+              lastLiveTickTime
+            ) / 1000;
+
+
+          if (
+            secondsSinceLastTick >
+            15
+          ) {
+
+            liveStatusEl.textContent =
+              "🟠 Live stream may have stopped — no tick received for " +
+              Math.floor(
+                secondsSinceLastTick
+              ) +
+              " seconds.";
+
+            setStatus(
+              "🟠 No recent live tick.",
+              "warning"
+            );
+
+          } else {
+
+            liveStatusEl.textContent =
+              "🟢 LIVE DATA ACTIVE — last tick " +
+              Math.floor(
+                secondsSinceLastTick
+              ) +
+              "s ago";
+
+          }
+
+        },
+        3000
+      );
+
+  }
+
+
+  function stopWatchdog() {
+
+    if (watchdogTimer) {
+
+      clearInterval(
+        watchdogTimer
+      );
+
+      watchdogTimer =
+        null;
+
+    }
+
+  }
+
+
+  /* =========================================================
+     START BUTTON
      ========================================================= */
 
   document
     .getElementById("startBtn")
     .addEventListener(
       "click",
-      function () {
+      function() {
 
         running = true;
 
         ticks = [];
 
-        updateUI();
+        liveTickCount = 0;
 
-        log("Starting live analysis...");
+        historicalTickCount = 0;
+
+        lastLiveTickTime = 0;
+
+
+        historicalTicksEl.textContent =
+          "0";
+
+        liveTicksEl.textContent =
+          "0";
+
+        ticksCollectedEl.textContent =
+          "0";
+
+        lastDigitEl.textContent =
+          "—";
+
+        lastQuoteEl.textContent =
+          "Last quote: —";
+
+
+        logEl.innerHTML = "";
+
+
+        log(
+          "🚀 Trader Pro started."
+        );
+
+
+        log(
+          "Connecting to live Deriv data..."
+        );
+
+
+        liveStatusEl.textContent =
+          "Connecting to live tick stream...";
+
 
         connect();
+
       }
     );
 
 
   /* =========================================================
-     STOP
+     STOP BUTTON
      ========================================================= */
 
   document
     .getElementById("stopBtn")
     .addEventListener(
       "click",
-      function () {
+      function() {
 
         running = false;
 
+
         if (reconnectTimer) {
-          clearTimeout(reconnectTimer);
+
+          clearTimeout(
+            reconnectTimer
+          );
+
+          reconnectTimer =
+            null;
+
         }
+
+
+        stopWatchdog();
+
 
         if (socket) {
 
           try {
             socket.close();
-          } catch (e) {}
+          } catch (error) {}
+
         }
+
 
         setStatus(
           "⏹ Analysis stopped."
         );
 
-        log("Analysis stopped.");
+
+        liveStatusEl.textContent =
+          "Live stream stopped.";
+
+
+        log(
+          "⏹ Trader Pro stopped."
+        );
+
       }
     );
 
 
   /* =========================================================
-     INITIAL UI
+     INITIAL STATE
      ========================================================= */
 
   updateUI();
 
+  log(
+    "Trader Pro ready."
+  );
+
 </script>
 
 </body>
-  </html>
+</html>
