@@ -2,317 +2,236 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trader Pro</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Trader Pro — Matches Edge</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#06090d;
+  color:#f5f7fa;
+  font-family:Arial,sans-serif
 }
 
-body {
-  margin: 0;
-  background: #070a0f;
-  color: #f4f7fb;
-  font-family: Arial, sans-serif;
+.app{
+  max-width:760px;
+  margin:auto;
+  padding:16px 12px 40px
 }
 
-.app {
-  width: 100%;
-  max-width: 760px;
-  margin: auto;
-  padding: 18px 14px 40px;
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+.logo{
+  font-size:24px;
+  font-weight:900
 }
 
-.logo {
-  font-size: 25px;
-  font-weight: 900;
+.logo span{color:#19d681}
+
+.status{
+  font-size:11px;
+  padding:7px 10px;
+  border-radius:20px;
+  background:#141a22;
+  color:#9da9b7
 }
 
-.logo span {
-  color: #19d681;
+.card{
+  background:#10151c;
+  border:1px solid #252e39;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:12px
 }
 
-.status {
-  padding: 7px 11px;
-  border-radius: 20px;
-  background: #151b24;
-  color: #aeb8c5;
-  font-size: 12px;
+.label{
+  color:#8793a2;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-bottom:8px
 }
 
-.card {
-  background: #10151d;
-  border: 1px solid #252e3b;
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 13px;
+select{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #303a46;
+  background:#080c11;
+  color:#fff;
+  font-size:15px
 }
 
-.label {
-  color: #8793a2;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .7px;
-  margin-bottom: 8px;
+.price{
+  font-size:25px;
+  font-weight:900;
+  margin-top:5px;
+  word-break:break-all
 }
 
-select {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #303a48;
-  background: #080c12;
-  color: white;
-  font-size: 15px;
+.center{text-align:center}
+
+.timer{
+  font-size:42px;
+  font-weight:900;
+  margin:5px 0
 }
 
-.price {
-  font-size: 27px;
-  font-weight: 900;
-  margin-top: 10px;
-  word-break: break-all;
+.timer.live{color:#19d681}
+
+.timer.done{color:#fff}
+
+.big-digit{
+  font-size:82px;
+  font-weight:900;
+  margin:0
 }
 
-.timer {
-  text-align: center;
-  font-size: 43px;
-  font-weight: 900;
-  margin: 5px 0;
+.result-label{
+  color:#19d681;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px
 }
 
-.timer.waiting {
-  color: #8793a2;
+.confidence{
+  font-size:35px;
+  font-weight:900;
+  margin:5px 0 12px
 }
 
-.timer.running {
-  color: #19d681;
+.edge{
+  font-size:20px;
+  font-weight:900;
+  margin-bottom:10px
 }
 
-.timer.finished {
-  color: #ffffff;
+.insight{
+  color:#c1cad5;
+  line-height:1.6;
+  font-size:14px
 }
 
-.big-digit {
-  text-align: center;
-  font-size: 72px;
-  font-weight: 900;
-  margin: 4px 0;
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px
 }
 
-.center {
-  text-align: center;
+.stat{
+  background:#080c11;
+  border-radius:10px;
+  padding:12px
 }
 
-.muted {
-  color: #7f8b9b;
+.stat-title{
+  color:#7e8998;
+  font-size:10px;
+  text-transform:uppercase
 }
 
-.buttons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 14px;
+.stat-value{
+  font-size:20px;
+  font-weight:900;
+  margin-top:5px
 }
 
-button {
-  flex: 1;
-  padding: 15px;
-  border: 0;
-  border-radius: 11px;
-  font-size: 15px;
-  font-weight: 800;
+.digits{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:7px
 }
 
-#startButton {
-  background: #19d681;
-  color: #03130b;
+.digit{
+  background:#080c11;
+  border:1px solid #27313c;
+  border-radius:9px;
+  padding:10px 3px;
+  text-align:center
 }
 
-#nextButton {
-  background: #ffffff;
-  color: #080c12;
+.digit strong{
+  display:block;
+  font-size:18px
 }
 
-#stopButton {
-  background: #252e3a;
-  color: white;
+.digit small{
+  color:#7f8a99;
+  font-size:10px
 }
 
-button:disabled {
-  opacity: .45;
+.digit.selected{
+  border-color:#19d681
 }
 
-.ai {
-  border-left: 4px solid #19d681;
+.tickfeed{
+  max-height:200px;
+  overflow:auto;
+  font-family:monospace;
+  color:#9ca8b5;
+  font-size:12px;
+  line-height:1.7
 }
 
-.confidence {
-  font-size: 35px;
-  font-weight: 900;
-  margin: 5px 0 12px;
+.error{
+  display:none;
+  background:#291116;
+  border:1px solid #74303d;
+  color:#ff9ba7;
+  padding:11px;
+  border-radius:9px;
+  margin-top:10px;
+  font-size:12px;
+  line-height:1.5;
+  word-break:break-word
 }
 
-.signal {
-  font-size: 22px;
-  font-weight: 900;
-  margin-bottom: 10px;
+.buttons{
+  display:flex;
+  gap:8px
 }
 
-.candidate {
-  text-align: center;
-  font-size: 12px;
-  color: #8793a2;
-  text-transform: uppercase;
-  letter-spacing: .8px;
+button{
+  flex:1;
+  border:0;
+  border-radius:10px;
+  padding:15px 6px;
+  font-weight:900;
+  font-size:13px
 }
 
-.insight {
-  line-height: 1.65;
-  color: #c3ccd7;
+#start{
+  background:#19d681;
+  color:#03130b
 }
 
-.match-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+#next{
+  background:#fff;
+  color:#05080c
 }
 
-.match {
-  background: #080c12;
-  border-radius: 12px;
-  padding: 15px;
+#stop{
+  background:#252e38;
+  color:#fff
 }
 
-.match-title {
-  color: #8793a2;
-  font-size: 12px;
+button:disabled{
+  opacity:.4
 }
 
-.match-value {
-  font-size: 26px;
-  font-weight: 800;
-  margin-top: 6px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.stat {
-  background: #080c12;
-  border-radius: 11px;
-  padding: 13px;
-}
-
-.stat-title {
-  color: #8793a2;
-  font-size: 11px;
-}
-
-.stat-value {
-  font-size: 20px;
-  font-weight: 800;
-  margin-top: 5px;
-}
-
-.digits {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 7px;
-}
-
-.digit-card {
-  background: #080c12;
-  border: 1px solid #27313e;
-  border-radius: 9px;
-  padding: 10px 3px;
-  text-align: center;
-}
-
-.digit-card strong {
-  display: block;
-  font-size: 18px;
-}
-
-.digit-card small {
-  color: #8793a2;
-}
-
-.digit-card.hot {
-  border-color: #19d681;
-}
-
-.tick-list {
-  max-height: 220px;
-  overflow-y: auto;
-  font-family: monospace;
-  line-height: 1.7;
-  color: #aeb8c5;
-}
-
-.error-box {
-  display: none;
-  background: #241014;
-  border: 1px solid #71303b;
-  color: #ff9ba7;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  margin-top: 10px;
-  word-break: break-word;
-}
-
-.window-box {
-  background: #080c12;
-  border-radius: 11px;
-  padding: 13px;
-  margin-top: 12px;
-  text-align: center;
-}
-
-.window-box strong {
-  display: block;
-  font-size: 18px;
-  margin-top: 5px;
-}
-
-.note {
-  color: #718092;
-  font-size: 11px;
-  line-height: 1.5;
-  margin-top: 12px;
-}
-
-@media (max-width: 430px) {
-  .app {
-    padding: 15px 11px 30px;
-  }
-
-  .logo {
-    font-size: 22px;
-  }
-
-  .price {
-    font-size: 24px;
-  }
-
-  .timer {
-    font-size: 38px;
-  }
-
-  .big-digit {
-    font-size: 65px;
-  }
+.note{
+  color:#6f7b89;
+  font-size:10px;
+  line-height:1.5;
+  margin-top:10px
 }
 </style>
 </head>
@@ -321,519 +240,376 @@ button:disabled {
 
 <div class="app">
 
-  <div class="header">
-    <div class="logo">
-      TRADER <span>PRO</span>
-    </div>
+<div class="header">
+  <div class="logo">TRADER <span>PRO</span></div>
+  <div id="status" class="status">● READY</div>
+</div>
 
-    <div id="status" class="status">
-      ● Ready
-    </div>
+
+<!-- MARKET -->
+
+<div class="card">
+
+  <div class="label">Volatility Index</div>
+
+  <select id="market">
+    <option>Loading Volatility...</option>
+  </select>
+
+  <div class="label" style="margin-top:15px">
+    Live Price
   </div>
 
+  <div id="price" class="price">—</div>
 
-  <!-- MARKET -->
-  <div class="card">
+  <div id="error" class="error"></div>
 
-    <div class="label">
-      Live Deriv Market
-    </div>
+</div>
 
-    <select id="marketSelect">
-      <option value="">
-        Press START ANALYSIS
-      </option>
-    </select>
 
-    <div class="label" style="margin-top:16px;">
-      Live Price
-    </div>
+<!-- WINDOW -->
 
-    <div id="price" class="price">
-      —
-    </div>
+<div class="card center">
 
-    <div id="errorBox" class="error-box"></div>
+  <div class="label">Analysis Window</div>
 
+  <select id="window">
+    <option value="30">30 Seconds</option>
+    <option value="60" selected>1 Minute</option>
+    <option value="120">2 Minutes</option>
+    <option value="300">5 Minutes</option>
+  </select>
+
+  <div class="label" style="margin-top:16px">
+    Time Remaining
   </div>
 
+  <div id="timer" class="timer">01:00</div>
 
-  <!-- TIME WINDOW -->
-  <div class="card center">
-
-    <div class="label">
-      Analysis Time Window
-    </div>
-
-    <select id="windowSelect">
-
-      <option value="30">
-        30 Seconds
-      </option>
-
-      <option value="60" selected>
-        1 Minute
-      </option>
-
-      <option value="120">
-        2 Minutes
-      </option>
-
-      <option value="300">
-        5 Minutes
-      </option>
-
-    </select>
-
-    <div class="label" style="margin-top:18px;">
-      Time Remaining
-    </div>
-
-    <div id="timer"
-         class="timer waiting">
-      01:00
-    </div>
-
-    <div id="windowStatus"
-         class="muted">
-      Waiting to start
-    </div>
-
+  <div id="windowState">
+    Waiting to start
   </div>
 
+</div>
 
-  <!-- FROZEN RESULT -->
-  <div class="card center">
 
-    <div class="candidate">
-      Completed Window — Candidate Digit
-    </div>
+<!-- MAIN MATCHES RESULT -->
 
-    <div id="candidateDigit"
-         class="big-digit">
-      —
-    </div>
+<div class="card center">
 
-    <div id="candidateStatus"
-         class="muted">
-      No completed analysis yet
-    </div>
-
+  <div class="result-label">
+    MATCHES CANDIDATE
   </div>
 
-
-  <!-- STATISTICAL ANALYSIS -->
-  <div class="card ai">
-
-    <div class="label">
-      Time-Window Statistical Analysis
-    </div>
-
-    <div id="signal"
-         class="signal">
-      WAITING
-    </div>
-
-    <div class="confidence">
-      <span id="confidence">—</span>
-    </div>
-
-    <div id="insight"
-         class="insight">
-      Press START ANALYSIS.
-      The app will collect ticks for the
-      selected time window before producing
-      a result.
-    </div>
-
+  <div class="label" style="margin-top:10px">
+    Last Digit
   </div>
 
+  <div id="candidate" class="big-digit">—</div>
 
-  <!-- MATCHES / DIFFERS -->
-  <div class="card">
+  <div id="resultState">
+    No completed analysis
+  </div>
 
-    <div class="label">
-      Matches / Differs
+</div>
+
+
+<!-- EDGE -->
+
+<div class="card">
+
+  <div class="label">
+    Matches Edge Engine
+  </div>
+
+  <div id="edge" class="edge">
+    WAITING
+  </div>
+
+  <div class="label">
+    Confidence
+  </div>
+
+  <div id="confidence" class="confidence">
+    —
+  </div>
+
+  <div id="insight" class="insight">
+    Start an analysis window to evaluate the
+    last-digit structure of the selected
+    Volatility Index.
+  </div>
+
+</div>
+
+
+<!-- MATCHES / DIFFERS -->
+
+<div class="card">
+
+  <div class="label">
+    Historical Sample
+  </div>
+
+  <div class="grid">
+
+    <div class="stat">
+      <div class="stat-title">Candidate Matches</div>
+      <div id="matches" class="stat-value">—</div>
     </div>
 
-    <div class="match-grid">
-
-      <div class="match">
-
-        <div class="match-title">
-          Candidate Digit Matches
-        </div>
-
-        <div id="matches"
-             class="match-value">
-          —
-        </div>
-
-      </div>
-
-      <div class="match">
-
-        <div class="match-title">
-          Candidate Digit Differs
-        </div>
-
-        <div id="differs"
-             class="match-value">
-          —
-        </div>
-
-      </div>
-
+    <div class="stat">
+      <div class="stat-title">Candidate Differs</div>
+      <div id="differs" class="stat-value">—</div>
     </div>
 
-    <div class="note">
-      These percentages describe the completed
-      analysis sample. They are not guaranteed
-      probabilities for the next contract.
+    <div class="stat">
+      <div class="stat-title">Sample Size</div>
+      <div id="sample" class="stat-value">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Recent Agreement</div>
+      <div id="agreement" class="stat-value">—</div>
     </div>
 
   </div>
 
-
-  <!-- STATS -->
-  <div class="card">
-
-    <div class="label">
-      Completed Window Statistics
-    </div>
-
-    <div class="stats">
-
-      <div class="stat">
-        <div class="stat-title">
-          Candidate Digit
-        </div>
-
-        <div id="dominant"
-             class="stat-value">
-          —
-        </div>
-      </div>
-
-
-      <div class="stat">
-        <div class="stat-title">
-          Recent Digit
-        </div>
-
-        <div id="recentDominant"
-             class="stat-value">
-          —
-        </div>
-      </div>
-
-
-      <div class="stat">
-        <div class="stat-title">
-          Ticks Collected
-        </div>
-
-        <div id="sampleSize"
-             class="stat-value">
-          0
-        </div>
-      </div>
-
-
-      <div class="stat">
-        <div class="stat-title">
-          Window
-        </div>
-
-        <div id="completedWindow"
-             class="stat-value">
-          —
-        </div>
-      </div>
-
-    </div>
-
+  <div class="note">
+    Matches/Differs figures describe the completed
+    sample. They are not a guarantee of the next tick.
   </div>
 
+</div>
 
-  <!-- DIGIT DISTRIBUTION -->
-  <div class="card">
 
-    <div class="label">
-      Completed Window Digit Distribution
-    </div>
+<!-- DIGIT DISTRIBUTION -->
 
-    <div id="distribution"
-         class="digits">
-    </div>
+<div class="card">
 
+  <div class="label">
+    Digit Distribution
   </div>
 
+  <div id="digits" class="digits"></div>
 
-  <!-- LIVE TICKS -->
-  <div class="card">
+</div>
 
-    <div class="label">
-      Live Tick Feed
-    </div>
 
-    <div id="ticks"
-         class="tick-list">
-      No ticks yet.
-    </div>
+<!-- LIVE FEED -->
 
+<div class="card">
+
+  <div class="label">
+    Live Volatility Tick Feed
   </div>
 
-
-  <!-- BUTTONS -->
-  <div class="buttons">
-
-    <button id="startButton">
-      START
-    </button>
-
-    <button id="nextButton"
-            disabled>
-      NEXT ANALYSIS
-    </button>
-
-    <button id="stopButton">
-      STOP
-    </button>
-
+  <div id="feed" class="tickfeed">
+    Waiting for ticks...
   </div>
+
+</div>
+
+
+<!-- CONTROLS -->
+
+<div class="buttons">
+
+  <button id="start">
+    START
+  </button>
+
+  <button id="next" disabled>
+    NEXT ANALYSIS
+  </button>
+
+  <button id="stop">
+    STOP
+  </button>
+
+</div>
 
 </div>
 
 
 <script>
 
-/*
-====================================================
-TRADER PRO
-TIME-WINDOW DIGIT ANALYZER
-====================================================
-*/
+/* ==================================================
+   TRADER PRO
+   VOLATILITY-ONLY MATCHES EDGE ENGINE
+   ================================================== */
 
 const WS_URL =
-  "wss://api.derivws.com/trading/v1/options/ws/public";
+"wss://api.derivws.com/trading/v1/options/ws/public";
 
 
-let socket = null;
+/* ONLY THESE MARKETS ARE ALLOWED */
+
+const VOLATILITY = {
+
+  "R_10":
+  "Volatility 10 Index",
+
+  "1HZ10V":
+  "Volatility 10 (1s) Index",
+
+  "R_25":
+  "Volatility 25 Index",
+
+  "1HZ25V":
+  "Volatility 25 (1s) Index",
+
+  "R_50":
+  "Volatility 50 Index",
+
+  "1HZ50V":
+  "Volatility 50 (1s) Index",
+
+  "R_75":
+  "Volatility 75 Index",
+
+  "1HZ75V":
+  "Volatility 75 (1s) Index",
+
+  "R_100":
+  "Volatility 100 Index",
+
+  "1HZ100V":
+  "Volatility 100 (1s) Index"
+
+};
+
+
+/* STATE */
+
+let ws = null;
 
 let running = false;
 
 let collecting = false;
 
-let reconnectTimer = null;
+let timerLoop = null;
 
-let timerInterval = null;
+let reconnectLoop = null;
 
-let reconnectAttempts = 0;
+let symbol = "";
 
-let selectedSymbol = "";
+let ticks = [];
 
-let tickData = [];
+let liveFeed = [];
 
-let counts =
-  Array(10).fill(0);
+let counts = Array(10).fill(0);
 
-let frozenResult = null;
+let startedAt = 0;
 
-let analysisStartTime = 0;
-
-let analysisEndTime = 0;
-
-const MAX_LIVE_TICKS = 500;
-
-const RECENT_TICKS = 30;
+let endsAt = 0;
 
 
 /* ELEMENTS */
 
 const status =
-  document.getElementById(
-    "status"
-  );
+document.getElementById("status");
 
-const marketSelect =
-  document.getElementById(
-    "marketSelect"
-  );
-
-const windowSelect =
-  document.getElementById(
-    "windowSelect"
-  );
-
-const timer =
-  document.getElementById(
-    "timer"
-  );
-
-const windowStatus =
-  document.getElementById(
-    "windowStatus"
-  );
+const market =
+document.getElementById("market");
 
 const price =
-  document.getElementById(
-    "price"
-  );
+document.getElementById("price");
 
-const lastCandidate =
-  document.getElementById(
-    "candidateDigit"
-  );
+const error =
+document.getElementById("error");
 
-const candidateStatus =
-  document.getElementById(
-    "candidateStatus"
-  );
+const windowSelect =
+document.getElementById("window");
+
+const timer =
+document.getElementById("timer");
+
+const windowState =
+document.getElementById("windowState");
+
+const candidate =
+document.getElementById("candidate");
+
+const resultState =
+document.getElementById("resultState");
+
+const edge =
+document.getElementById("edge");
 
 const confidence =
-  document.getElementById(
-    "confidence"
-  );
-
-const signal =
-  document.getElementById(
-    "signal"
-  );
+document.getElementById("confidence");
 
 const insight =
-  document.getElementById(
-    "insight"
-  );
+document.getElementById("insight");
 
 const matches =
-  document.getElementById(
-    "matches"
-  );
+document.getElementById("matches");
 
 const differs =
-  document.getElementById(
-    "differs"
-  );
+document.getElementById("differs");
 
-const dominant =
-  document.getElementById(
-    "dominant"
-  );
+const sample =
+document.getElementById("sample");
 
-const recentDominant =
-  document.getElementById(
-    "recentDominant"
-  );
+const agreement =
+document.getElementById("agreement");
 
-const sampleSize =
-  document.getElementById(
-    "sampleSize"
-  );
+const digits =
+document.getElementById("digits");
 
-const completedWindow =
-  document.getElementById(
-    "completedWindow"
-  );
-
-const distribution =
-  document.getElementById(
-    "distribution"
-  );
-
-const ticks =
-  document.getElementById(
-    "ticks"
-  );
-
-const errorBox =
-  document.getElementById(
-    "errorBox"
-  );
+const feed =
+document.getElementById("feed");
 
 const startButton =
-  document.getElementById(
-    "startButton"
-  );
+document.getElementById("start");
 
 const nextButton =
-  document.getElementById(
-    "nextButton"
-  );
+document.getElementById("next");
 
 const stopButton =
-  document.getElementById(
-    "stopButton"
-  );
+document.getElementById("stop");
 
 
 /* STATUS */
 
 function setStatus(text){
-
   status.textContent = text;
-
 }
 
 
 /* ERROR */
 
-function showError(message){
+function showError(text){
 
-  errorBox.style.display =
-    "block";
+  error.style.display = "block";
 
-  errorBox.textContent =
-    "Deriv response: " +
-    message;
-
+  error.textContent =
+    "Deriv: " + text;
 }
-
 
 function clearError(){
 
-  errorBox.style.display =
-    "none";
+  error.style.display = "none";
 
-  errorBox.textContent =
-    "";
-
+  error.textContent = "";
 }
 
 
 /* SEND */
 
-function send(request){
+function send(data){
 
   if(
-    !socket ||
-    socket.readyState !==
-    WebSocket.OPEN
+    !ws ||
+    ws.readyState !== WebSocket.OPEN
   ){
-
     return false;
-
   }
 
+  ws.send(JSON.stringify(data));
 
-  try{
-
-    socket.send(
-      JSON.stringify(request)
-    );
-
-    return true;
-
-  }catch(error){
-
-    showError(
-      error.message
-    );
-
-    return false;
-
-  }
-
+  return true;
 }
 
 
@@ -843,535 +619,290 @@ function connect(){
 
   clearError();
 
-  clearTimeout(
-    reconnectTimer
-  );
-
-  setStatus(
-    "● Connecting"
-  );
-
+  setStatus("● CONNECTING");
 
   try{
 
-    socket =
-      new WebSocket(
-        WS_URL
-      );
+    ws =
+    new WebSocket(WS_URL);
 
-  }catch(error){
+  }catch(e){
 
-    showError(
-      error.message
-    );
-
-    setStatus(
-      "● Connection failed"
-    );
-
-    scheduleReconnect();
+    showError(e.message);
 
     return;
 
   }
 
 
-  socket.onopen =
-    function(){
+  ws.onopen = function(){
 
-      reconnectAttempts = 0;
+    setStatus("● CONNECTED");
 
-      setStatus(
-        "● Connected"
+    send({
+      active_symbols:"brief",
+      req_id:1
+    });
+
+  };
+
+
+  ws.onmessage = function(event){
+
+    let data;
+
+    try{
+
+      data =
+      JSON.parse(event.data);
+
+    }catch(e){
+
+      return;
+
+    }
+
+
+    console.log(data);
+
+
+    if(data.error){
+
+      showError(
+        data.error.message ||
+        data.error.code ||
+        "API error"
       );
 
-      requestMarkets();
+      setStatus("● API ERROR");
 
-    };
+      return;
+    }
 
 
-  socket.onmessage =
-    function(event){
+    if(
+      data.msg_type ===
+      "active_symbols"
+    ){
 
-      handleMessage(
-        event.data
+      loadMarkets(
+        data.active_symbols
       );
 
-    };
+      return;
+    }
 
 
-  socket.onerror =
-    function(){
+    if(
+      data.msg_type ===
+      "tick"
+    ){
 
-      setStatus(
-        "● WebSocket error"
+      receiveTick(
+        data.tick
       );
 
-    };
+    }
+
+  };
 
 
-  socket.onclose =
-    function(event){
+  ws.onerror = function(){
 
-      if(!running){
+    setStatus("● CONNECTION ERROR");
 
-        return;
-
-      }
+  };
 
 
-      setStatus(
-        "● Disconnected"
+  ws.onclose = function(){
+
+    if(running){
+
+      setStatus("● DISCONNECTED");
+
+      reconnectLoop =
+      setTimeout(
+        connect,
+        3000
       );
 
+    }
 
-      if(event.code){
-
-        showError(
-          "WebSocket closed. Code: " +
-          event.code +
-          " " +
-          (
-            event.reason ||
-            ""
-          )
-        );
-
-      }
-
-
-      scheduleReconnect();
-
-    };
-
-}
-
-
-/* RECONNECT */
-
-function scheduleReconnect(){
-
-  if(!running){
-
-    return;
-
-  }
-
-
-  clearTimeout(
-    reconnectTimer
-  );
-
-
-  reconnectAttempts++;
-
-
-  const delay =
-    Math.min(
-      1000 *
-      Math.pow(
-        2,
-        reconnectAttempts - 1
-      ),
-      15000
-    );
-
-
-  setStatus(
-    "● Reconnecting"
-  );
-
-
-  reconnectTimer =
-    setTimeout(
-      connect,
-      delay
-    );
-
-}
-
-
-/* MARKET REQUEST */
-
-function requestMarkets(){
-
-  /*
-   Current Deriv public API.
-   product_type is intentionally
-   NOT included.
-  */
-
-  send({
-
-    active_symbols:
-      "brief",
-
-    req_id:
-      1
-
-  });
-
-}
-
-
-/* MESSAGE HANDLER */
-
-function handleMessage(raw){
-
-  let data;
-
-
-  try{
-
-    data =
-      JSON.parse(
-        raw
-      );
-
-  }catch(error){
-
-    showError(
-      "Invalid server response."
-    );
-
-    return;
-
-  }
-
-
-  console.log(
-    "Deriv:",
-    data
-  );
-
-
-  if(data.error){
-
-    const message =
-      data.error.message ||
-      data.error.code ||
-      JSON.stringify(
-        data.error
-      );
-
-
-    showError(
-      message
-    );
-
-
-    setStatus(
-      "● API error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    Array.isArray(
-      data.errors
-    ) &&
-    data.errors.length
-  ){
-
-    showError(
-      data.errors
-        .map(
-          item =>
-            item.message ||
-            item.code ||
-            JSON.stringify(item)
-        )
-        .join(" | ")
-    );
-
-
-    setStatus(
-      "● API error"
-    );
-
-    return;
-
-  }
-
-
-  if(
-    data.msg_type ===
-    "active_symbols"
-  ){
-
-    loadMarkets(
-      data.active_symbols
-    );
-
-    return;
-
-  }
-
-
-  if(
-    data.msg_type ===
-    "tick"
-  ){
-
-    processTick(
-      data.tick
-    );
-
-    return;
-
-  }
+  };
 
 }
 
 
 /* MARKETS */
 
-function loadMarkets(markets){
+function loadMarkets(list){
 
-  if(
-    !Array.isArray(
-      markets
-    )
-  ){
+  market.innerHTML = "";
+
+  if(!Array.isArray(list)){
 
     showError(
-      "No active markets returned."
+      "No market list received."
     );
 
     return;
-
   }
 
 
-  const usable =
-    markets.filter(
-      item =>
-        item &&
+  /*
+   Only known Volatility symbols
+   are inserted into the select.
+  */
+
+  const available =
+  list.filter(
+    item =>
+      item &&
+      VOLATILITY[
         item.underlying_symbol
-    );
+      ]
+  );
 
 
-  usable.sort(
-    function(a,b){
+  available.forEach(
+    item => {
 
-      const aName =
-        (
-          a.underlying_symbol_name ||
-          ""
-        ).toLowerCase();
+      const option =
+      document.createElement("option");
 
-      const bName =
-        (
-          b.underlying_symbol_name ||
-          ""
-        ).toLowerCase();
+      option.value =
+      item.underlying_symbol;
 
+      option.textContent =
+      VOLATILITY[
+        item.underlying_symbol
+      ];
 
-      const aVol =
-        aName.includes(
-          "volatility"
-        ) ? 0 : 1;
-
-      const bVol =
-        bName.includes(
-          "volatility"
-        ) ? 0 : 1;
-
-
-      return aVol - bVol;
+      market.appendChild(option);
 
     }
   );
 
 
-  marketSelect.innerHTML =
-    "";
-
-
-  usable
-    .slice(0,150)
-    .forEach(
-      function(item){
-
-        const option =
-          document.createElement(
-            "option"
-          );
-
-
-        option.value =
-          item.underlying_symbol;
-
-
-        option.textContent =
-          (
-            item.underlying_symbol_name ||
-            item.underlying_symbol
-          ) +
-          " (" +
-          item.underlying_symbol +
-          ")";
-
-
-        marketSelect.appendChild(
-          option
-        );
-
-      }
-    );
-
-
   if(
-    !marketSelect.options.length
+    market.options.length === 0
   ){
 
     showError(
-      "No usable markets found."
+      "Deriv returned no Volatility Indices."
     );
 
     return;
-
   }
 
 
+  /*
+   Prefer Volatility 100 (1s).
+  */
+
   const preferred =
-    Array.from(
-      marketSelect.options
-    ).find(
-      option =>
-        option.textContent
-          .toLowerCase()
-          .includes(
-            "volatility 100"
-          )
-    );
+  [...market.options]
+  .find(
+    x =>
+      x.value === "1HZ100V"
+  );
 
 
   if(preferred){
 
-    marketSelect.value =
-      preferred.value;
+    market.value =
+    preferred.value;
 
   }
 
 
-  selectedSymbol =
-    marketSelect.value;
+  symbol =
+  market.value;
 
 
   clearError();
 
-
-  setStatus(
-    "● Markets loaded"
-  );
-
-
-  subscribeToTicks();
+  subscribe();
 
 }
 
 
-/* TICK SUBSCRIPTION */
+/* SUBSCRIBE */
 
-function subscribeToTicks(){
+function subscribe(){
 
   if(
-    !selectedSymbol
+    !symbol ||
+    !VOLATILITY[symbol]
   ){
 
-    return;
+    showError(
+      "Invalid Volatility symbol."
+    );
 
+    return;
   }
 
 
-  const success =
-    send({
-
-      ticks:
-        selectedSymbol,
-
-      subscribe:
-        1,
-
-      req_id:
-        2
-
-    });
-
-
-  if(!success){
-
-    return;
-
-  }
+  send({
+    ticks:symbol,
+    subscribe:1,
+    req_id:2
+  });
 
 
   setStatus(
     "● LIVE " +
-    selectedSymbol
+    VOLATILITY[symbol]
   );
 
 }
 
 
-/* PROCESS TICK */
+/* TICK */
 
-function processTick(tick){
+function receiveTick(tick){
 
   if(!tick){
 
     return;
-
   }
 
 
-  const value =
-    Number(
-      tick.quote
-    );
+  const quote =
+  String(tick.quote);
+
+
+  const numeric =
+  Number(tick.quote);
 
 
   if(
-    !Number.isFinite(value)
+    !Number.isFinite(numeric)
   ){
 
     return;
-
   }
 
 
-  let quoteText =
-    String(
-      tick.quote
-    );
-
-
   let decimalPart =
-    quoteText.includes(".")
-      ? quoteText.split(".")[1]
-      : "";
+  quote.includes(".")
+  ? quote.split(".")[1]
+  : "0";
 
 
-  if(
-    !decimalPart.length
-  ){
+  if(!decimalPart){
 
-    decimalPart =
-      "0";
-
+    decimalPart = "0";
   }
 
 
   const digit =
-    Number(
-      decimalPart[
-        decimalPart.length - 1
-      ]
-    );
+  Number(
+    decimalPart[
+      decimalPart.length - 1
+    ]
+  );
 
 
   if(
@@ -1379,196 +910,143 @@ function processTick(tick){
   ){
 
     return;
-
   }
 
 
   price.textContent =
-    tick.quote;
+  quote;
 
 
-  /*
-   Keep a live feed separately
-   from the current analysis window.
-  */
+  const item = {
 
-  tickData.push({
-
-    price:value,
+    price:numeric,
 
     digit:digit,
 
-    epoch:
-      tick.epoch ||
-      Math.floor(
-        Date.now()/1000
-      )
+    time:
+    Date.now()
 
-  });
+  };
+
+
+  liveFeed.push(item);
 
 
   if(
-    tickData.length >
-    MAX_LIVE_TICKS
+    liveFeed.length > 80
   ){
 
-    tickData.shift();
+    liveFeed.shift();
 
   }
 
 
-  renderLiveTicks();
+  renderFeed();
 
 
   /*
-   ONLY add the tick to the
-   statistical sample while the
-   timer is actively collecting.
+   ONLY add to the analysis
+   when a window is active.
   */
 
   if(collecting){
 
+    ticks.push(item);
+
     counts[digit]++;
 
-    updateCollectionDisplay();
+    updateStats();
 
   }
 
 }
 
 
-/* START */
+/* START NEW WINDOW */
 
-function startAnalysis(){
-
-  if(
-    !running
-  ){
-
-    running = true;
-
-  }
-
+function startWindow(){
 
   if(
-    !socket ||
-    socket.readyState !==
-    WebSocket.OPEN
+    !symbol ||
+    !VOLATILITY[symbol]
   ){
 
-    connect();
+    showError(
+      "Choose a Volatility Index."
+    );
 
     return;
-
   }
 
-
-  beginWindow();
-
-}
-
-
-/* BEGIN WINDOW */
-
-function beginWindow(){
 
   clearError();
 
-  clearInterval(
-    timerInterval
-  );
-
 
   /*
-   Fresh sample for the new
-   analysis window.
+   Fresh sample.
   */
 
+  ticks = [];
+
   counts =
-    Array(10).fill(0);
+  Array(10).fill(0);
 
-
-  frozenResult = null;
 
   collecting = true;
 
+  startedAt =
+  Date.now();
 
-  candidateStatus.textContent =
+
+  endsAt =
+  startedAt +
+  Number(
+    windowSelect.value
+  ) * 1000;
+
+
+  /*
+   Remove previous result.
+  */
+
+  candidate.textContent = "—";
+
+  resultState.textContent =
     "Collecting a fresh sample...";
 
 
-  lastCandidate.textContent =
-    "—";
+  edge.textContent =
+    "ANALYSING";
 
 
   confidence.textContent =
     "—";
 
 
-  signal.textContent =
-    "COLLECTING DATA";
-
-
   insight.textContent =
-    "Collecting live ticks for the selected time window.";
+    "The engine is collecting Volatility ticks and evaluating all ten possible last digits.";
 
 
-  matches.textContent =
-    "—";
+  matches.textContent = "—";
 
+  differs.textContent = "—";
 
-  differs.textContent =
-    "—";
+  agreement.textContent = "—";
 
-
-  dominant.textContent =
-    "—";
-
-
-  recentDominant.textContent =
-    "—";
-
-
-  sampleSize.textContent =
-    "0";
-
-
-  completedWindow.textContent =
-    "—";
-
-
-  renderDistribution();
-
-
-  const seconds =
-    Number(
-      windowSelect.value
-    );
-
-
-  analysisStartTime =
-    Date.now();
-
-
-  analysisEndTime =
-    analysisStartTime +
-    seconds * 1000;
+  sample.textContent = "0";
 
 
   timer.className =
-    "timer running";
+    "timer live";
 
 
-  windowStatus.textContent =
-    "Collecting live ticks...";
+  windowState.textContent =
+    "Collecting ticks...";
 
 
-  nextButton.disabled =
-    true;
+  startButton.disabled = true;
 
-
-  startButton.disabled =
-    true;
+  nextButton.disabled = true;
 
 
   setStatus(
@@ -1576,14 +1054,17 @@ function beginWindow(){
   );
 
 
+  clearInterval(timerLoop);
+
+
   updateTimer();
 
 
-  timerInterval =
-    setInterval(
-      updateTimer,
-      250
-    );
+  timerLoop =
+  setInterval(
+    updateTimer,
+    200
+  );
 
 }
 
@@ -1595,192 +1076,85 @@ function updateTimer(){
   if(!collecting){
 
     return;
-
   }
 
 
   const remaining =
-    Math.max(
-      0,
-      analysisEndTime -
-      Date.now()
-    );
-
-
-  const seconds =
-    Math.ceil(
-      remaining / 1000
-    );
-
-
-  const minutes =
-    Math.floor(
-      seconds / 60
-    );
-
-
-  const secs =
-    seconds % 60;
+  Math.max(
+    0,
+    endsAt - Date.now()
+  );
 
 
   timer.textContent =
-    String(minutes)
-      .padStart(2,"0") +
-    ":" +
-    String(secs)
-      .padStart(2,"0");
+  formatTime(
+    Math.ceil(
+      remaining / 1000
+    )
+  );
 
 
   if(
     remaining <= 0
   ){
 
-    finishWindow();
+    finishAnalysis();
 
   }
 
 }
 
 
-/* COLLECTION DISPLAY */
+/* ==================================================
+   MATCHES EDGE ENGINE
+   ================================================== */
 
-function updateCollectionDisplay(){
+function calculateEdge(){
 
   const total =
-    counts.reduce(
-      (sum,value) =>
-        sum + value,
-      0
-    );
+  ticks.length;
 
 
-  sampleSize.textContent =
-    total;
+  if(total < 10){
 
-
-  renderDistribution();
-
-}
-
-
-/* FINISH WINDOW */
-
-function finishWindow(){
-
-  if(!collecting){
-
-    return;
+    return {
+      valid:false
+    };
 
   }
 
 
-  collecting = false;
+  /*
+   STEP 1
+   Frequency score
+  */
 
-
-  clearInterval(
-    timerInterval
+  const frequency =
+  counts.map(
+    count =>
+      count / total
   );
 
 
-  timerInterval = null;
-
-
-  timer.textContent =
-    "00:00";
-
-
-  timer.className =
-    "timer finished";
-
-
-  windowStatus.textContent =
-    "Analysis complete — result frozen";
-
-
   /*
-   Calculate result ONLY from the
-   completed time window.
+   STEP 2
+   Recent sample
+
+   Only ticks from this
+   completed window.
   */
-
-  const total =
-    counts.reduce(
-      (sum,value) =>
-        sum + value,
-      0
-    );
-
-
-  if(
-    total === 0
-  ){
-
-    signal.textContent =
-      "NO DATA";
-
-
-    candidateStatus.textContent =
-      "No ticks were collected.";
-
-
-    insight.textContent =
-      "The analysis window completed without receiving usable ticks.";
-
-
-    confidence.textContent =
-      "0%";
-
-
-    nextButton.disabled =
-      false;
-
-
-    startButton.disabled =
-      false;
-
-
-    setStatus(
-      "● NO DATA"
-    );
-
-
-    return;
-
-  }
-
-
-  const candidate =
-    getDominant(
-      counts
-    );
-
-
-  const candidateFrequency =
-    counts[candidate] /
-    total *
-    100;
-
-
-  /*
-   Recent part of the completed
-   window is used as a second
-   confirmation check.
-  */
-
-  const windowTicks =
-    getWindowTicks();
-
 
   const recent =
-    windowTicks.slice(
-      -Math.min(
-        30,
-        windowTicks.length
-      )
-    );
+  ticks.slice(
+    -Math.min(
+      30,
+      total
+    )
+  );
 
 
   const recentCounts =
-    Array(10).fill(0);
+  Array(10).fill(0);
 
 
   recent.forEach(
@@ -1794,167 +1168,345 @@ function finishWindow(){
   );
 
 
-  const recentCandidate =
-    getDominant(
-      recentCounts
-    );
+  const recentTotal =
+  recent.length;
 
 
   const recentFrequency =
-    recent.length
-      ? recentCounts[
-          recentCandidate
-        ] /
-        recent.length *
-        100
-      : 0;
+  recentCounts.map(
+    count =>
+      count /
+      recentTotal
+  );
 
 
   /*
-   Statistical agreement score.
+   STEP 3
+   Consistency.
 
-   This is intentionally NOT described
-   as a guaranteed next-digit probability.
+   Split the window into
+   three sections.
   */
 
-  let score = 50;
+  const sectionSize =
+  Math.max(
+    1,
+    Math.floor(
+      total / 3
+    )
+  );
 
 
-  if(
-    candidate ===
-    recentCandidate
+  const sections = [
+
+    ticks.slice(
+      0,
+      sectionSize
+    ),
+
+    ticks.slice(
+      sectionSize,
+      sectionSize * 2
+    ),
+
+    ticks.slice(
+      sectionSize * 2
+    )
+
+  ];
+
+
+  /*
+   Score every digit.
+  */
+
+  const scores =
+  Array(10).fill(0);
+
+
+  for(
+    let d = 0;
+    d < 10;
+    d++
   ){
 
-    score += 15;
+    /*
+     Frequency component
+    */
 
-  }
-
-
-  if(
-    candidateFrequency >=
-    15
-  ){
-
-    score += 8;
-
-  }
+    const freqScore =
+    frequency[d] * 100;
 
 
-  if(
-    candidateFrequency >=
-    20
-  ){
+    /*
+     Recent component
+    */
 
-    score += 7;
-
-  }
+    const recentScore =
+    recentFrequency[d] * 100;
 
 
-  if(
-    recentFrequency >=
-    20
-  ){
+    /*
+     Consistency component
+    */
 
-    score += 6;
-
-  }
+    let consistency = 0;
 
 
-  if(
-    total >= 30
-  ){
+    sections.forEach(
+      section => {
 
-    score += 4;
+        if(!section.length){
 
-  }
+          return;
 
-
-  if(
-    total >= 60
-  ){
-
-    score += 3;
-
-  }
+        }
 
 
-  score =
-    Math.min(
-      score,
-      90
+        const occurrences =
+        section.filter(
+          x =>
+            x.digit === d
+        ).length;
+
+
+        const rate =
+        occurrences /
+        section.length;
+
+
+        /*
+         Reward digits that
+         remain present across
+         different parts of
+         the window.
+        */
+
+        if(rate >= 0.10){
+
+          consistency += 1;
+
+        }
+
+      }
     );
 
 
+    /*
+     Cluster / recency component.
+
+     Count appearances among
+     the last 10 ticks.
+    */
+
+    const last10 =
+    ticks.slice(-10);
+
+
+    const recent10Count =
+    last10.filter(
+      x =>
+        x.digit === d
+    ).length;
+
+
+    const clusterScore =
+    recent10Count * 2;
+
+
+    /*
+     Combined score.
+
+     Frequency alone is NOT
+     enough to select a digit.
+    */
+
+    scores[d] =
+      (freqScore * 0.45) +
+      (recentScore * 0.30) +
+      (consistency * 4) +
+      clusterScore;
+
+  }
+
+
   /*
-   Freeze result.
+   Sort digits by score.
   */
 
-  frozenResult = {
+  const ranking =
+  Array.from(
+    {length:10},
+    (_,d) => ({
+      digit:d,
+      score:scores[d],
+      frequency:frequency[d],
+      recentFrequency:
+      recentFrequency[d]
+    })
+  ).sort(
+    (a,b) =>
+      b.score - a.score
+  );
 
-    digit:candidate,
 
-    frequency:
-      candidateFrequency,
+  const best =
+  ranking[0];
 
-    recentDigit:
-      recentCandidate,
 
-    recentFrequency:
-      recentFrequency,
+  const second =
+  ranking[1];
+
+
+  /*
+   Edge strength.
+
+   The larger the gap between
+   first and second, the more
+   distinct the candidate is.
+  */
+
+  const gap =
+  best.score -
+  second.score;
+
+
+  /*
+   Convert to a bounded
+   confidence-style score.
+  */
+
+  let confidenceScore =
+  45 +
+  gap * 1.5;
+
+
+  /*
+   Reward enough data.
+  */
+
+  if(total >= 30){
+
+    confidenceScore += 5;
+
+  }
+
+  if(total >= 60){
+
+    confidenceScore += 5;
+
+  }
+
+  if(total >= 100){
+
+    confidenceScore += 5;
+
+  }
+
+
+  /*
+   Reward recent agreement.
+  */
+
+  if(
+    best.digit ===
+    getDominant(recentCounts)
+  ){
+
+    confidenceScore += 8;
+
+  }
+
+
+  confidenceScore =
+  Math.round(
+    Math.min(
+      90,
+      Math.max(
+        0,
+        confidenceScore
+      )
+    )
+  );
+
+
+  /*
+   Edge classification.
+
+   We deliberately require
+   enough separation.
+  */
+
+  let edgeLevel;
+
+
+  if(
+    total < 20 ||
+    gap < 3
+  ){
+
+    edgeLevel =
+    "NO CLEAR EDGE";
+
+  }
+  else if(
+    gap < 6
+  ){
+
+    edgeLevel =
+    "WEAK EDGE";
+
+  }
+  else if(
+    gap < 10
+  ){
+
+    edgeLevel =
+    "MODERATE EDGE";
+
+  }
+  else{
+
+    edgeLevel =
+    "STRONG EDGE";
+
+  }
+
+
+  return {
+
+    valid:true,
+
+    candidate:best.digit,
 
     confidence:
-      score,
+    confidenceScore,
 
-    ticks:
-      total
+    edge:edgeLevel,
+
+    ranking:ranking,
+
+    frequency:
+    frequency,
+
+    recentFrequency:
+    recentFrequency,
+
+    recentDigit:
+    getDominant(
+      recentCounts
+    )
 
   };
 
-
-  displayFrozenResult(
-    frozenResult
-  );
-
-
-  nextButton.disabled =
-    false;
-
-
-  startButton.disabled =
-    false;
-
-
-  setStatus(
-    "● RESULT READY"
-  );
-
 }
 
 
-/* GET WINDOW TICKS */
-
-function getWindowTicks(){
-
-  /*
-   Reconstruct the most recent ticks
-   approximately from the current live
-   buffer. The completed sample itself
-   is represented by counts, while this
-   recent section provides a short-term
-   confirmation.
-  */
-
-  return tickData.slice();
-
-}
-
-
-/* DOMINANT DIGIT */
+/* DOMINANT */
 
 function getDominant(arr){
 
-  let best =
-    0;
+  let best = 0;
 
 
   for(
@@ -1980,465 +1532,171 @@ function getDominant(arr){
 }
 
 
-/* DISPLAY FROZEN RESULT */
+/* FINISH */
 
-function displayFrozenResult(result){
+function finishAnalysis(){
 
-  lastCandidate.textContent =
-    result.digit;
+  if(!collecting){
 
-
-  candidateStatus.textContent =
-    "FROZEN — use this result while waiting for the next digit";
-
-
-  confidence.textContent =
-    result.confidence +
-    "%";
-
-
-  dominant.textContent =
-    result.digit;
-
-
-  recentDominant.textContent =
-    result.recentDigit;
-
-
-  sampleSize.textContent =
-    result.ticks;
-
-
-  completedWindow.textContent =
-    formatWindow();
-
-
-  matches.textContent =
-    result.frequency.toFixed(1) +
-    "%";
-
-
-  differs.textContent =
-    (
-      100 -
-      result.frequency
-    ).toFixed(1) +
-    "%";
-
-
-  if(
-    result.digit ===
-    result.recentDigit &&
-    result.recentFrequency >= 20
-  ){
-
-    signal.textContent =
-      "OBSERVED CONSENSUS: DIGIT " +
-      result.digit;
-
-  }else if(
-    result.digit ===
-    result.recentDigit
-  ){
-
-    signal.textContent =
-      "OBSERVED BIAS: DIGIT " +
-      result.digit;
-
-  }else{
-
-    signal.textContent =
-      "NO STRONG CONSENSUS";
-
+    return;
   }
 
 
-  insight.innerHTML =
+  collecting = false;
 
-    "Candidate digit from the completed window: " +
-    "<strong>" +
-    result.digit +
-    "</strong><br>" +
 
-    "Observed frequency: <strong>" +
-    result.frequency.toFixed(1) +
-    "%</strong><br>" +
-
-    "Recent-window dominant: <strong>" +
-    result.recentDigit +
-    "</strong><br>" +
-
-    "Recent frequency: <strong>" +
-    result.recentFrequency.toFixed(1) +
-    "%</strong><br><br>" +
-
-    "<strong>RESULT FROZEN.</strong> " +
-
-    "The candidate will remain unchanged " +
-    "until you start the next analysis window." +
-
-    "<br><br>" +
-
-    "Confidence measures statistical agreement " +
-    "inside the observed sample. It is not a " +
-    "guaranteed probability of the next digit.";
-
-
-  renderDistribution();
-
-}
-
-
-/* WINDOW LABEL */
-
-function formatWindow(){
-
-  const seconds =
-    Number(
-      windowSelect.value
-    );
-
-
-  if(seconds < 60){
-
-    return seconds +
-      " sec";
-
-  }
-
-
-  return (
-    seconds / 60
-  ) +
-  " min";
-
-}
-
-
-/* DISTRIBUTION */
-
-function renderDistribution(){
-
-  distribution.innerHTML =
-    "";
-
-
-  const total =
-    counts.reduce(
-      (sum,value) =>
-        sum + value,
-      0
-    );
-
-
-  const dominantDigit =
-    total
-      ? getDominant(counts)
-      : -1;
-
-
-  for(
-    let digit = 0;
-    digit < 10;
-    digit++
-  ){
-
-    const percent =
-      total
-        ? counts[digit] /
-          total *
-          100
-        : 0;
-
-
-    const box =
-      document.createElement(
-        "div"
-      );
-
-
-    box.className =
-      "digit-card";
-
-
-    if(
-      digit ===
-      dominantDigit
-    ){
-
-      box.classList.add(
-        "hot"
-      );
-
-    }
-
-
-    box.innerHTML =
-
-      "<strong>" +
-      digit +
-      "</strong>" +
-
-      "<small>" +
-      percent.toFixed(1) +
-      "%</small>";
-
-
-    distribution.appendChild(
-      box
-    );
-
-  }
-
-}
-
-
-/* LIVE TICK LIST */
-
-function renderLiveTicks(){
-
-  ticks.innerHTML =
-    tickData
-      .slice(-RECENT_TICKS)
-      .reverse()
-      .map(
-        item => {
-
-          const time =
-            new Date(
-              item.epoch *
-              1000
-            )
-            .toLocaleTimeString();
-
-
-          return (
-            time +
-            "  " +
-            item.price +
-            "  →  " +
-            item.digit
-          );
-
-        }
-      )
-      .join("<br>");
-
-}
-
-
-/* MARKET CHANGE */
-
-marketSelect.addEventListener(
-  "change",
-  function(){
-
-    selectedSymbol =
-      marketSelect.value;
-
-
-    if(
-      socket &&
-      socket.readyState ===
-      WebSocket.OPEN
-    ){
-
-      subscribeToTicks();
-
-    }
-
-  }
-);
-
-
-/* WINDOW CHANGE */
-
-windowSelect.addEventListener(
-  "change",
-  function(){
-
-    if(!collecting){
-
-      const seconds =
-        Number(
-          windowSelect.value
-        );
-
-
-      timer.textContent =
-        formatTimerValue(
-          seconds
-        );
-
-    }
-
-  }
-);
-
-
-/* FORMAT TIMER */
-
-function formatTimerValue(seconds){
-
-  const minutes =
-    Math.floor(
-      seconds / 60
-    );
-
-
-  const secs =
-    seconds % 60;
-
-
-  return (
-    String(minutes)
-      .padStart(2,"0")
-    +
-    ":" +
-    String(secs)
-      .padStart(2,"0")
+  clearInterval(
+    timerLoop
   );
 
-}
+
+  timerLoop = null;
 
 
-/* START BUTTON */
-
-startButton.addEventListener(
-  "click",
-  function(){
-
-    if(!running){
-
-      running = true;
-
-    }
+  timer.textContent =
+  "00:00";
 
 
-    if(
-      socket &&
-      socket.readyState ===
-      WebSocket.OPEN
-    ){
-
-      beginWindow();
-
-    }else{
-
-      connect();
-
-    }
-
-  }
-);
+  timer.className =
+  "timer done";
 
 
-/* NEXT ANALYSIS */
-
-nextButton.addEventListener(
-  "click",
-  function(){
-
-    if(!running){
-
-      running = true;
-
-    }
+  windowState.textContent =
+  "Window complete — result frozen";
 
 
-    if(
-      socket &&
-      socket.readyState ===
-      WebSocket.OPEN
-    ){
-
-      beginWindow();
-
-    }else{
-
-      connect();
-
-    }
-
-  }
-);
+  const result =
+  calculateEdge();
 
 
-/* STOP */
+  if(!result.valid){
 
-stopButton.addEventListener(
-  "click",
-  function(){
-
-    running = false;
-
-    collecting = false;
+    candidate.textContent =
+    "—";
 
 
-    clearInterval(
-      timerInterval
-    );
+    resultState.textContent =
+    "Not enough ticks";
 
 
-    clearTimeout(
-      reconnectTimer
-    );
+    edge.textContent =
+    "NO EDGE";
 
 
-    timerInterval = null;
+    confidence.textContent =
+    "0%";
 
 
-    if(socket){
-
-      try{
-
-        socket.close();
-
-      }catch(error){}
-
-    }
-
-
-    socket = null;
+    insight.textContent =
+    "The completed window did not contain enough usable ticks to calculate a meaningful Matches signal.";
 
 
     startButton.disabled =
-      false;
+    false;
 
 
     nextButton.disabled =
-      true;
-
-
-    timer.className =
-      "timer waiting";
-
-
-    windowStatus.textContent =
-      "Stopped";
+    false;
 
 
     setStatus(
-      "● Stopped"
+      "● NO EDGE"
     );
 
+
+    return;
+
   }
-);
 
 
-/* INITIAL DIGIT GRID */
+  const d =
+  result.candidate;
 
-renderDistribution();
+
+  const freq =
+  result.frequency[d] *
+  100;
 
 
-timer.textContent =
-  formatTimerValue(
-    Number(
-      windowSelect.value
-    )
-  );
+  const recentFreq =
+  result.recentFrequency[d] *
+  100;
 
-</script>
 
-</body>
-</html>
+  candidate.textContent =
+  d;
+
+
+  resultState.textContent =
+  "FROZEN — candidate will not change";
+
+
+  edge.textContent =
+  result.edge;
+
+
+  confidence.textContent =
+  result.confidence +
+  "%";
+
+
+  matches.textContent =
+  freq.toFixed(1) +
+  "%";
+
+
+  differs.textContent =
+  (
+    100 - freq
+  ).toFixed(1) +
+  "%";
+
+
+  sample.textContent =
+  ticks.length;
+
+
+  agreement.textContent =
+  recentFreq.toFixed(1) +
+  "%";
+
+
+  /*
+   IMPORTANT:
+   We don't tell the user that
+   the next tick MUST be this digit.
+  */
+
+  insight.innerHTML =
+
+  "Candidate last digit: <strong>" +
+  d +
+  "</strong><br><br>" +
+
+  "This digit received the highest combined " +
+  "score from frequency, recent activity, " +
+  "window consistency and short-term clustering." +
+
+  "<br><br>" +
+
+  "Observed Matches rate in the completed sample: " +
+  "<strong>" +
+  freq.toFixed(1) +
+  "%</strong>." +
+
+  "<br><br>" +
+
+  "Recent sample agreement: " +
+  "<strong>" +
+  recentFreq.toFixed(1) +
+  "%</strong>." +
+
+  "<br><br>" +
+
+  "<strong>RESULT FROZEN.</strong> " +
+
+  "Press NEXT ANALYSIS to calculate a completely " +
+  "new candidate from a fresh window.";
+
+
+  renderDigits(
