@@ -1,1356 +1,2059 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trader Pro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trader Pro</title>
 
-<style>
-*{box-sizing:border-box}
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-body{
-  margin:0;
-  background:#050505;
-  color:#fff;
-  font-family:Arial,sans-serif;
-}
+    body {
+      margin: 0;
+      background: #080a0f;
+      color: #f5f7fa;
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+    }
 
-.container{
-  max-width:520px;
-  margin:auto;
-  padding:18px;
-}
+    .container {
+      width: 100%;
+      max-width: 650px;
+      margin: auto;
+      padding: 18px;
+    }
 
-h1{
-  text-align:center;
-  margin:5px 0;
-}
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
 
-.subtitle{
-  text-align:center;
-  color:#888;
-  margin-bottom:18px;
-}
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+      font-weight: 800;
+    }
 
-.card{
-  background:#111;
-  border:1px solid #292929;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:14px;
-}
+    .header p {
+      margin: 6px 0 0;
+      color: #8d96a5;
+      font-size: 13px;
+    }
 
-label{
-  display:block;
-  color:#aaa;
-  font-size:14px;
-  margin-bottom:7px;
-}
+    .card {
+      background: #11151d;
+      border: 1px solid #202733;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.22);
+    }
 
-select,button{
-  width:100%;
-  padding:14px;
-  margin-bottom:14px;
-  border-radius:10px;
-  border:1px solid #333;
-  background:#181818;
-  color:white;
-  font-size:16px;
-}
+    label {
+      display: block;
+      font-size: 12px;
+      color: #8d96a5;
+      margin-bottom: 7px;
+    }
 
-button{
-  background:white;
-  color:black;
-  font-weight:bold;
-}
+    select,
+    button {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 12px;
+      border: 1px solid #293140;
+      background: #0b0e14;
+      color: #fff;
+      padding: 0 14px;
+      font-size: 15px;
+      font-weight: 700;
+    }
 
-.connection{
-  text-align:center;
-  padding:18px;
-  background:#090909;
-  border-radius:12px;
-}
+    select {
+      margin-bottom: 14px;
+    }
 
-.connection-state{
-  font-size:22px;
-  font-weight:bold;
-}
+    button {
+      cursor: pointer;
+      background: #171d28;
+    }
 
-.connection-detail{
-  margin-top:8px;
-  color:#aaa;
-  font-size:13px;
-}
+    button:active {
+      transform: scale(.98);
+    }
 
-.signal{
-  text-align:center;
-  font-size:31px;
-  font-weight:bold;
-  padding:25px 5px;
-}
+    .primary {
+      background: #ffffff;
+      color: #05070a;
+      border: none;
+      margin-top: 4px;
+    }
 
-.status{
-  text-align:center;
-  color:#aaa;
-  font-size:14px;
-}
+    .signal-card {
+      text-align: center;
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
+    .signal-label {
+      color: #8d96a5;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
 
-.stat{
-  background:#181818;
-  border-radius:10px;
-  padding:12px;
-  text-align:center;
-}
+    .signal {
+      font-size: 46px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      margin: 5px 0;
+    }
 
-.stat span{
-  display:block;
-  color:#777;
-  font-size:12px;
-  margin-bottom:5px;
-}
+    .signal-sub {
+      font-size: 14px;
+      color: #aab2bf;
+      margin-top: 8px;
+    }
 
-.stat strong{
-  font-size:20px;
-}
+    .countdown {
+      font-size: 22px;
+      font-weight: 900;
+      margin-top: 12px;
+    }
 
-.log{
-  background:#070707;
-  border-radius:10px;
-  padding:12px;
-  font-size:12px;
-  color:#aaa;
-  line-height:1.7;
-  max-height:230px;
-  overflow:auto;
-  word-break:break-word;
-}
-</style>
+    .confidence {
+      font-size: 14px;
+      margin-top: 8px;
+      color: #cbd2dc;
+    }
+
+    .take-button {
+      margin-top: 16px;
+      background: #ffffff;
+      color: #05070a;
+      border: none;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .take-button:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .danger-button {
+      margin-top: 10px;
+      background: #151922;
+      color: #ff9b9b;
+      border-color: #39252a;
+    }
+
+    .connection {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #777;
+      flex-shrink: 0;
+    }
+
+    .green {
+      background: #39e58c;
+      box-shadow: 0 0 12px rgba(57,229,140,.7);
+    }
+
+    .yellow {
+      background: #ffd34d;
+      box-shadow: 0 0 12px rgba(255,211,77,.6);
+    }
+
+    .red {
+      background: #ff4d5e;
+      box-shadow: 0 0 12px rgba(255,77,94,.6);
+    }
+
+    .detail {
+      margin-top: 8px;
+      color: #8993a3;
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .stat {
+      background: #0b0e14;
+      border: 1px solid #202733;
+      border-radius: 12px;
+      padding: 13px 8px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .stat-label {
+      color: #7f8998;
+      font-size: 10px;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .log {
+      background: #07090d;
+      border: 1px solid #202733;
+      border-radius: 12px;
+      padding: 10px;
+      height: 170px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: #9ca6b5;
+    }
+
+    .result {
+      font-size: 25px;
+      font-weight: 900;
+      margin-top: 12px;
+    }
+
+    .small {
+      font-size: 11px;
+      color: #707b8b;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .mode {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 8px;
+      background: #191f2a;
+      color: #c5ccd7;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .7px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>Trader Pro</h1>
+  <div class="header">
+    <h1>Trader Pro</h1>
+    <p>Expert Pattern Engine • One Round Mode</p>
+  </div>
 
-<div class="subtitle">
-Expert Pattern Engine • One Round Mode
-</div>
+  <!-- SETTINGS -->
+  <div class="card">
 
-<div class="card">
+    <label>VOLATILITY MARKET</label>
 
-<label>Volatility Market</label>
+    <select id="market">
+      <option value="1HZ10V">Volatility 10 (1s)</option>
+      <option value="1HZ25V">Volatility 25 (1s)</option>
+      <option value="1HZ50V">Volatility 50 (1s)</option>
+      <option value="1HZ75V">Volatility 75 (1s)</option>
+      <option value="1HZ100V">Volatility 100 (1s)</option>
+      <option value="R_10">Volatility 10</option>
+      <option value="R_25">Volatility 25</option>
+      <option value="R_50">Volatility 50</option>
+      <option value="R_75">Volatility 75</option>
+      <option value="R_100">Volatility 100</option>
+    </select>
 
-<select id="symbol">
-  <option value="1HZ10V">Volatility 10 (1s)</option>
-  <option value="1HZ25V">Volatility 25 (1s)</option>
-  <option value="1HZ50V">Volatility 50 (1s)</option>
-  <option value="1HZ75V">Volatility 75 (1s)</option>
-  <option value="1HZ100V">Volatility 100 (1s)</option>
-  <option value="R_10">Volatility 10</option>
-  <option value="R_25">Volatility 25</option>
-  <option value="R_50">Volatility 50</option>
-  <option value="R_75">Volatility 75</option>
-  <option value="R_100">Volatility 100</option>
-</select>
+    <label>CONTRACT DURATION</label>
 
-<label>Contract Duration</label>
+    <select id="duration">
+      <option value="1">1 tick</option>
+      <option value="2">2 ticks</option>
+      <option value="3">3 ticks</option>
+      <option value="4">4 ticks</option>
+      <option value="5">5 ticks</option>
+      <option value="6">6 ticks</option>
+      <option value="7">7 ticks</option>
+      <option value="8">8 ticks</option>
+      <option value="9">9 ticks</option>
+      <option value="10">10 ticks</option>
+    </select>
 
-<select id="duration">
-  <option value="1">1 Tick</option>
-  <option value="2">2 Ticks</option>
-  <option value="3">3 Ticks</option>
-  <option value="4">4 Ticks</option>
-  <option value="5">5 Ticks</option>
-  <option value="6">6 Ticks</option>
-  <option value="7">7 Ticks</option>
-  <option value="8">8 Ticks</option>
-  <option value="9">9 Ticks</option>
-  <option value="10">10 Ticks</option>
-</select>
+    <button class="primary" id="startBtn">
+      START EXPERT ANALYSIS
+    </button>
 
-<button id="startBtn">
-START EXPERT ANALYSIS
-</button>
+  </div>
 
-</div>
+  <!-- CONNECTION -->
+  <div class="card">
 
+    <div class="connection">
+      <span class="dot yellow" id="connectionDot"></span>
+      <span id="connectionStatus">DISCONNECTED</span>
+    </div>
 
-<div class="card">
+    <div class="detail" id="connectionDetail">
+      Press START EXPERT ANALYSIS
+    </div>
 
-<div class="connection">
+  </div>
 
-<div id="connectionState"
-class="connection-state">
-🟡 CONNECTING
-</div>
+  <!-- SIGNAL -->
+  <div class="card signal-card">
 
-<div id="connectionDetail"
-class="connection-detail">
-Opening Deriv market-data connection...
-</div>
+    <div class="mode">
+      ONE ROUND MODE
+    </div>
 
-</div>
+    <div class="signal-label" id="signalLabel">
+      WAITING
+    </div>
 
-</div>
+    <div class="signal" id="signal">
+      —
+    </div>
 
+    <div class="signal-sub" id="signalSub">
+      No active signal
+    </div>
 
-<div class="card">
+    <div class="confidence" id="confidence">
+      Confidence: —
+    </div>
 
-<div id="signal"
-class="signal">
-WAITING...
-</div>
+    <div class="countdown" id="countdown"></div>
 
-<div id="status"
-class="status">
-Starting...
-</div>
+    <button
+      class="take-button"
+      id="takeSignalBtn"
+      disabled
+    >
+      TAKE SIGNAL
+    </button>
 
-</div>
+    <button
+      class="danger-button"
+      id="cancelSignalBtn"
+      disabled
+    >
+      CANCEL / WAIT FOR NEW SETUP
+    </button>
 
+    <div class="result" id="result"></div>
 
-<div class="card">
+  </div>
 
-<div class="stats">
+  <!-- STATS -->
+  <div class="card">
 
-<div class="stat">
-<span>Historical</span>
-<strong id="historical">0</strong>
-</div>
+    <div class="stats">
 
-<div class="stat">
-<span>Live ticks</span>
-<strong id="liveTicks">0</strong>
-</div>
+      <div class="stat">
+        <div class="stat-value" id="historical">
+          0
+        </div>
+        <div class="stat-label">
+          Historical
+        </div>
+      </div>
 
-<div class="stat">
-<span>Signals</span>
-<strong id="signals">0</strong>
-</div>
+      <div class="stat">
+        <div class="stat-value" id="liveTicks">
+          0
+        </div>
+        <div class="stat-label">
+          Live ticks
+        </div>
+      </div>
 
-<div class="stat">
-<span>Wins</span>
-<strong id="wins">0</strong>
-</div>
+      <div class="stat">
+        <div class="stat-value" id="signals">
+          0
+        </div>
+        <div class="stat-label">
+          Signals
+        </div>
+      </div>
 
-<div class="stat">
-<span>Losses</span>
-<strong id="losses">0</strong>
-</div>
+      <div class="stat">
+        <div class="stat-value" id="wins">
+          0
+        </div>
+        <div class="stat-label">
+          Wins
+        </div>
+      </div>
 
-<div class="stat">
-<span>Hit rate</span>
-<strong id="hitRate">0%</strong>
-</div>
+      <div class="stat">
+        <div class="stat-value" id="losses">
+          0
+        </div>
+        <div class="stat-label">
+          Losses
+        </div>
+      </div>
 
-</div>
+      <div class="stat">
+        <div class="stat-value" id="hitRate">
+          —
+        </div>
+        <div class="stat-label">
+          Hit rate
+        </div>
+      </div>
 
-</div>
+    </div>
 
+  </div>
 
-<div class="card">
+  <!-- LOG -->
+  <div class="card">
 
-<b>Deriv Connection Log</b>
+    <label>DERIV CONNECTION LOG</label>
 
-<div id="log" class="log">
-Starting...
-</div>
+    <div class="log" id="log"></div>
 
-</div>
+    <div class="small">
+      Public market-data connection only. Trader Pro does not place trades.
+      The external Deriv bot remains responsible for entering the contract.
+    </div>
+
+  </div>
 
 </div>
 
 
 <script>
 
-/*
-  CURRENT DERIV PUBLIC MARKET DATA ENDPOINT
-*/
+  /*
+  ============================================================
+  TRADER PRO
+  ONE ROUND MODE
+  ============================================================
 
-const WS_URL =
-"wss://api.derivws.com/trading/v1/options/ws/public";
+  WORKFLOW:
 
+  1. Connect to Deriv public market data.
+  2. Load historical ticks.
+  3. Subscribe to live ticks.
+  4. Build digit statistics.
+  5. Find ONE qualifying Matches digit.
+  6. Display READY.
+  7. User enters that digit into external bot.
+  8. User presses TAKE SIGNAL.
+  9. Trader Pro waits for the next live tick.
+  10. Next tick is compared with the selected digit.
+  11. WIN or LOSS.
+  12. Signal is closed.
+  13. Fresh analysis begins.
 
-let ws = null;
+  IMPORTANT:
+  This is a statistical signal engine.
+  It does NOT guarantee the next digit.
+  */
 
-let requestedSymbol = null;
-let actualSymbol = null;
+  const WS_URL =
+    "wss://api.derivws.com/trading/v1/options/ws/public";
 
-let history = [];
-let live = [];
+  let ws = null;
 
-let running = false;
+  let selectedMarket = "";
+  let actualSymbol = "";
 
-let signalDigit = null;
-let signalStart = 0;
+  let pipSize = null;
+  let decimalPlaces = 2;
 
-let duration = 1;
+  let historicalTicks = [];
+  let liveTicksArray = [];
 
-let signals = 0;
-let wins = 0;
-let losses = 0;
+  let allTicks = [];
 
-let lastLossDigit = null;
+  let liveTickCount = 0;
 
-let pipSize = 2;
+  let analysisTimer = null;
+  let countdownTimer = null;
 
-let reconnectTimer = null;
+  let signalDigit = null;
+  let signalConfidence = 0;
 
+  let signalState = "IDLE";
 
-/* ELEMENTS */
+  let readyUntil = 0;
 
-const symbolEl =
-document.getElementById("symbol");
+  let waitingForResult = false;
 
-const durationEl =
-document.getElementById("duration");
+  let lastLossDigit = null;
 
-const startBtn =
-document.getElementById("startBtn");
+  let resultStartIndex = 0;
 
-const connectionState =
-document.getElementById("connectionState");
+  let wins = 0;
+  let losses = 0;
+  let signals = 0;
 
-const connectionDetail =
-document.getElementById("connectionDetail");
+  let reqId = 10;
 
-const signalEl =
-document.getElementById("signal");
+  const MAX_TICKS = 1500;
 
-const statusEl =
-document.getElementById("status");
+  const READY_TIME = 10000;
 
-const logEl =
-document.getElementById("log");
+  const MIN_HISTORY = 500;
 
+  const marketEl = document.getElementById("market");
+  const durationEl = document.getElementById("duration");
 
-/* LOG */
+  const startBtn = document.getElementById("startBtn");
 
-function log(message){
+  const connectionDot =
+    document.getElementById("connectionDot");
 
-  const time =
-  new Date().toLocaleTimeString();
+  const connectionStatus =
+    document.getElementById("connectionStatus");
 
-  logEl.innerHTML =
-    time +
-    " — " +
-    message +
-    "<br>" +
-    logEl.innerHTML;
+  const connectionDetail =
+    document.getElementById("connectionDetail");
 
-}
+  const signalLabel =
+    document.getElementById("signalLabel");
 
+  const signalEl =
+    document.getElementById("signal");
 
-/* CONNECTION STATUS */
+  const signalSub =
+    document.getElementById("signalSub");
 
-function setConnection(state,detail){
+  const confidenceEl =
+    document.getElementById("confidence");
 
-  connectionState.textContent =
-    state;
+  const countdownEl =
+    document.getElementById("countdown");
 
-  connectionDetail.textContent =
-    detail;
+  const takeSignalBtn =
+    document.getElementById("takeSignalBtn");
 
-}
+  const cancelSignalBtn =
+    document.getElementById("cancelSignalBtn");
 
+  const resultEl =
+    document.getElementById("result");
 
-/* SEND REQUEST */
+  const historicalEl =
+    document.getElementById("historical");
 
-function sendRequest(request){
+  const liveTicksEl =
+    document.getElementById("liveTicks");
 
-  if(
-    !ws ||
-    ws.readyState !== WebSocket.OPEN
-  ){
+  const signalsEl =
+    document.getElementById("signals");
 
-    log(
-      "Cannot send request: socket not open"
-    );
+  const winsEl =
+    document.getElementById("wins");
 
-    return false;
-  }
+  const lossesEl =
+    document.getElementById("losses");
 
-  try{
+  const hitRateEl =
+    document.getElementById("hitRate");
 
-    ws.send(
-      JSON.stringify(request)
-    );
+  const logEl =
+    document.getElementById("log");
 
-    log(
-      "Sent: " +
-      JSON.stringify(request)
-    );
 
-    return true;
+  /*
+  ============================================================
+  LOGGING
+  ============================================================
+  */
 
-  }catch(error){
+  function log(message) {
 
-    log(
-      "Send error: " +
-      error.message
-    );
+    const time =
+      new Date().toLocaleTimeString();
 
-    return false;
+    const line =
+      document.createElement("div");
 
-  }
+    line.textContent =
+      "[" + time + "] " + message;
 
-}
+    logEl.appendChild(line);
 
+    logEl.scrollTop =
+      logEl.scrollHeight;
 
-/* CONNECT */
-
-function connect(){
-
-  clearTimeout(
-    reconnectTimer
-  );
-
-  setConnection(
-    "🟡 CONNECTING",
-    "Opening Deriv public market-data connection..."
-  );
-
-  statusEl.textContent =
-    "Connecting to Deriv...";
-
-  log(
-    "Opening WebSocket..."
-  );
-
-
-  try{
-
-    ws =
-    new WebSocket(
-      WS_URL
-    );
-
-  }catch(error){
-
-    setConnection(
-      "🔴 ERROR",
-      error.message
-    );
-
-    log(
-      "WebSocket error: " +
-      error.message
-    );
-
-    scheduleReconnect();
-
-    return;
-
+    while (logEl.children.length > 120) {
+      logEl.removeChild(logEl.firstChild);
+    }
   }
 
 
-  ws.onopen =
-  function(){
+  /*
+  ============================================================
+  CONNECTION STATUS
+  ============================================================
+  */
 
-    setConnection(
-      "🟢 CONNECTED",
-      "Connected • Requesting active markets"
+  function setConnection(
+    status,
+    detail,
+    type
+  ) {
+
+    connectionStatus.textContent =
+      status;
+
+    connectionDetail.textContent =
+      detail;
+
+    connectionDot.className =
+      "dot " + type;
+  }
+
+
+  /*
+  ============================================================
+  NUMBER / DIGIT FUNCTIONS
+  ============================================================
+  */
+
+  function calculateDecimals(value) {
+
+    if (!value || value <= 0) {
+      return 2;
+    }
+
+    const str =
+      String(value);
+
+    if (str.includes("e-")) {
+
+      const parts =
+        str.split("e-");
+
+      return parseInt(parts[1], 10);
+    }
+
+    const decimal =
+      str.split(".")[1];
+
+    return decimal
+      ? decimal.length
+      : 0;
+  }
+
+
+  function getLastDigit(price) {
+
+    if (price === null ||
+        price === undefined) {
+      return null;
+    }
+
+    let number =
+      Number(price);
+
+    if (!Number.isFinite(number)) {
+      return null;
+    }
+
+    let fixed =
+      number.toFixed(decimalPlaces);
+
+    let clean =
+      fixed.replace(".", "");
+
+    return Number(
+      clean.charAt(clean.length - 1)
     );
+  }
 
-    statusEl.textContent =
-      "Connected • Finding market...";
 
-    log(
-      "WebSocket connected successfully"
-    );
+  /*
+  ============================================================
+  DIGIT COUNTS
+  ============================================================
+  */
 
+  function digitCounts(list) {
 
-    /*
-      IMPORTANT:
-      Get active symbols FIRST.
-    */
+    const counts =
+      Array(10).fill(0);
 
-    sendRequest({
+    let total = 0;
 
-      active_symbols:
-        "brief",
-
-      req_id:1
-
-    });
-
-  };
-
-
-  ws.onmessage =
-  function(event){
-
-    let data;
-
-    try{
-
-      data =
-      JSON.parse(
-        event.data
-      );
-
-    }catch(error){
-
-      log(
-        "Could not read Deriv response"
-      );
-
-      return;
-
-    }
-
-
-    /*
-      ERROR
-    */
-
-    if(data.error){
-
-      const message =
-        data.error.message ||
-        data.error.code ||
-        "Unknown Deriv error";
-
-      setConnection(
-        "🔴 DERIV ERROR",
-        message
-      );
-
-      statusEl.textContent =
-        "Deriv rejected a request";
-
-      log(
-        "DERIV ERROR: " +
-        message
-      );
-
-      if(data.echo_req){
-
-        log(
-          "Rejected request: " +
-          JSON.stringify(
-            data.echo_req
-          )
-        );
-
-      }
-
-      return;
-
-    }
-
-
-    /*
-      ACTIVE SYMBOLS
-    */
-
-    if(
-      data.msg_type ===
-      "active_symbols"
-    ){
-
-      log(
-        "Active-symbol response received"
-      );
-
-
-      const markets =
-      data.active_symbols || [];
-
-
-      log(
-        "Markets returned: " +
-        markets.length
-      );
-
-
-      const wanted =
-        symbolEl.value;
-
-
-      const found =
-      markets.find(
-        item =>
-          item.underlying_symbol ===
-          wanted
-      );
-
-
-      if(!found){
-
-        setConnection(
-          "🔴 MARKET NOT FOUND",
-          wanted +
-          " was not returned by Deriv"
-        );
-
-        log(
-          "Selected symbol not found: " +
-          wanted
-        );
-
-        return;
-
-      }
-
-
-      actualSymbol =
-        found.underlying_symbol;
-
-
-      if(
-        found.pip_size !== undefined
-      ){
-
-        pipSize =
-          Number(
-            found.pip_size
-          );
-
-      }
-
-
-      setConnection(
-        "🟢 MARKET FOUND",
-        actualSymbol +
-        " • Requesting history"
-      );
-
-
-      log(
-        "Using symbol: " +
-        actualSymbol
-      );
-
-
-      /*
-        HISTORY REQUEST
-      */
-
-      sendRequest({
-
-        ticks_history:
-          actualSymbol,
-
-        end:
-          "latest",
-
-        count:
-          1000,
-
-        style:
-          "ticks",
-
-        req_id:
-          2
-
-      });
-
-
-      /*
-        LIVE SUBSCRIPTION
-      */
-
-      sendRequest({
-
-        ticks:
-          actualSymbol,
-
-        subscribe:
-          1,
-
-        req_id:
-          3
-
-      });
-
-
-      return;
-
-    }
-
-
-    /*
-      HISTORY
-    */
-
-    if(
-      data.msg_type ===
-      "history"
-    ){
-
-      history = [];
-
-
-      if(
-        data.pip_size !== undefined
-      ){
-
-        pipSize =
-          Number(
-            data.pip_size
-          );
-
-      }
-
-
-      const prices =
-      data.history &&
-      data.history.prices
-      ? data.history.prices
-      : [];
-
-
-      for(
-        const price of prices
-      ){
-
-        history.push(
-          digitFromQuote(
-            price
-          )
-        );
-
-      }
-
-
-      document.getElementById(
-        "historical"
-      ).textContent =
-      history.length;
-
-
-      log(
-        "Historical ticks loaded: " +
-        history.length
-      );
-
-
-      setConnection(
-        "🟢 CONNECTED",
-        "History loaded • Waiting for live ticks"
-      );
-
-
-      return;
-
-    }
-
-
-    /*
-      LIVE TICK
-    */
-
-    if(
-      data.msg_type ===
-      "tick"
-    ){
-
-      if(
-        !data.tick
-      ){
-
-        log(
-          "Tick response contained no tick data"
-        );
-
-        return;
-
-      }
-
-
-      if(
-        data.tick.pip_size !== undefined
-      ){
-
-        pipSize =
-          Number(
-            data.tick.pip_size
-          );
-
-      }
-
+    for (const price of list) {
 
       const digit =
-      digitFromQuote(
-        data.tick.quote
-      );
+        getLastDigit(price);
 
-
-      live.push(
-        digit
-      );
-
-
-      if(
-        live.length > 1500
-      ){
-
-        live.shift();
-
+      if (digit === null) {
+        continue;
       }
 
-
-      document.getElementById(
-        "liveTicks"
-      ).textContent =
-      live.length;
-
-
-      setConnection(
-        "🟢 LIVE",
-        "Receiving live ticks • " +
-        actualSymbol
-      );
-
-
-      statusEl.textContent =
-        "LIVE • Last digit: " +
-        digit;
-
-
-      log(
-        "LIVE TICK • " +
-        data.tick.quote +
-        " • digit " +
-        digit
-      );
-
-
-      processTick();
-
-      return;
-
+      counts[digit]++;
+      total++;
     }
 
-  };
+    return {
+      counts,
+      total
+    };
+  }
 
 
-  ws.onerror =
-  function(){
+  /*
+  ============================================================
+  ANALYSIS ENGINE
+  ============================================================
 
-    setConnection(
-      "🔴 CONNECTION ERROR",
-      "Browser WebSocket error"
-    );
+  SCORE:
 
-    statusEl.textContent =
-      "Connection error";
+  40% long-term frequency
+  35% recent frequency
+  25% conditional next-digit frequency
 
-    log(
-      "WebSocket error event"
-    );
+  The conditional component checks what digit tends
+  to appear after the current last digit.
 
-  };
+  This does NOT mean the next digit is predictable
+  with certainty.
+  ============================================================
+  */
 
+  function analyzeDigits() {
 
-  ws.onclose =
-  function(event){
+    if (allTicks.length < MIN_HISTORY) {
+      return null;
+    }
 
-    setConnection(
-      "🔴 DISCONNECTED",
-      "Connection closed • code " +
-      event.code
-    );
+    const usable =
+      allTicks.slice(-1200);
 
-    statusEl.textContent =
-      "Deriv connection closed";
+    const recent =
+      usable.slice(-300);
 
-    log(
-      "WebSocket closed • code " +
-      event.code
-    );
+    const longStats =
+      digitCounts(usable);
 
+    const recentStats =
+      digitCounts(recent);
 
-    scheduleReconnect();
+    if (longStats.total < MIN_HISTORY) {
+      return null;
+    }
 
-  };
+    const lastPrice =
+      usable[usable.length - 1];
 
-}
+    const currentDigit =
+      getLastDigit(lastPrice);
 
+    if (currentDigit === null) {
+      return null;
+    }
 
-/* RECONNECT */
+    /*
+    ------------------------------------------------------------
+    CONDITIONAL TRANSITIONS
+    ------------------------------------------------------------
+    */
 
-function scheduleReconnect(){
-
-  clearTimeout(
-    reconnectTimer
-  );
-
-  reconnectTimer =
-  setTimeout(
-    function(){
-
-      log(
-        "Reconnecting..."
+    const transitions =
+      Array.from(
+        { length: 10 },
+        () => Array(10).fill(0)
       );
 
-      connect();
+    let transitionTotal = 0;
 
-    },
-    3000
-  );
+    for (let i = 1; i < usable.length; i++) {
 
-}
+      const previous =
+        getLastDigit(usable[i - 1]);
 
+      const next =
+        getLastDigit(usable[i]);
 
-/* DIGIT */
+      if (
+        previous === null ||
+        next === null
+      ) {
+        continue;
+      }
 
-function digitFromQuote(
-  quote
-){
+      transitions[previous][next]++;
+      transitionTotal++;
+    }
 
-  const decimals =
-    Number.isFinite(
-      Number(pipSize)
-    )
-    ? Number(pipSize)
-    : 2;
+    const candidates = [];
 
+    for (let digit = 0; digit <= 9; digit++) {
 
-  const text =
-    Number(
-      quote
-    ).toFixed(
-      decimals
+      /*
+      Don't immediately repeat the digit that just lost.
+      */
+
+      if (
+        lastLossDigit !== null &&
+        digit === lastLossDigit
+      ) {
+        continue;
+      }
+
+      const longProbability =
+        longStats.counts[digit] /
+        longStats.total;
+
+      const recentProbability =
+        recentStats.counts[digit] /
+        recentStats.total;
+
+      const currentRow =
+        transitions[currentDigit];
+
+      const rowTotal =
+        currentRow.reduce(
+          (a, b) => a + b,
+          0
+        );
+
+      let conditionalProbability =
+        0.10;
+
+      if (rowTotal >= 25) {
+
+        conditionalProbability =
+          currentRow[digit] /
+          rowTotal;
+      }
+
+      /*
+      Baseline probability for each digit = 10%.
+      */
+
+      const score =
+        (longProbability * 0.40) +
+        (recentProbability * 0.35) +
+        (conditionalProbability * 0.25);
+
+      candidates.push({
+
+        digit,
+
+        longProbability,
+
+        recentProbability,
+
+        conditionalProbability,
+
+        score
+
+      });
+    }
+
+    if (!candidates.length) {
+      return null;
+    }
+
+    candidates.sort(
+      (a, b) =>
+        b.score - a.score
     );
 
+    const best =
+      candidates[0];
 
-  const parts =
-    text.split(".");
+    const second =
+      candidates[1] || null;
+
+    /*
+    ------------------------------------------------------------
+    CONFIDENCE
+    ------------------------------------------------------------
+
+    This is a heuristic confidence score,
+    NOT a probability of winning.
+    ------------------------------------------------------------
+    */
+
+    const advantage =
+      Math.max(
+        0,
+        best.score - 0.10
+      );
+
+    const separation =
+      second
+        ? Math.max(
+            0,
+            best.score -
+            second.score
+          )
+        : 0;
+
+    let confidence =
+      50 +
+      (advantage * 400) +
+      (separation * 300);
+
+    confidence =
+      Math.max(
+        0,
+        Math.min(
+          99,
+          confidence
+        )
+      );
+
+    /*
+    ------------------------------------------------------------
+    QUALIFICATION FILTER
+    ------------------------------------------------------------
+    */
+
+    const longStrong =
+      best.longProbability >= 0.105;
+
+    const recentStrong =
+      best.recentProbability >= 0.105;
+
+    const conditionalStrong =
+      best.conditionalProbability >= 0.105;
+
+    const separationStrong =
+      second
+        ? (best.score - second.score) >= 0.008
+        : true;
+
+    const enoughData =
+      usable.length >= 500;
+
+    const qualifies =
+      enoughData &&
+      longStrong &&
+      recentStrong &&
+      separationStrong &&
+      (
+        conditionalStrong ||
+        best.recentProbability >= 0.12
+      );
+
+    return {
+
+      best,
+
+      confidence,
+
+      qualifies,
+
+      currentDigit,
+
+      sampleSize: usable.length
+
+    };
+  }
 
 
-  const decimal =
-    parts[1] || "0";
+  /*
+  ============================================================
+  FIND NEW SIGNAL
+  ============================================================
+  */
 
+  function findSignal() {
 
-  return Number(
-    decimal.charAt(
-      decimal.length - 1
-    )
-  );
+    if (
+      signalState !== "IDLE" &&
+      signalState !== "EXPIRED"
+    ) {
+      return;
+    }
 
-}
+    const analysis =
+      analyzeDigits();
 
+    if (!analysis) {
 
-/* START */
+      signalLabel.textContent =
+        "ANALYZING";
 
-startBtn.onclick =
-function(){
+      signalEl.textContent =
+        "—";
 
-  duration =
-    Number(
-      durationEl.value
+      signalSub.textContent =
+        "Building statistical sample...";
+
+      confidenceEl.textContent =
+        "Confidence: —";
+
+      return;
+    }
+
+    if (!analysis.qualifies) {
+
+      signalLabel.textContent =
+        "NO CLEAR EDGE";
+
+      signalEl.textContent =
+        "—";
+
+      signalSub.textContent =
+        "Setup does not meet the expert filter.";
+
+      confidenceEl.textContent =
+        "Confidence: " +
+        Math.round(
+          analysis.confidence
+        ) +
+        "%";
+
+      takeSignalBtn.disabled =
+        true;
+
+      cancelSignalBtn.disabled =
+        true;
+
+      countdownEl.textContent =
+        "";
+
+      return;
+    }
+
+    /*
+    ------------------------------------------------------------
+    QUALIFIED SIGNAL
+    ------------------------------------------------------------
+    */
+
+    signalDigit =
+      analysis.best.digit;
+
+    signalConfidence =
+      Math.round(
+        analysis.confidence
+      );
+
+    signalState =
+      "READY";
+
+    readyUntil =
+      Date.now() + READY_TIME;
+
+    signalLabel.textContent =
+      "READY — ENTER NOW";
+
+    signalEl.textContent =
+      "MATCHES " + signalDigit;
+
+    signalSub.textContent =
+      "Enter digit " +
+      signalDigit +
+      " in your Deriv bot.";
+
+    confidenceEl.textContent =
+      "Confidence: " +
+      signalConfidence +
+      "% • " +
+      analysis.sampleSize +
+      " tick sample";
+
+    resultEl.textContent =
+      "";
+
+    takeSignalBtn.disabled =
+      false;
+
+    cancelSignalBtn.disabled =
+      false;
+
+    signals++;
+
+    updateStats();
+
+    log(
+      "QUALIFIED SIGNAL: MATCHES " +
+      signalDigit +
+      " | confidence " +
+      signalConfidence +
+      "%"
     );
 
+    startReadyCountdown();
+  }
 
-  if(!running){
 
-    running = true;
+  /*
+  ============================================================
+  READY COUNTDOWN
+  ============================================================
+  */
 
-    startBtn.textContent =
-      "STOP EXPERT ANALYSIS";
+  function startReadyCountdown() {
+
+    clearInterval(countdownTimer);
+
+    countdownTimer =
+      setInterval(() => {
+
+        const remaining =
+          Math.max(
+            0,
+            readyUntil -
+            Date.now()
+          );
+
+        const seconds =
+          Math.ceil(
+            remaining / 1000
+          );
+
+        countdownEl.textContent =
+          "READY WINDOW: " +
+          seconds +
+          "s";
+
+        if (remaining <= 0) {
+
+          clearInterval(
+            countdownTimer
+          );
+
+          expireSignal();
+
+        }
+
+      }, 100);
+  }
+
+
+  /*
+  ============================================================
+  EXPIRE SIGNAL
+  ============================================================
+  */
+
+  function expireSignal() {
+
+    if (
+      signalState !== "READY"
+    ) {
+      return;
+    }
+
+    signalState =
+      "EXPIRED";
+
+    signalDigit =
+      null;
+
+    takeSignalBtn.disabled =
+      true;
+
+    cancelSignalBtn.disabled =
+      true;
+
+    signalLabel.textContent =
+      "EXPIRED";
 
     signalEl.textContent =
-      "ANALYZING...";
+      "—";
 
-    statusEl.textContent =
-      "Scanning live market...";
+    signalSub.textContent =
+      "Signal window closed.";
 
-    analyze();
+    confidenceEl.textContent =
+      "Waiting for a fresh setup.";
 
-  }else{
+    countdownEl.textContent =
+      "";
 
-    running = false;
+    log(
+      "Signal expired without being taken."
+    );
 
-    signalDigit = null;
+    setTimeout(() => {
 
-    startBtn.textContent =
-      "START EXPERT ANALYSIS";
+      signalState =
+        "IDLE";
+
+      findSignal();
+
+    }, 500);
+  }
+
+
+  /*
+  ============================================================
+  CANCEL SIGNAL
+  ============================================================
+  */
+
+  function cancelSignal() {
+
+    clearInterval(
+      countdownTimer
+    );
+
+    signalState =
+      "IDLE";
+
+    signalDigit =
+      null;
+
+    takeSignalBtn.disabled =
+      true;
+
+    cancelSignalBtn.disabled =
+      true;
+
+    signalLabel.textContent =
+      "ANALYZING";
 
     signalEl.textContent =
-      "STOPPED";
+      "—";
 
-    statusEl.textContent =
-      "Analysis stopped";
+    signalSub.textContent =
+      "Looking for a fresh setup...";
 
-  }
+    confidenceEl.textContent =
+      "Confidence: —";
 
-};
+    countdownEl.textContent =
+      "";
 
+    log(
+      "Signal cancelled by user."
+    );
 
-/* TICK PROCESSING */
-
-function processTick(){
-
-  if(!running){
-    return;
-  }
-
-
-  if(
-    signalDigit === null
-  ){
-
-    analyze();
-
-    return;
-
+    setTimeout(
+      findSignal,
+      300
+    );
   }
 
 
-  const elapsed =
-    live.length -
-    signalStart;
+  /*
+  ============================================================
+  TAKE SIGNAL
+  ============================================================
+
+  THIS IS THE IMPORTANT PART.
+
+  We DO NOT count the next tick until the
+  user presses TAKE SIGNAL.
+
+  That means the user can:
+
+  1. See MATCHES 7
+  2. Switch to Deriv bot
+  3. Enter 7
+  4. Start the one-round contract
+  5. Return to Trader Pro
+  6. Press TAKE SIGNAL
+
+  Then Trader Pro measures the next tick.
+  ============================================================
+  */
+
+  function takeSignal() {
+
+    if (
+      signalState !== "READY"
+    ) {
+      return;
+    }
+
+    if (
+      signalDigit === null
+    ) {
+      return;
+    }
+
+    clearInterval(
+      countdownTimer
+    );
+
+    signalState =
+      "WAITING_RESULT";
+
+    waitingForResult =
+      true;
+
+    resultStartIndex =
+      liveTickCount;
+
+    takeSignalBtn.disabled =
+      true;
+
+    cancelSignalBtn.disabled =
+      true;
+
+    signalLabel.textContent =
+      "ROUND ACTIVE";
+
+    signalEl.textContent =
+      "MATCHES " +
+      signalDigit;
+
+    signalSub.textContent =
+      "Waiting for the result tick...";
+
+    confidenceEl.textContent =
+      "Selected digit: " +
+      signalDigit;
+
+    countdownEl.textContent =
+      "";
+
+    resultEl.textContent =
+      "";
+
+    log(
+      "SIGNAL TAKEN: MATCHES " +
+      signalDigit +
+      " | waiting for next tick"
+    );
+  }
 
 
-  if(
-    elapsed >= duration
-  ){
+  /*
+  ============================================================
+  CHECK RESULT
+  ============================================================
+  */
 
-    const finalIndex =
-      signalStart +
-      duration -
-      1;
+  function checkResult(price) {
 
+    if (
+      !waitingForResult
+    ) {
+      return;
+    }
 
-    const finalDigit =
-      live[
-        finalIndex
-      ];
+    /*
+    Ignore the tick that existed before
+    TAKE SIGNAL.
 
+    The first NEW live tick after TAKE SIGNAL
+    becomes the result.
+    */
 
-    if(
-      finalDigit ===
-      signalDigit
-    ){
+    const currentLiveIndex =
+      liveTickCount;
+
+    if (
+      currentLiveIndex <=
+      resultStartIndex
+    ) {
+      return;
+    }
+
+    const resultDigit =
+      getLastDigit(price);
+
+    if (resultDigit === null) {
+      return;
+    }
+
+    waitingForResult =
+      false;
+
+    signalState =
+      "RESULT";
+
+    if (
+      resultDigit === signalDigit
+    ) {
 
       wins++;
 
+      lastLossDigit =
+        null;
+
+      resultEl.textContent =
+        "WIN ✓";
+
       log(
-        "WIN • Matches " +
+        "WIN — predicted " +
         signalDigit +
-        " • Final " +
-        finalDigit
+        " | result " +
+        resultDigit
       );
 
-    }else{
+    } else {
 
       losses++;
 
       lastLossDigit =
         signalDigit;
 
+      resultEl.textContent =
+        "LOSS";
+
       log(
-        "LOSS • Matches " +
+        "LOSS — predicted " +
         signalDigit +
-        " • Final " +
-        finalDigit
+        " | result " +
+        resultDigit
       );
 
     }
 
+    signalLabel.textContent =
+      "ROUND COMPLETE";
 
-    signals++;
+    signalSub.textContent =
+      "Result digit: " +
+      resultDigit;
 
-    signalDigit =
-      null;
+    signalEl.textContent =
+      "MATCHES " +
+      signalDigit;
 
+    confidenceEl.textContent =
+      "Fresh analysis will start automatically.";
 
     updateStats();
 
+    /*
+    ------------------------------------------------------------
+    IMPORTANT:
+    The old digit is now finished.
+    We do NOT immediately reuse it.
+    ------------------------------------------------------------
+    */
 
-    signalEl.textContent =
-      "ANALYZING...";
+    setTimeout(() => {
+
+      signalState =
+        "IDLE";
+
+      signalDigit =
+        null;
+
+      resultEl.textContent =
+        "";
+
+      signalLabel.textContent =
+        "ANALYZING";
+
+      signalEl.textContent =
+        "—";
+
+      signalSub.textContent =
+        "Searching for the next qualified setup...";
+
+      confidenceEl.textContent =
+        "Confidence: —";
+
+      findSignal();
+
+    }, 1200);
+  }
 
 
-    setTimeout(
-      function(){
+  /*
+  ============================================================
+  PROCESS LIVE TICK
+  ============================================================
+  */
 
-        if(running){
-          analyze();
-        }
+  function processLiveTick(price) {
 
-      },
-      1200
+    const number =
+      Number(price);
+
+    if (!Number.isFinite(number)) {
+      return;
+    }
+
+    liveTicksArray.push(number);
+
+    allTicks.push(number);
+
+    if (
+      allTicks.length >
+      MAX_TICKS
+    ) {
+      allTicks.shift();
+    }
+
+    liveTickCount++;
+
+    liveTicksEl.textContent =
+      liveTickCount;
+
+    /*
+    Check result BEFORE doing new analysis.
+    */
+
+    checkResult(number);
+
+    /*
+    Only look for a new signal when
+    completely idle.
+    */
+
+    if (
+      signalState === "IDLE"
+    ) {
+
+      /*
+      Don't analyze every single tick.
+      Wait for a small batch.
+      */
+
+      if (
+        liveTickCount % 5 === 0
+      ) {
+        findSignal();
+      }
+    }
+  }
+
+
+  /*
+  ============================================================
+  ACTIVE SYMBOLS
+  ============================================================
+  */
+
+  function requestActiveSymbols() {
+
+    if (
+      !ws ||
+      ws.readyState !== WebSocket.OPEN
+    ) {
+      return;
+    }
+
+    const request = {
+      active_symbols: "brief",
+      req_id: 1
+    };
+
+    log(
+      "Requesting active symbols..."
     );
 
-  }
-
-}
-
-
-/* ANALYSIS */
-
-function analyze(){
-
-  if(!running){
-    return;
+    ws.send(
+      JSON.stringify(request)
+    );
   }
 
 
-  const combined =
-    history
-    .concat(live)
-    .slice(-1200);
+  /*
+  ============================================================
+  REQUEST MARKET DATA
+  ============================================================
+  */
 
+  function requestMarketData(symbol) {
 
-  if(
-    combined.length < 500
-  ){
+    if (
+      !ws ||
+      ws.readyState !== WebSocket.OPEN
+    ) {
+      return;
+    }
 
-    signalEl.textContent =
-      "LOADING DATA";
+    /*
+    HISTORY
+    */
 
-    statusEl.textContent =
-      "Need more market history";
+    const historyRequest = {
 
-    return;
+      ticks_history: symbol,
 
+      end: "latest",
+
+      count: 1000,
+
+      style: "ticks",
+
+      req_id: 2
+
+    };
+
+    log(
+      "Requesting 1000 historical ticks for " +
+      symbol
+    );
+
+    ws.send(
+      JSON.stringify(
+        historyRequest
+      )
+    );
+
+    /*
+    LIVE STREAM
+    */
+
+    const tickRequest = {
+
+      ticks: symbol,
+
+      subscribe: 1,
+
+      req_id: 3
+
+    };
+
+    log(
+      "Starting live tick stream..."
+    );
+
+    ws.send(
+      JSON.stringify(
+        tickRequest
+      )
+    );
   }
 
 
-  const counts =
-    Array(10).fill(0);
+  /*
+  ============================================================
+  OPEN CONNECTION
+  ============================================================
+  */
 
+  function connect() {
 
-  for(
-    const digit of combined
-  ){
+    if (ws) {
 
-    counts[digit]++;
-
-  }
-
-
-  const recent =
-    combined.slice(-100);
-
-
-  const recentCounts =
-    Array(10).fill(0);
-
-
-  for(
-    const digit of recent
-  ){
-
-    recentCounts[digit]++;
-
-  }
-
-
-  const candidates=[];
-
-
-  for(
-    let digit=0;
-    digit<10;
-    digit++
-  ){
-
-    if(
-      digit ===
-      lastLossDigit
-    ){
-
-      continue;
+      try {
+        ws.close();
+      } catch (e) {}
 
     }
 
+    selectedMarket =
+      marketEl.value;
 
-    const longRate =
-      counts[digit] /
-      combined.length;
+    historicalTicks = [];
+    liveTicksArray = [];
+    allTicks = [];
+
+    liveTickCount = 0;
+
+    signalDigit = null;
+
+    signalState = "IDLE";
+
+    waitingForResult = false;
+
+    lastLossDigit = null;
+
+    resultEl.textContent = "";
+
+    setConnection(
+      "CONNECTING",
+      "Connecting to Deriv public market data...",
+      "yellow"
+    );
+
+    log(
+      "Connecting to Deriv..."
+    );
+
+    ws =
+      new WebSocket(WS_URL);
+
+    ws.onopen = function() {
+
+      setConnection(
+        "CONNECTED",
+        "WebSocket connected. Requesting live market information...",
+        "green"
+      );
+
+      log(
+        "WebSocket connected."
+      );
+
+      requestActiveSymbols();
+    };
 
 
-    const recentRate =
-      recentCounts[digit] /
-      recent.length;
+    ws.onmessage =
+      function(event) {
+
+        let data;
+
+        try {
+
+          data =
+            JSON.parse(
+              event.data
+            );
+
+        } catch (error) {
+
+          log(
+            "Received invalid JSON."
+          );
+
+          return;
+        }
+
+        /*
+        --------------------------------------------------------
+        ERROR
+        --------------------------------------------------------
+        */
+
+        if (data.error) {
+
+          const message =
+            data.error.message ||
+            "Unknown Deriv error";
+
+          setConnection(
+            "DERIV ERROR",
+            message,
+            "red"
+          );
+
+          log(
+            "DERIV ERROR: " +
+            message
+          );
+
+          console.error(
+            "Deriv error:",
+            data
+          );
+
+          return;
+        }
 
 
-    const score =
-      longRate * 0.5 +
-      recentRate * 0.5;
+        /*
+        --------------------------------------------------------
+        ACTIVE SYMBOLS
+        --------------------------------------------------------
+        */
+
+        if (
+          data.msg_type ===
+          "active_symbols"
+        ) {
+
+          const symbols =
+            data.active_symbols ||
+            [];
+
+          const found =
+            symbols.find(
+              item =>
+                item.underlying_symbol ===
+                selectedMarket
+            );
+
+          if (!found) {
+
+            setConnection(
+              "MARKET NOT FOUND",
+              selectedMarket +
+              " was not returned by active_symbols.",
+              "red"
+            );
+
+            log(
+              "Market not found: " +
+              selectedMarket
+            );
+
+            return;
+          }
+
+          actualSymbol =
+            found.underlying_symbol;
+
+          pipSize =
+            found.pip_size || null;
+
+          decimalPlaces =
+            calculateDecimals(
+              pipSize
+            );
+
+          setConnection(
+            "MARKET FOUND",
+            actualSymbol +
+            " • pip size: " +
+            pipSize +
+            " • decimals: " +
+            decimalPlaces,
+            "green"
+          );
+
+          log(
+            "Market found: " +
+            actualSymbol
+          );
+
+          requestMarketData(
+            actualSymbol
+          );
+
+          return;
+        }
 
 
-    candidates.push({
+        /*
+        --------------------------------------------------------
+        HISTORY
+        --------------------------------------------------------
+        */
 
-      digit:
-        digit,
+        if (
+          data.msg_type ===
+          "history"
+        ) {
 
-      long:
-        longRate,
+          const prices =
+            data.history &&
+            data.history.prices;
 
-      recent:
-        recentRate,
+          if (
+            Array.isArray(prices)
+          ) {
 
-      score:
-        score
+            historicalTicks =
+              prices
+                .map(Number)
+                .filter(
+                  Number.isFinite
+                );
 
-    });
+            allTicks =
+              historicalTicks.slice(
+                -MAX_TICKS
+              );
 
+            historicalEl.textContent =
+              historicalTicks.length;
+
+            setConnection(
+              "LIVE",
+              actualSymbol +
+              " • historical data loaded • waiting for live ticks",
+              "green"
+            );
+
+            log(
+              "Historical ticks loaded: " +
+              historicalTicks.length
+            );
+
+            if (
+              historicalTicks.length >=
+              MIN_HISTORY
+            ) {
+
+              signalState =
+                "IDLE";
+
+              findSignal();
+            }
+
+          } else {
+
+            log(
+              "History response contained no prices."
+            );
+          }
+
+          return;
+        }
+
+
+        /*
+        --------------------------------------------------------
+        LIVE TICK
+        --------------------------------------------------------
+        */
+
+        if (
+          data.msg_type ===
+          "tick"
+        ) {
+
+          const quote =
+            data.tick &&
+            data.tick.quote;
+
+          if (
+            quote === undefined
+          ) {
+            return;
+          }
+
+          setConnection(
+            "LIVE",
+            actualSymbol +
+            " • streaming live ticks",
+            "green"
+          );
+
+          processLiveTick(
+            quote
+          );
+
+          return;
+        }
+
+      };
+
+
+    ws.onerror =
+      function() {
+
+        setConnection(
+          "CONNECTION ERROR",
+          "WebSocket connection error. Check internet and reload.",
+          "red"
+        );
+
+        log(
+          "WebSocket error."
+        );
+      };
+
+
+    ws.onclose =
+      function() {
+
+        setConnection(
+          "DISCONNECTED",
+          "Deriv connection closed.",
+          "red"
+        );
+
+        log(
+          "WebSocket closed."
+        );
+      };
   }
 
 
-  candidates.sort(
-    (a,b) =>
-      b.score -
-      a.score
+  /*
+  ============================================================
+  STATS
+  ============================================================
+  */
+
+  function updateStats() {
+
+    signalsEl.textContent =
+      signals;
+
+    winsEl.textContent =
+      wins;
+
+    lossesEl.textContent =
+      losses;
+
+    const total =
+      wins + losses;
+
+    if (total === 0) {
+
+      hitRateEl.textContent =
+        "—";
+
+    } else {
+
+      const rate =
+        (wins / total) * 100;
+
+      hitRateEl.textContent =
+        rate.toFixed(1) +
+        "%";
+    }
+  }
+
+
+  /*
+  ============================================================
+  BUTTONS
+  ============================================================
+  */
+
+  startBtn.addEventListener(
+    "click",
+    function() {
+
+      startBtn.disabled =
+        true;
+
+      startBtn.textContent =
+        "EXPERT ANALYSIS RUNNING";
+
+      log(
+        "Trader Pro started."
+      );
+
+      connect();
+    }
   );
 
 
-  const best =
-    candidates[0];
+  takeSignalBtn.addEventListener(
+    "click",
+    takeSignal
+  );
 
 
-  const second =
-    candidates[1];
+  cancelSignalBtn.addEventListener(
+    "click",
+    cancelSignal
+  );
 
 
-  if(!best || !second){
-    return;
-  }
+  /*
+  ============================================================
+  INITIAL UI
+  ============================================================
+  */
 
+  updateStats();
 
-  const qualified =
-    best.long >= 0.105 &&
-    best.recent >= 0.105 &&
-    (
-      best.long -
-      second.long
-    ) >= 0.010;
-
-
-  if(!qualified){
-
-    signalEl.textContent =
-      "NO CLEAR EDGE";
-
-    statusEl.textContent =
-      "Analyzing • No qualifying digit";
-
-    return;
-
-  }
-
-
-  signalDigit =
-    best.digit;
-
-
-  signalStart =
-    live.length;
-
+  signalLabel.textContent =
+    "WAITING";
 
   signalEl.textContent =
-    "MATCHES " +
-    signalDigit;
+    "—";
 
+  signalSub.textContent =
+    "Press START EXPERT ANALYSIS";
 
-  statusEl.textContent =
-    "QUALIFIED • " +
-    duration +
-    " tick round";
-
-
-  log(
-    "SIGNAL LOCKED • MATCHES " +
-    signalDigit
-  );
-
-}
-
-
-/* STATS */
-
-function updateStats(){
-
-  document.getElementById(
-    "signals"
-  ).textContent =
-  signals;
-
-
-  document.getElementById(
-    "wins"
-  ).textContent =
-  wins;
-
-
-  document.getElementById(
-    "losses"
-  ).textContent =
-  losses;
-
-
-  const completed =
-    wins + losses;
-
-
-  const rate =
-    completed > 0
-    ? (
-        wins /
-        completed *
-        100
-      ).toFixed(1)
-    : "0";
-
-
-  document.getElementById(
-    "hitRate"
-  ).textContent =
-  rate + "%";
-
-}
-
-
-/* CHANGE MARKET */
-
-symbolEl.onchange =
-function(){
-
-  history=[];
-  live=[];
-
-  signalDigit=null;
-
-  actualSymbol=null;
-
-  document.getElementById(
-    "historical"
-  ).textContent="0";
-
-  document.getElementById(
-    "liveTicks"
-  ).textContent="0";
-
-
-  if(ws){
-
-    try{
-      ws.close();
-    }catch(e){}
-
-  }
-
-
-  connect();
-
-};
-
-
-/* START CONNECTION */
-
-connect();
+  confidenceEl.textContent =
+    "Confidence: —";
 
 </script>
 
