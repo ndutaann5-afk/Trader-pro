@@ -1,42 +1,1092 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Trader Pro</title>
+<title>Trader Pro</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #070a0f;
+  color: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  max-width: 720px;
+  margin: auto;
+  padding: 18px 14px 40px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.logo span {
+  color: #19d681;
+}
+
+.connection {
+  padding: 7px 10px;
+  border-radius: 20px;
+  background: #151b24;
+  color: #aab4c2;
+  font-size: 12px;
+}
+
+.card {
+  background: #10151d;
+  border: 1px solid #222b38;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 13px;
+}
+
+.label {
+  color: #8995a5;
+  font-size: 12px;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.market-row {
+  display: flex;
+  gap: 10px;
+}
+
+select {
+  flex: 1;
+  background: #080c12;
+  color: white;
+  border: 1px solid #303a48;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 15px;
+}
+
+.price {
+  font-size: 32px;
+  font-weight: 800;
+  margin-top: 12px;
+}
+
+.digit {
+  font-size: 48px;
+  font-weight: 900;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  flex: 1;
+  border: 0;
+  border-radius: 11px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+#start {
+  background: #19d681;
+  color: #03130b;
+}
+
+#stop {
+  background: #242c38;
+  color: white;
+}
+
+.ai {
+  border-left: 4px solid #19d681;
+}
+
+.confidence {
+  font-size: 30px;
+  font-weight: 900;
+  margin: 5px 0 12px;
+}
+
+.insight {
+  line-height: 1.65;
+  color: #c5ced9;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+.digit-box {
+  background: #080c12;
+  border: 1px solid #27303d;
+  border-radius: 9px;
+  padding: 9px 4px;
+  text-align: center;
+}
+
+.digit-box strong {
+  display: block;
+  font-size: 17px;
+}
+
+.digit-box small {
+  color: #8793a2;
+}
+
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.match {
+  background: #080c12;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.match-value {
+  font-size: 25px;
+  font-weight: 800;
+  margin-top: 5px;
+}
+
+.ticks {
+  max-height: 180px;
+  overflow-y: auto;
+  font-family: monospace;
+  color: #aeb8c5;
+  line-height: 1.7;
+}
+
+.muted {
+  color: #7f8a99;
+}
+
+@media (max-width: 430px) {
+  .price {
+    font-size: 27px;
+  }
+
+  .grid {
+    gap: 5px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <main class="container">
+<div class="app">
 
-    <h1>Trader Pro</h1>
+  <div class="header">
+    <div class="logo">TRADER <span>PRO</span></div>
+    <div id="connection" class="connection">
+      ● Offline
+    </div>
+  </div>
 
-    <p>
-      Deriv Matches &amp; Differs Analyzer
-    </p>
+  <div class="card">
 
-    <div
-      id="connectionStatus"
-      class="status"
-    >
-      Ready — press Start Analysis
+    <div class="label">Market</div>
+
+    <div class="market-row">
+
+      <select id="market">
+        <option value="1HZ100V">
+          Volatility 100 (1s)
+        </option>
+        <option value="1HZ75V">
+          Volatility 75 (1s)
+        </option>
+        <option value="1HZ50V">
+          Volatility 50 (1s)
+        </option>
+        <option value="1HZ25V">
+          Volatility 25 (1s)
+        </option>
+        <option value="1HZ10V">
+          Volatility 10 (1s)
+        </option>
+      </select>
+
     </div>
 
-    <div
-      id="marketStatus"
-      class="panel"
-    >
-      Market: waiting
+    <div class="label" style="margin-top:15px;">
+      Live price
     </div>
 
-    <div class="
+    <div id="price" class="price">
+      —
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Latest last digit
+    </div>
+
+    <div id="lastDigit" class="digit">
+      —
+    </div>
+
+    <div id="tickCount" class="muted"
+         style="text-align:center;">
+      Waiting for live ticks
+    </div>
+
+  </div>
+
+
+  <div class="card ai">
+
+    <div class="label">
+      AI / Statistical Insight
+    </div>
+
+    <div id="confidence"
+         class="confidence">
+      —
+    </div>
+
+    <div id="insight" class="insight">
+      Start analysis to build a live
+      statistical picture of the last digits.
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Matches / Differs
+    </div>
+
+    <div class="match-grid">
+
+      <div class="match">
+        <div class="muted">
+          Matches
+        </div>
+
+        <div id="matches"
+             class="match-value">
+          —
+        </div>
+      </div>
+
+      <div class="match">
+        <div class="muted">
+          Differs
+        </div>
+
+        <div id="differs"
+             class="match-value">
+          —
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Digit distribution
+    </div>
+
+    <div id="distribution"
+         class="grid">
+
+      <div class="digit-box">
+        <strong>0</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>1</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>2</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>3</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>4</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>5</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>6</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>7</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>8</strong>
+        <small>0%</small>
+      </div>
+
+      <div class="digit-box">
+        <strong>9</strong>
+        <small>0%</small>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="label">
+      Recent ticks
+    </div>
+
+    <div id="ticks" class="ticks">
+      No ticks received yet.
+    </div>
+
+  </div>
+
+
+  <div class="buttons">
+
+    <button id="start">
+      START ANALYSIS
+    </button>
+
+    <button id="stop">
+      STOP
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const WS_URL =
+  "wss://ws.binaryws.com/websockets/v3";
+
+let ws = null;
+
+let running = false;
+
+let reconnectTimer = null;
+
+let reconnectAttempts = 0;
+
+let selectedSymbol =
+  "1HZ100V";
+
+let data = [];
+
+let counts =
+  Array(10).fill(0);
+
+
+const connection =
+  document.getElementById(
+    "connection"
+  );
+
+const market =
+  document.getElementById(
+    "market"
+  );
+
+const price =
+  document.getElementById(
+    "price"
+  );
+
+const lastDigit =
+  document.getElementById(
+    "lastDigit"
+  );
+
+const tickCount =
+  document.getElementById(
+    "tickCount"
+  );
+
+const confidence =
+  document.getElementById(
+    "confidence"
+  );
+
+const insight =
+  document.getElementById(
+    "insight"
+  );
+
+const matches =
+  document.getElementById(
+    "matches"
+  );
+
+const differs =
+  document.getElementById(
+    "differs"
+  );
+
+const distribution =
+  document.getElementById(
+    "distribution"
+  );
+
+const ticksBox =
+  document.getElementById(
+    "ticks"
+  );
+
+
+function setConnection(
+  text
+) {
+
+  connection.textContent =
+    text;
+
+}
+
+
+function connect() {
+
+  clearTimeout(
+    reconnectTimer
+  );
+
+  setConnection(
+    "● Connecting"
+  );
+
+  try {
+
+    ws =
+      new WebSocket(
+        WS_URL
+      );
+
+  } catch (error) {
+
+    setConnection(
+      "● Connection error"
+    );
+
+    reconnect();
+
+    return;
+
+  }
+
+
+  ws.onopen =
+    function() {
+
+      reconnectAttempts =
+        0;
+
+      setConnection(
+        "● Connected"
+      );
+
+      subscribe();
+
+    };
+
+
+  ws.onmessage =
+    function(event) {
+
+      let message;
+
+      try {
+
+        message =
+          JSON.parse(
+            event.data
+          );
+
+      } catch (error) {
+
+        return;
+
+      }
+
+
+      if (
+        message.error
+      ) {
+
+        console.error(
+          message.error
+        );
+
+        setConnection(
+          "● API error"
+        );
+
+        return;
+
+      }
+
+
+      if (
+        message.msg_type ===
+        "tick"
+      ) {
+
+        processTick(
+          message.tick
+        );
+
+      }
+
+    };
+
+
+  ws.onerror =
+    function() {
+
+      setConnection(
+        "● Connection error"
+      );
+
+    };
+
+
+  ws.onclose =
+    function(event) {
+
+      setConnection(
+        "● Disconnected " +
+        event.code
+      );
+
+      if (running) {
+
+        reconnect();
+
+      }
+
+    };
+
+}
+
+
+function reconnect() {
+
+  if (!running) {
+    return;
+  }
+
+  reconnectAttempts++;
+
+  const delay =
+    Math.min(
+      1000 *
+      Math.pow(
+        2,
+        reconnectAttempts - 1
+      ),
+      15000
+    );
+
+  setConnection(
+    "● Reconnecting"
+  );
+
+  reconnectTimer =
+    setTimeout(
+      connect,
+      delay
+    );
+
+}
+
+
+function subscribe() {
+
+  if (
+    !ws ||
+    ws.readyState !==
+    WebSocket.OPEN
+  ) {
+
+    return;
+
+  }
+
+
+  ws.send(
+    JSON.stringify({
+
+      ticks:
+        selectedSymbol,
+
+      subscribe:
+        1
+
+    })
+  );
+
+}
+
+
+function processTick(
+  tick
+) {
+
+  if (!tick) {
+    return;
+  }
+
+
+  const value =
+    Number(
+      tick.quote
+    );
+
+
+  if (!Number.isFinite(value)) {
+    return;
+  }
+
+
+  const text =
+    String(
+      tick.quote
+    );
+
+
+  let decimals =
+    text.split(".")[1] ||
+    "";
+
+
+  if (
+    decimals.length === 0
+  ) {
+
+    decimals = "0";
+
+  }
+
+
+  const digit =
+    Number(
+      decimals[
+        decimals.length - 1
+      ]
+    );
+
+
+  if (
+    digit < 0 ||
+    digit > 9
+  ) {
+
+    return;
+
+  }
+
+
+  data.push({
+    price: value,
+    digit: digit
+  });
+
+
+  if (
+    data.length > 200
+  ) {
+
+    const removed =
+      data.shift();
+
+    counts[
+      removed.digit
+    ]--;
+
+  }
+
+
+  counts[digit]++;
+
+  updateInterface();
+
+}
+
+
+function updateInterface() {
+
+  if (!data.length) {
+    return;
+  }
+
+
+  const latest =
+    data[
+      data.length - 1
+    ];
+
+
+  price.textContent =
+    latest.price;
+
+
+  lastDigit.textContent =
+    latest.digit;
+
+
+  tickCount.textContent =
+    data.length +
+    " live ticks analysed";
+
+
+  let dominant =
+    0;
+
+
+  for (
+    let i = 1;
+    i < 10;
+    i++
+  ) {
+
+    if (
+      counts[i] >
+      counts[dominant]
+    ) {
+
+      dominant = i;
+
+    }
+
+  }
+
+
+  const total =
+    data.length;
+
+
+  const dominantPercent =
+    (
+      counts[dominant] /
+      total
+    ) * 100;
+
+
+  const recent =
+    data.slice(-30);
+
+
+  const recentCounts =
+    Array(10).fill(0);
+
+
+  recent.forEach(
+    item => {
+
+      recentCounts[
+        item.digit
+      ]++;
+
+    }
+  );
+
+
+  let recentDominant =
+    0;
+
+
+  for (
+    let i = 1;
+    i < 10;
+    i++
+  ) {
+
+    if (
+      recentCounts[i] >
+      recentCounts[
+        recentDominant
+      ]
+    ) {
+
+      recentDominant = i;
+
+    }
+
+  }
+
+
+  const recentPercent =
+    (
+      recentCounts[
+        recentDominant
+      ] /
+      recent.length
+    ) * 100;
+
+
+  let modelConfidence =
+    50;
+
+
+  if (
+    dominant ===
+    recentDominant
+  ) {
+
+    modelConfidence += 15;
+
+  }
+
+
+  if (
+    dominantPercent >= 15
+  ) {
+
+    modelConfidence += 10;
+
+  }
+
+
+  if (
+    recentPercent >= 20
+  ) {
+
+    modelConfidence += 10;
+
+  }
+
+
+  if (
+    total >= 100
+  ) {
+
+    modelConfidence += 5;
+
+  }
+
+
+  modelConfidence =
+    Math.min(
+      modelConfidence,
+      90
+    );
+
+
+  confidence.textContent =
+    modelConfidence +
+    "%";
+
+
+  insight.innerHTML =
+    "Current dominant digit: <strong>" +
+    dominant +
+    "</strong><br>" +
+
+    "Recent dominant digit: <strong>" +
+    recentDominant +
+    "</strong><br>" +
+
+    "The current sample shows " +
+    dominantPercent.toFixed(1) +
+    "% frequency for digit " +
+    dominant +
+    ".<br><br>" +
+
+    "<strong>Important:</strong> this is " +
+    "statistical analysis, not a guaranteed " +
+    "prediction of the next tick.";
+
+
+  matches.textContent =
+    dominantPercent.toFixed(1) +
+    "%";
+
+
+  differs.textContent =
+    (
+      100 -
+      dominantPercent
+    ).toFixed(1) +
+    "%";
+
+
+  distribution.innerHTML =
+    counts.map(
+      function(count, digit) {
+
+        const percent =
+          (
+            count /
+            total
+          ) * 100;
+
+        return `
+          <div class="digit-box">
+            <strong>${digit}</strong>
+            <small>
+              ${percent.toFixed(1)}%
+            </small>
+          </div>
+        `;
+
+      }
+    ).join("");
+
+
+  ticksBox.innerHTML =
+    data
+      .slice(-30)
+      .reverse()
+      .map(
+        item =>
+          item.price +
+          " → " +
+          item.digit
+      )
+      .join("<br>");
+
+}
+
+
+market.addEventListener(
+  "change",
+  function() {
+
+    selectedSymbol =
+      market.value;
+
+    data = [];
+
+    counts =
+      Array(10).fill(0);
+
+    price.textContent =
+      "—";
+
+    lastDigit.textContent =
+      "—";
+
+    if (running) {
+
+      if (ws) {
+
+        try {
+          ws.close();
+        } catch (error) {}
+
+      }
+
+      connect();
+
+    }
+
+  }
+);
+
+
+document
+  .getElementById("start")
+  .addEventListener(
+    "click",
+    function() {
+
+      if (running) {
+        return;
+      }
+
+      running = true;
+
+      data = [];
+
+      counts =
+        Array(10).fill(0);
+
+      connect();
+
+    }
+  );
+
+
+document
+  .getElementById("stop")
+  .addEventListener(
+    "click",
+    function() {
+
+      running = false;
+
+      clearTimeout(
+        reconnectTimer
+      );
+
+      if (ws) {
+
+        try {
+          ws.close();
+        } catch (error) {}
+
+      }
+
+      ws = null;
+
+      setConnection(
+        "● Stopped"
+      );
+
+    }
+  );
+
+</script>
+
+</body>
+  </html>
