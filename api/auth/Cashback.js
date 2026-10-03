@@ -1,21 +1,29 @@
 export default function handler(req, res) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   const { code, state, error } = req.query;
 
   if (error) {
-    return res.status(400).send(`Deriv authorization failed: ${error}`);
+    return res.status(400).json({
+      success: false,
+      error: "Deriv authorization failed",
+      details: error
+    });
   }
 
   if (!code) {
-    return res.status(400).send("No authorization code received.");
+    return res.status(400).json({
+      success: false,
+      error: "No authorization code received"
+    });
   }
 
-  res.status(200).send(`
-    <html>
-      <body style="font-family:Arial;text-align:center;padding:40px">
-        <h2>Trader Pro</h2>
-        <p>Deriv authorization received.</p>
-        <p>You can return to Trader Pro.</p>
-      </body>
-    </html>
-  `);
+  return res.status(200).json({
+    success: true,
+    message: "Deriv callback reached successfully",
+    code_received: true,
+    state_received: Boolean(state)
+  });
 }
